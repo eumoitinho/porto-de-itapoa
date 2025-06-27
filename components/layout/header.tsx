@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, ChevronDown, Search, Globe, Phone, Mail, MapPin, Clock } from "lucide-react"
+import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin, Clock } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
@@ -13,104 +13,100 @@ import { useI18n } from "@/lib/i18n/context"
 
 const navigation = [
   { name: "Home", href: "/", nameKey: "home" },
-  { 
-    name: "Institucional", 
+  {
+    name: "Institucional",
     href: "/institucional",
     nameKey: "institutional",
     submenu: [
-      { 
-        name: "Sobre o Porto", 
+      {
+        name: "Sobre o Porto",
         items: [
           { name: "Porto Itapoá", href: "/porto-itapoa" },
           { name: "Infraestrutura", href: "/infraestrutura" },
           { name: "Localização", href: "/localizacao" },
-          { name: "Tour 360°", href: "/tour-360" }
-        ]
+          { name: "Tour 360°", href: "/tour-360" },
+        ],
       },
-      { 
-        name: "Governança", 
+      {
+        name: "Governança",
         items: [
           { name: "Acionistas", href: "/acionistas" },
           { name: "Demonstrações Financeiras", href: "/demonstracoes" },
           { name: "Política de Gestão Integrada", href: "/politica-gestao" },
-          { name: "LGPD", href: "/lgpd" }
-        ]
+          { name: "LGPD", href: "/lgpd" },
+        ],
       },
-      { 
-        name: "Transparência", 
+      {
+        name: "Transparência",
         items: [
           { name: "Denúncias", href: "/denuncias" },
           { name: "Certificações", href: "/certificacoes" },
           { name: "Premiações", href: "/premiacao" },
-          { name: "Pacto Global 2021", href: "/pacto-global" }
-        ]
+          { name: "Pacto Global 2021", href: "/pacto-global" },
+        ],
       },
-      { 
-        name: "Recursos", 
+      {
+        name: "Recursos",
         items: [
           { name: "Downloads", href: "/downloads" },
           { name: "Galerias", href: "/galerias" },
-          { name: "Linha do Tempo", href: "/linha-tempo" }
-        ]
-      }
-    ]
+          { name: "Linha do Tempo", href: "/linha-tempo" },
+        ],
+      },
+    ],
   },
-  { 
-    name: "Serviços", 
+  {
+    name: "Serviços",
     href: "/servicos",
     nameKey: "services",
     submenu: [
-      { 
-        name: "Cadastros", 
-        items: [
-          { name: "Cadastro de Cliente", href: "/cadastro-cliente" },
-          { name: "Cadastro de Motorista", href: "/cadastro-motorista" }
-        ]
-      },
-      { 
-        name: "Consultas e Simuladores", 
+      
+      {
+        name: "Consultas e Simuladores",
         items: [
           { name: "Consultas", href: "/consultas" },
-          { name: "Simuladores de Preço", href: "/simuladores" }
-        ]
+          { name: "Simuladores de Preço", href: "/simuladores" },
+        ],
       },
-      { 
-        name: "Operações e Procedimentos", 
+      {
+        name: "Operações e Procedimentos",
         items: [
           { name: "Procedimentos", href: "/procedimentos" },
           { name: "Cartas Protestos", href: "/cartas-protestos" },
           { name: "Programação de Navios", href: "/programacao-navios" },
           { name: "Integração de Motoristas", href: "/integracao-motoristas" },
-          { name: "Integração de Terceiros", href: "/integracao-terceiros" }
-        ]
+          { name: "Integração de Terceiros", href: "/integracao-terceiros" },
+        ],
       },
-      { 
-        name: "Preços e Tabelas", 
+      {
+        name: "Preços e Tabelas",
         items: [
           { name: "Tabela de Preços 2025", href: "/precos" },
-          { name: "Tabela de Preços 2025 (A partir de 21/03)", href: "/precos-21-03" }
-        ]
+          { name: "Tabela de Preços 2025 (A partir de 21/03)", href: "/precos-21-03" },
+        ],
       },
-      { 
-        name: "Portais e Ferramentas", 
+      {
+        name: "Portais e Ferramentas",
         items: [
           { name: "Portal de Compras", href: "/portal-compras" },
           { name: "Portfólio de Serviços", href: "/portfolio" },
           { name: "Câmera Online", href: "/camera-online" },
-          { name: "Linhas de Navegação", href: "/linhas-navegacao" }
-        ]
-      }
-    ]
+          { name: "Linhas de Navegação", href: "/linhas-navegacao" },
+          { name: "Cadastro de Cliente", href: "/cadastro-cliente" },
+          { name: "Cadastro de Motorista", href: "/cadastro-motorista" },
+        ],
+      },
+    ],
   },
   { name: "Notícias", href: "/noticias", nameKey: "news" },
   { name: "Sustentabilidade", href: "/sustentabilidade", nameKey: "sustainability" },
-  { name: "Contato", href: "/contato", nameKey: "contact" }
+  { name: "Contato", href: "/contato", nameKey: "contact" },
 ]
 
 const quickLinks = [
   { name: "Agendamento", href: "/agendamento", icon: Clock },
   { name: "Rastreamento", href: "/rastreamento", icon: Search },
-  { name: "Preços", href: "/precos", icon: Phone }
+  { name: "Preços", href: "/precos", icon: Phone },
 ]
 
 export function Header() {
@@ -156,17 +152,17 @@ export function Header() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isHomePage 
-            ? scrolled 
-              ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xl" 
+          isHomePage
+            ? scrolled
+              ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xl"
               : "bg-transparent"
             : "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xl"
         }`}
         style={
-          isHomePage && !scrolled 
+          isHomePage && !scrolled
             ? {
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.05) 100%)',
-                backdropFilter: 'blur(8px)'
+                background: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.05) 100%)",
+                backdropFilter: "blur(8px)",
               }
             : {}
         }
@@ -174,7 +170,7 @@ export function Header() {
         {/* Top Bar - apenas quando scrolled ou não for home */}
         <AnimatePresence>
           {(scrolled || !isHomePage) && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -220,7 +216,7 @@ export function Header() {
           <div className="flex items-center justify-between h-20">
             {/* Logo - Apenas o logo sem texto */}
             <Link href="/" className="flex items-center group">
-              <motion.div 
+              <motion.div
                 className="relative w-16 h-16 transition-transform group-hover:scale-105"
                 whileHover={{ rotate: 5 }}
                 transition={{ duration: 0.3 }}
@@ -230,7 +226,7 @@ export function Header() {
                   alt="Porto Itapoá"
                   fill
                   className={`object-contain transition-all duration-500 ${
-                    isHomePage && !scrolled ? 'brightness-0 invert' : ''
+                    isHomePage && !scrolled ? "brightness-0 invert" : ""
                   }`}
                 />
               </motion.div>
@@ -248,11 +244,13 @@ export function Header() {
                   <Link
                     href={item.href}
                     className={`flex items-center text-sm font-semibold transition-all duration-300 px-4 py-3 rounded-xl relative overflow-hidden ${
-                      pathname === item.href || (item.submenu && item.submenu.some(section => 
-                        section.items.some(subItem => pathname === subItem.href)
-                      ))
+                      pathname === item.href ||
+                      (
+                        item.submenu &&
+                          item.submenu.some((section) => section.items.some((subItem) => pathname === subItem.href))
+                      )
                         ? isHomePage && !scrolled
-                          ? "text-green-300 bg-white/10 backdrop-blur-sm" 
+                          ? "text-green-300 bg-white/10 backdrop-blur-sm"
                           : "text-green-600 bg-green-50"
                         : isHomePage && !scrolled
                           ? "text-white hover:text-green-200 hover:bg-white/10"
@@ -265,18 +263,20 @@ export function Header() {
                         animate={{ rotate: activeSubmenu === item.name ? 180 : 0 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <ChevronDown className={`ml-2 h-4 w-4 transition-all duration-300 ${
-                          activeSubmenu === item.name ? 'text-green-600' : ''
-                        }`} />
+                        <ChevronDown
+                          className={`ml-2 h-4 w-4 transition-all duration-300 ${
+                            activeSubmenu === item.name ? "text-green-600" : ""
+                          }`}
+                        />
                       </motion.div>
                     )}
-                    
+
                     {/* Hover Effect */}
-                    <motion.div 
+                    <motion.div
                       className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl ${
                         isHomePage && !scrolled
-                          ? 'bg-white/10 backdrop-blur-sm'
-                          : 'bg-gradient-to-r from-green-50 to-emerald-50'
+                          ? "bg-white/10 backdrop-blur-sm"
+                          : "bg-gradient-to-r from-green-50 to-emerald-50"
                       }`}
                       initial={{ scale: 0.8 }}
                       whileHover={{ scale: 1 }}
@@ -296,87 +296,46 @@ export function Header() {
                           className={`absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 py-6 z-50 ${
                             item.name === "Serviços" ? "min-w-[600px]" : "min-w-[800px]"
                           }`}
-                          style={{ 
-                            background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)'
+                          style={{
+                            background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+                            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)",
                           }}
                         >
-                          {item.name === "Serviços" ? (
-                            // Layout especial para Serviços - uma coluna
-                            <div className="px-8">
-                              {item.submenu.map((section, sectionIndex) => (
-                                <motion.div
-                                  key={section.name}
-                                  initial={{ opacity: 0, x: -20 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
-                                  className="space-y-4"
-                                >
-                                  <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
-                                    {section.name}
-                                  </h3>
-                                  <div className="grid grid-cols-2 gap-2">
-                                    {section.items.map((subItem) => (
-                                      <motion.div
-                                        key={subItem.name}
-                                        whileHover={{ x: 4 }}
-                                        transition={{ duration: 0.2 }}
+                          {/* Layout padrão para todos os menus - até 4 colunas para evitar aperto visual */}
+                          <div
+                            className={`grid ${item.submenu.length <= 2 ? "grid-cols-2" : item.submenu.length === 3 ? "grid-cols-3" : "grid-cols-4"} gap-8 px-8`}
+                          >
+                            {item.submenu.map((section, sectionIndex) => (
+                              <motion.div
+                                key={section.name}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
+                                className="space-y-4"
+                              >
+                                <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
+                                  {section.name}
+                                </h3>
+                                <div className="space-y-2">
+                                  {section.items.map((subItem) => (
+                                    <motion.div key={subItem.name} whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                                      <Link
+                                        href={subItem.href}
+                                        className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
+                                          pathname === subItem.href
+                                            ? "text-green-600 bg-green-50 font-medium"
+                                            : "text-gray-700"
+                                        }`}
                                       >
-                                        <Link
-                                          href={subItem.href}
-                                          className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
-                                            pathname === subItem.href 
-                                              ? "text-green-600 bg-green-50 font-medium" 
-                                              : "text-gray-700"
-                                          }`}
-                                        >
-                                          {subItem.name}
-                                        </Link>
-                                      </motion.div>
-                                    ))}
-                                  </div>
-                                </motion.div>
-                              ))}
-                            </div>
-                          ) : (
-                            // Layout padrão para outros menus - quatro colunas
-                            <div className="grid grid-cols-4 gap-8 px-8">
-                              {item.submenu.map((section, sectionIndex) => (
-                                <motion.div
-                                  key={section.name}
-                                  initial={{ opacity: 0, x: -20 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
-                                  className="space-y-4"
-                                >
-                                  <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
-                                    {section.name}
-                                  </h3>
-                                  <div className="space-y-2">
-                                    {section.items.map((subItem) => (
-                                      <motion.div
-                                        key={subItem.name}
-                                        whileHover={{ x: 4 }}
-                                        transition={{ duration: 0.2 }}
-                                      >
-                                        <Link
-                                          href={subItem.href}
-                                          className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
-                                            pathname === subItem.href 
-                                              ? "text-green-600 bg-green-50 font-medium" 
-                                              : "text-gray-700"
-                                          }`}
-                                        >
-                                          {subItem.name}
-                                        </Link>
-                                      </motion.div>
-                                    ))}
-                                  </div>
-                                </motion.div>
-                              ))}
-                            </div>
-                          )}
-                          
+                                        {subItem.name}
+                                      </Link>
+                                    </motion.div>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+
                           {/* Decorative Elements */}
                           <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full opacity-20" />
                           <div className="absolute bottom-4 left-4 w-16 h-16 bg-gradient-to-br from-emerald-100 to-green-100 rounded-full opacity-20" />
@@ -391,9 +350,7 @@ export function Header() {
             {/* Search & Actions */}
             <div className="hidden lg:flex items-center space-x-4">
               {/* Language Selector - apenas quando não scrolled na home */}
-              {isHomePage && !scrolled && (
-                <LanguageSelector />
-              )}
+              {isHomePage && !scrolled && <LanguageSelector />}
 
               {/* Search */}
               <div className="relative">
@@ -423,18 +380,13 @@ export function Header() {
                       </Button>
                     </motion.div>
                   ) : (
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
+                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={toggleSearch}
                         className={`p-2 rounded-full transition-colors duration-300 ${
-                          isHomePage && !scrolled
-                            ? 'hover:bg-white/10 text-white'
-                            : 'hover:bg-green-50 text-gray-600'
+                          isHomePage && !scrolled ? "hover:bg-white/10 text-white" : "hover:bg-green-50 text-gray-600"
                         }`}
                       >
                         <Search className="h-5 w-5" />
@@ -446,36 +398,30 @@ export function Header() {
 
               {/* Portal do Cliente Button */}
               <Link href="/portal-cliente">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button className={`rounded-full px-6 py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
-                    isHomePage && !scrolled
-                      ? 'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30'
-                      : 'bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white'
-                  }`}>
-                    {t('clientPortal')}
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    className={`rounded-full px-6 py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
+                      isHomePage && !scrolled
+                        ? "bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30"
+                        : "bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white"
+                    }`}
+                  >
+                    {t("clientPortal")}
                   </Button>
                 </motion.div>
               </Link>
             </div>
 
             {/* Mobile Menu Button */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               className={`lg:hidden p-2 rounded-xl transition-colors duration-300 ${
-                isHomePage && !scrolled
-                  ? 'hover:bg-white/10 text-white'
-                  : 'hover:bg-green-50 text-gray-700'
+                isHomePage && !scrolled ? "hover:bg-white/10 text-white" : "hover:bg-green-50 text-gray-700"
               }`}
               onClick={() => setIsOpen(!isOpen)}
             >
-              <motion.div
-                animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
                 {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </motion.div>
             </Button>
@@ -548,7 +494,7 @@ export function Header() {
                 <div className="pt-4 border-t border-gray-200">
                   <Link href="/portal-cliente" onClick={() => setIsOpen(false)}>
                     <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-full py-3 font-semibold">
-                      {t('clientPortal')}
+                      {t("clientPortal")}
                     </Button>
                   </Link>
                 </div>
