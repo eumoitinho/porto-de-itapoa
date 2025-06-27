@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import Image from "next/image"
+import { useI18n } from "@/lib/i18n/context"
 
 const formSchema = z.object({
   nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -22,35 +23,36 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-const contatos = [
-  {
-    icon: MapPin,
-    titulo: "Endereço",
-    info: "Rod. SC-415, Km 5 - Itapoá/SC",
-    detalhe: "CEP: 89248-000",
-  },
-  {
-    icon: Phone,
-    titulo: "Telefone",
-    info: "+55 (47) 3441-8000",
-    detalhe: "Atendimento 24h",
-  },
-  {
-    icon: Mail,
-    titulo: "Email",
-    info: "contato@portoitapoa.com.br",
-    detalhe: "Resposta em até 24h",
-  },
-  {
-    icon: Clock,
-    titulo: "Horário",
-    info: "24 horas por dia",
-    detalhe: "7 dias por semana",
-  },
-]
-
 export default function ContatoPage() {
+  const { t } = useI18n()
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const contatos = [
+    {
+      icon: MapPin,
+      titulo: t('address'),
+      info: "Rod. SC-415, Km 5 - Itapoá/SC",
+      detalhe: "CEP: 89248-000",
+    },
+    {
+      icon: Phone,
+      titulo: t('telephone'),
+      info: "+55 (47) 3441-8000",
+      detalhe: "Atendimento 24h",
+    },
+    {
+      icon: Mail,
+      titulo: t('email'),
+      info: "contato@portoitapoa.com.br",
+      detalhe: "Resposta em até 24h",
+    },
+    {
+      icon: Clock,
+      titulo: t('schedule'),
+      info: "24 horas por dia",
+      detalhe: "7 dias por semana",
+    },
+  ]
 
   const {
     register,
@@ -80,10 +82,9 @@ export default function ContatoPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl font-light text-green-800 mb-6">Contato</h1>
+          <h1 className="text-5xl font-light text-green-800 mb-6">{t('contactTitle')}</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Entre em contato conosco para saber mais sobre nossos serviços ou esclarecer dúvidas sobre operações
-            portuárias.
+            {t('contactDescription')}
           </p>
         </motion.div>
 
@@ -96,13 +97,13 @@ export default function ContatoPage() {
           >
             <Card className="backdrop-blur-md bg-white/60 border border-white/20 shadow-xl rounded-2xl">
               <CardContent className="p-8">
-                <h2 className="text-2xl font-semibold text-green-800 mb-6">Envie sua Mensagem</h2>
+                <h2 className="text-2xl font-semibold text-green-800 mb-6">{t('sendMessage')}</h2>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Input
-                        placeholder="Seu nome"
+                        placeholder={t('yourName')}
                         {...register("nome")}
                         className="rounded-full border-gray-200 focus:border-green-500"
                       />
@@ -112,7 +113,7 @@ export default function ContatoPage() {
                     <div>
                       <Input
                         type="email"
-                        placeholder="Seu email"
+                        placeholder={t('yourEmail')}
                         {...register("email")}
                         className="rounded-full border-gray-200 focus:border-green-500"
                       />
@@ -122,7 +123,7 @@ export default function ContatoPage() {
 
                   <div>
                     <Input
-                      placeholder="Nome da empresa"
+                      placeholder={t('companyName')}
                       {...register("empresa")}
                       className="rounded-full border-gray-200 focus:border-green-500"
                     />
@@ -131,7 +132,7 @@ export default function ContatoPage() {
 
                   <div>
                     <Input
-                      placeholder="Assunto"
+                      placeholder={t('subject')}
                       {...register("assunto")}
                       className="rounded-full border-gray-200 focus:border-green-500"
                     />
@@ -140,7 +141,7 @@ export default function ContatoPage() {
 
                   <div>
                     <Textarea
-                      placeholder="Sua mensagem"
+                      placeholder={t('yourMessage')}
                       rows={6}
                       {...register("mensagem")}
                       className="rounded-2xl border-gray-200 focus:border-green-500 resize-none"
@@ -154,10 +155,10 @@ export default function ContatoPage() {
                     className="w-full bg-green-600 hover:bg-green-700 text-white rounded-full py-3 text-lg font-medium transition-all duration-300 hover:scale-105 shadow-xl"
                   >
                     {isSubmitting ? (
-                      "Enviando..."
+                      t('sending')
                     ) : (
                       <>
-                        Enviar Mensagem
+                        {t('sendMessageButton')}
                         <Send className="ml-2 h-5 w-5" />
                       </>
                     )}

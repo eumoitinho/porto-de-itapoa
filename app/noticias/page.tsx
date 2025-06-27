@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
+import { useI18n } from "@/lib/i18n/context"
 
 const noticias = [
   {
@@ -64,9 +65,11 @@ const noticias = [
   },
 ]
 
-const categorias = ["Todas", "Operações", "Expansão", "Sustentabilidade", "Infraestrutura", "Qualidade", "Educação"]
-
 export default function NoticiasPage() {
+  const { t } = useI18n()
+
+  const categorias = [t('allCategories'), t('operations'), t('expansion'), t('sustainability'), t('infrastructure'), t('quality'), t('education')]
+
   return (
     <div className="min-h-screen py-16 px-8">
       <div className="max-w-7xl mx-auto">
@@ -77,9 +80,9 @@ export default function NoticiasPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl font-light text-green-800 mb-6">Notícias</h1>
+          <h1 className="text-5xl font-light text-green-800 mb-6">{t('newsTitle')}</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Acompanhe as últimas novidades, investimentos e conquistas do Porto Itapoá.
+            {t('newsDescription')}
           </p>
         </motion.div>
 
@@ -92,7 +95,7 @@ export default function NoticiasPage() {
             className="lg:col-span-1"
           >
             <div className="backdrop-blur-md bg-white/60 border border-white/20 rounded-2xl p-6 shadow-xl sticky top-8">
-              <h3 className="text-lg font-semibold text-green-800 mb-4">Categorias</h3>
+              <h3 className="text-lg font-semibold text-green-800 mb-4">{t('categories')}</h3>
               <div className="space-y-2">
                 {categorias.map((categoria) => (
                   <Button
@@ -152,7 +155,7 @@ export default function NoticiasPage() {
                         variant="outline"
                         className="w-full rounded-full border-green-600 text-green-600 hover:bg-green-600 hover:text-white bg-transparent"
                       >
-                        Ler Mais
+                        {t('readMore')}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </CardContent>
@@ -171,7 +174,7 @@ export default function NoticiasPage() {
               <div className="backdrop-blur-md bg-white/60 border border-white/20 rounded-2xl p-4 shadow-xl">
                 <div className="flex items-center space-x-2">
                   <Button variant="outline" size="sm" className="rounded-full bg-transparent">
-                    Anterior
+                    {t('previous')}
                   </Button>
                   <Button variant="default" size="sm" className="rounded-full bg-green-600">
                     1
@@ -183,7 +186,7 @@ export default function NoticiasPage() {
                     3
                   </Button>
                   <Button variant="outline" size="sm" className="rounded-full bg-transparent">
-                    Próximo
+                    {t('next')}
                   </Button>
                 </div>
               </div>
