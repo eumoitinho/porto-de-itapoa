@@ -2,13 +2,12 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Filter, Plus, X, Ship, Clock, MapPin, Users, Globe2, Anchor, Route, Package, Truck, FileText } from "lucide-react"
+import { Search, Filter, Plus, X, Ship, Clock, MapPin, Users, Globe2, Anchor, Route } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { servicosMaritimos, outrosServicos } from "@/lib/data/services"
 
 const categoriaLabels = {
@@ -31,33 +30,50 @@ const categoriaIcons = {
   Outros: Anchor,
 }
 
-const filtrosAdicionais = [
-  { id: "semanal", label: "Frequência Semanal", icon: Clock },
-  { id: "maersk", label: "Maersk", icon: Ship },
-  { id: "hapag-lloyd", label: "Hapag-Lloyd", icon: Ship },
-  { id: "msc", label: "MSC", icon: Ship },
-  { id: "cosco", label: "COSCO", icon: Ship },
-  { id: "cma-cgm", label: "CMA CGM", icon: Ship },
-  { id: "one", label: "ONE", icon: Ship },
-  { id: "hmm", label: "HMM", icon: Ship },
-  { id: "zim", label: "ZIM", icon: Ship },
-  { id: "alianca", label: "Aliança", icon: Ship },
-  { id: "direto", label: "Serviço Direto", icon: Route },
-  { id: "transbordo", label: "Com Transbordo", icon: Route }
+// Filtros de Cobertura baseados nos serviços existentes
+const coberturaFiltros = [
+  { id: "costa-leste-america-sul", label: "Costa Leste América do Sul", count: 8 },
+  { id: "norte-europa", label: "Norte da Europa", count: 3 },
+  { id: "costa-leste-eua", label: "Costa Leste dos EUA", count: 2 },
+  { id: "golfo-eua", label: "Golfo dos EUA", count: 3 },
+  { id: "mediterraneo", label: "Mediterrâneo", count: 2 },
+  { id: "asia", label: "Ásia", count: 3 },
+  { id: "costa-brasileira", label: "Costa Brasileira", count: 3 },
+  { id: "africa-ocidental", label: "África Ocidental", count: 1 }
 ]
 
-const tipoServicoFiltros = [
-  { id: "importacao", label: "Importação", icon: Package },
-  { id: "exportacao", label: "Exportação", icon: Truck },
-  { id: "cabotagem", label: "Cabotagem", icon: Ship },
-  { id: "longo-curso", label: "Longo Curso", icon: Globe2 }
+// Filtros de Nome do Serviço
+const nomeServicoFiltros = [
+  { id: "esa", label: "ESA - Europa Costa Leste" },
+  { id: "ucla-gulf", label: "UCLA/GULF" },
+  { id: "zgt", label: "ZGT" },
+  { id: "tango-sec", label: "TANGO/SEC" },
+  { id: "mse-wmed", label: "MSE/WMED" },
+  { id: "sirius-bossa", label: "SIRIUS/Bossa Nova" },
+  { id: "lux-ese2", label: "LUX/ESE2/EEX" },
+  { id: "nwc", label: "NWC" },
+  { id: "neoasas", label: "NEOASAS/ASE" },
+  { id: "seas2", label: "SEAS2/ESA2" },
+  { id: "fil2", label: "FIL2/SX2" },
+  { id: "alcat", label: "ALCAT (Cabotagem)" },
+  { id: "braco", label: "BRACO" }
+]
+
+// Filtros de Transit Time
+const transitTimeFiltros = [
+  { id: "ate-15", label: "Até 15 dias", count: 4 },
+  { id: "15-25", label: "15 a 25 dias", count: 6 },
+  { id: "25-35", label: "25 a 35 dias", count: 8 },
+  { id: "35-45", label: "35 a 45 dias", count: 5 },
+  { id: "acima-45", label: "Acima de 45 dias", count: 2 }
 ]
 
 export default function PortfolioPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategoria, setSelectedCategoria] = useState<string>("all")
-  const [selectedFiltros, setSelectedFiltros] = useState<Set<string>>(new Set())
-  const [selectedTipoServico, setSelectedTipoServico] = useState<Set<string>>(new Set())
+  const [selectedCobertura, setSelectedCobertura] = useState<Set<string>>(new Set())
+  const [selectedNomeServico, setSelectedNomeServico] = useState<Set<string>>(new Set())
+  const [selectedTransitTime, setSelectedTransitTime] = useState<Set<string>>(new Set())
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set())
 
   const filteredServicos = useMemo(() => {
@@ -69,26 +85,64 @@ export default function PortfolioPage() {
       
       const matchesCategoria = selectedCategoria === "all" || servico.categoria === selectedCategoria
       
-      const matchesFiltros = selectedFiltros.size === 0 || 
-        Array.from(selectedFiltros).some(filtro => {
-          if (filtro === "semanal") return servico.escala.toLowerCase().includes("semanal")
-          if (filtro === "direto") return !servico.rota.includes(">>")
-          if (filtro === "transbordo") return servico.rota.includes(">>")
-          return servico.armadores.some(armador => 
-            armador.toLowerCase().replace(/[^a-z]/g, '').includes(filtro.toLowerCase().replace(/[^a-z]/g, ''))
-          )
+      const matchesCobertura = selectedCobertura.size === 0 || 
+        Array.from(selectedCobertura).some(cobertura => {
+          // Mapear coberturas para os serviços
+          switch(cobertura) {
+            case "costa-leste-america-sul":
+              return servico.cobertura.toLowerCase().includes("américa do sul") || 
+                     servico.cobertura.toLowerCase().includes("costa leste")
+            case "norte-europa":
+              return servico.cobertura.toLowerCase().includes("europa") && 
+                     !servico.cobertura.toLowerCase().includes("mediterrâneo")
+            case "costa-leste-eua":
+              return servico.cobertura.toLowerCase().includes("costa leste") && 
+                     servico.cobertura.toLowerCase().includes("américa do norte")
+            case "golfo-eua":
+              return servico.cobertura.toLowerCase().includes("golfo")
+            case "mediterraneo":
+              return servico.cobertura.toLowerCase().includes("mediterrâneo")
+            case "asia":
+              return servico.cobertura.toLowerCase().includes("ásia")
+            case "costa-brasileira":
+              return servico.categoria === "Cabotagem"
+            case "africa-ocidental":
+              return servico.cobertura.toLowerCase().includes("áfrica")
+            default:
+              return false
+          }
         })
 
-      const matchesTipoServico = selectedTipoServico.size === 0 ||
-        Array.from(selectedTipoServico).some(tipo => {
-          if (tipo === "cabotagem") return servico.categoria === "Cabotagem"
-          if (tipo === "longo-curso") return servico.categoria !== "Cabotagem"
-          return true
+      const matchesNomeServico = selectedNomeServico.size === 0 ||
+        Array.from(selectedNomeServico).some(nome => {
+          return servico.codigo.toLowerCase().includes(nome.replace(/[^a-z]/g, '')) ||
+                 servico.nome.toLowerCase().includes(nome.replace(/[^a-z]/g, ''))
         })
 
-      return matchesSearch && matchesCategoria && matchesFiltros && matchesTipoServico
+      const matchesTransitTime = selectedTransitTime.size === 0 ||
+        Array.from(selectedTransitTime).some(tempo => {
+          if (servico.transit_times.length === 0) return false
+          const maxTransit = Math.max(...servico.transit_times.map(t => Math.max(t.importacao || 0, t.exportacao || 0)))
+          
+          switch(tempo) {
+            case "ate-15":
+              return maxTransit <= 15
+            case "15-25":
+              return maxTransit > 15 && maxTransit <= 25
+            case "25-35":
+              return maxTransit > 25 && maxTransit <= 35
+            case "35-45":
+              return maxTransit > 35 && maxTransit <= 45
+            case "acima-45":
+              return maxTransit > 45
+            default:
+              return false
+          }
+        })
+
+      return matchesSearch && matchesCategoria && matchesCobertura && matchesNomeServico && matchesTransitTime
     })
-  }, [searchTerm, selectedCategoria, selectedFiltros, selectedTipoServico])
+  }, [searchTerm, selectedCategoria, selectedCobertura, selectedNomeServico, selectedTransitTime])
 
   const toggleExpanded = (id: string) => {
     const newExpanded = new Set(expandedCards)
@@ -100,30 +154,41 @@ export default function PortfolioPage() {
     setExpandedCards(newExpanded)
   }
 
-  const toggleFiltro = (filtroId: string) => {
-    const newFiltros = new Set(selectedFiltros)
-    if (newFiltros.has(filtroId)) {
-      newFiltros.delete(filtroId)
+  const toggleCobertura = (coberturaId: string) => {
+    const newCobertura = new Set(selectedCobertura)
+    if (newCobertura.has(coberturaId)) {
+      newCobertura.delete(coberturaId)
     } else {
-      newFiltros.add(filtroId)
+      newCobertura.add(coberturaId)
     }
-    setSelectedFiltros(newFiltros)
+    setSelectedCobertura(newCobertura)
   }
 
-  const toggleTipoServico = (tipoId: string) => {
-    const newTipos = new Set(selectedTipoServico)
-    if (newTipos.has(tipoId)) {
-      newTipos.delete(tipoId)
+  const toggleNomeServico = (nomeId: string) => {
+    const newNomes = new Set(selectedNomeServico)
+    if (newNomes.has(nomeId)) {
+      newNomes.delete(nomeId)
     } else {
-      newTipos.add(tipoId)
+      newNomes.add(nomeId)
     }
-    setSelectedTipoServico(newTipos)
+    setSelectedNomeServico(newNomes)
+  }
+
+  const toggleTransitTime = (tempoId: string) => {
+    const newTempos = new Set(selectedTransitTime)
+    if (newTempos.has(tempoId)) {
+      newTempos.delete(tempoId)
+    } else {
+      newTempos.add(tempoId)
+    }
+    setSelectedTransitTime(newTempos)
   }
 
   const clearAllFilters = () => {
     setSelectedCategoria("all")
-    setSelectedFiltros(new Set())
-    setSelectedTipoServico(new Set())
+    setSelectedCobertura(new Set())
+    setSelectedNomeServico(new Set())
+    setSelectedTransitTime(new Set())
     setSearchTerm("")
   }
 
@@ -166,16 +231,16 @@ export default function PortfolioPage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
                 <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
                   <div className="flex items-center justify-center mb-2">
-                    <Globe2 className="h-6 w-6 text-green-600 mr-2" />
-                    <span className="font-semibold text-green-800">Regiões</span>
+                    <Ship className="h-6 w-6 text-green-600 mr-2" />
+                    <span className="font-semibold text-green-800">Serviços</span>
                   </div>
-                  <div className="text-2xl font-bold text-green-900">6+</div>
-                  <div className="text-sm text-gray-600">Continentes Conectados</div>
+                  <div className="text-2xl font-bold text-green-900">14</div>
+                  <div className="text-sm text-gray-600">Serviços Regulares</div>
                 </div>
                 
                 <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
                   <div className="flex items-center justify-center mb-2">
-                    <Ship className="h-6 w-6 text-blue-600 mr-2" />
+                    <Users className="h-6 w-6 text-blue-600 mr-2" />
                     <span className="font-semibold text-blue-800">Armadores</span>
                   </div>
                   <div className="text-2xl font-bold text-blue-900">15+</div>
@@ -205,7 +270,7 @@ export default function PortfolioPage() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar com Filtros Expandida */}
+          {/* Sidebar com Filtros Atualizados */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -256,54 +321,89 @@ export default function PortfolioPage() {
                 </Select>
               </div>
 
-              {/* Tipo de Serviço */}
+              {/* Cobertura (14 serviços) */}
               <div className="mb-6">
-                <label className="text-sm font-medium text-gray-700 mb-3 block">Tipo de Serviço</label>
-                <div className="space-y-2">
-                  {tipoServicoFiltros.map((tipo) => (
+                <label className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                  <MapPin className="h-4 w-4 mr-2 text-green-600" />
+                  Cobertura (14 serviços)
+                </label>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {coberturaFiltros.map((cobertura) => (
                     <Button
-                      key={tipo.id}
-                      variant={selectedTipoServico.has(tipo.id) ? "default" : "ghost"}
+                      key={cobertura.id}
+                      variant={selectedCobertura.has(cobertura.id) ? "default" : "ghost"}
                       size="sm"
-                      onClick={() => toggleTipoServico(tipo.id)}
-                      className={`w-full justify-start text-left rounded-lg ${
-                        selectedTipoServico.has(tipo.id) 
+                      onClick={() => toggleCobertura(cobertura.id)}
+                      className={`w-full justify-between text-left rounded-lg ${
+                        selectedCobertura.has(cobertura.id) 
                           ? "bg-green-600 text-white hover:bg-green-700" 
                           : "hover:bg-green-50"
                       }`}
                     >
-                      <tipo.icon className="h-4 w-4 mr-2" />
-                      {tipo.label}
+                      <span className="text-xs">{cobertura.label}</span>
+                      <Badge variant="secondary" className="ml-2 text-xs">
+                        {cobertura.count}
+                      </Badge>
                     </Button>
                   ))}
                 </div>
               </div>
 
-              {/* Armadores e Características */}
+              {/* Nome do Serviço */}
               <div className="mb-6">
-                <label className="text-sm font-medium text-gray-700 mb-3 block">Armadores & Características</label>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {filtrosAdicionais.map((filtro) => (
+                <label className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                  <Ship className="h-4 w-4 mr-2 text-blue-600" />
+                  Nome do Serviço
+                </label>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {nomeServicoFiltros.map((nome) => (
                     <Button
-                      key={filtro.id}
-                      variant={selectedFiltros.has(filtro.id) ? "default" : "ghost"}
+                      key={nome.id}
+                      variant={selectedNomeServico.has(nome.id) ? "default" : "ghost"}
                       size="sm"
-                      onClick={() => toggleFiltro(filtro.id)}
+                      onClick={() => toggleNomeServico(nome.id)}
                       className={`w-full justify-start text-left rounded-lg ${
-                        selectedFiltros.has(filtro.id) 
+                        selectedNomeServico.has(nome.id) 
                           ? "bg-blue-600 text-white hover:bg-blue-700" 
                           : "hover:bg-blue-50"
                       }`}
                     >
-                      <filtro.icon className="h-4 w-4 mr-2" />
-                      {filtro.label}
+                      <span className="text-xs">{nome.label}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Transit Time (porto) */}
+              <div className="mb-6">
+                <label className="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                  <Clock className="h-4 w-4 mr-2 text-purple-600" />
+                  Transit Time (porto)
+                </label>
+                <div className="space-y-2">
+                  {transitTimeFiltros.map((tempo) => (
+                    <Button
+                      key={tempo.id}
+                      variant={selectedTransitTime.has(tempo.id) ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => toggleTransitTime(tempo.id)}
+                      className={`w-full justify-between text-left rounded-lg ${
+                        selectedTransitTime.has(tempo.id) 
+                          ? "bg-purple-600 text-white hover:bg-purple-700" 
+                          : "hover:bg-purple-50"
+                      }`}
+                    >
+                      <span className="text-xs">{tempo.label}</span>
+                      <Badge variant="secondary" className="ml-2 text-xs">
+                        {tempo.count}
+                      </Badge>
                     </Button>
                   ))}
                 </div>
               </div>
 
               {/* Filtros Ativos */}
-              {(selectedFiltros.size > 0 || selectedTipoServico.size > 0 || selectedCategoria !== "all") && (
+              {(selectedCobertura.size > 0 || selectedNomeServico.size > 0 || selectedTransitTime.size > 0 || selectedCategoria !== "all") && (
                 <div className="mb-4">
                   <label className="text-sm font-medium text-gray-700 mb-2 block">Filtros Ativos</label>
                   <div className="flex flex-wrap gap-2">
@@ -316,21 +416,30 @@ export default function PortfolioPage() {
                         />
                       </Badge>
                     )}
-                    {Array.from(selectedTipoServico).map((tipo) => (
-                      <Badge key={tipo} variant="secondary" className="text-xs bg-green-100 text-green-800">
-                        {tipoServicoFiltros.find(f => f.id === tipo)?.label}
+                    {Array.from(selectedCobertura).map((cobertura) => (
+                      <Badge key={cobertura} variant="secondary" className="text-xs bg-green-100 text-green-800">
+                        {coberturaFiltros.find(f => f.id === cobertura)?.label}
                         <X 
                           className="h-3 w-3 ml-1 cursor-pointer" 
-                          onClick={() => toggleTipoServico(tipo)}
+                          onClick={() => toggleCobertura(cobertura)}
                         />
                       </Badge>
                     ))}
-                    {Array.from(selectedFiltros).map((filtro) => (
-                      <Badge key={filtro} variant="secondary" className="text-xs bg-blue-100 text-blue-800">
-                        {filtrosAdicionais.find(f => f.id === filtro)?.label}
+                    {Array.from(selectedNomeServico).map((nome) => (
+                      <Badge key={nome} variant="secondary" className="text-xs bg-blue-100 text-blue-800">
+                        {nomeServicoFiltros.find(f => f.id === nome)?.label}
                         <X 
                           className="h-3 w-3 ml-1 cursor-pointer" 
-                          onClick={() => toggleFiltro(filtro)}
+                          onClick={() => toggleNomeServico(nome)}
+                        />
+                      </Badge>
+                    ))}
+                    {Array.from(selectedTransitTime).map((tempo) => (
+                      <Badge key={tempo} variant="secondary" className="text-xs bg-purple-100 text-purple-800">
+                        {transitTimeFiltros.find(f => f.id === tempo)?.label}
+                        <X 
+                          className="h-3 w-3 ml-1 cursor-pointer" 
+                          onClick={() => toggleTransitTime(tempo)}
                         />
                       </Badge>
                     ))}
