@@ -61,23 +61,43 @@ const navigation = [
     nameKey: "services",
     submenu: [
       { 
-        name: "Operacionais", 
+        name: "Cadastros", 
         items: [
-          { name: "Portal de Compras", href: "/portal-compras" },
           { name: "Cadastro de Cliente", href: "/cadastro-cliente" },
-          { name: "Cadastro de Motorista", href: "/cadastro-motorista" },
-          { name: "Câmera Online", href: "/camera-online" },
+          { name: "Cadastro de Motorista", href: "/cadastro-motorista" }
+        ]
+      },
+      { 
+        name: "Consultas e Simuladores", 
+        items: [
           { name: "Consultas", href: "/consultas" },
-          { name: "Linhas de Navegação", href: "/linhas-navegacao" },
-          { name: "Tabela de Preços 2025", href: "/precos" },
-          { name: "Tabela de Preços 2025 (A partir de 21/03)", href: "/precos-21-03" },
-          { name: "Simuladores de Preço", href: "/simuladores" },
-          { name: "Portfólio de Serviços", href: "/portfolio" },
+          { name: "Simuladores de Preço", href: "/simuladores" }
+        ]
+      },
+      { 
+        name: "Operações e Procedimentos", 
+        items: [
           { name: "Procedimentos", href: "/procedimentos" },
           { name: "Cartas Protestos", href: "/cartas-protestos" },
           { name: "Programação de Navios", href: "/programacao-navios" },
           { name: "Integração de Motoristas", href: "/integracao-motoristas" },
           { name: "Integração de Terceiros", href: "/integracao-terceiros" }
+        ]
+      },
+      { 
+        name: "Preços e Tabelas", 
+        items: [
+          { name: "Tabela de Preços 2025", href: "/precos" },
+          { name: "Tabela de Preços 2025 (A partir de 21/03)", href: "/precos-21-03" }
+        ]
+      },
+      { 
+        name: "Portais e Ferramentas", 
+        items: [
+          { name: "Portal de Compras", href: "/portal-compras" },
+          { name: "Portfólio de Serviços", href: "/portfolio" },
+          { name: "Câmera Online", href: "/camera-online" },
+          { name: "Linhas de Navegação", href: "/linhas-navegacao" }
         ]
       }
     ]
