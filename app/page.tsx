@@ -79,7 +79,7 @@ function VideoBackground() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-green-900/80 via-green-800/70 to-green-900/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 via-green-800/30 to-green-900/50"></div>
       </div>
     )
   }
@@ -109,10 +109,10 @@ function VideoBackground() {
         {/* Fallback for browsers that don't support video */}
       </video>
       
-      {/* Enhanced Overlay with better readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-green-900/85 via-green-800/75 to-green-900/90"></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-green-900/60 via-transparent to-green-900/60"></div>
-      <div className="absolute inset-0 bg-black/20"></div>
+      {/* Overlay com opacidade reduzida */}
+      <div className="absolute inset-0 bg-gradient-to-b from-green-900/45 via-green-800/35 to-green-900/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-green-900/30 via-transparent to-green-900/30"></div>
+      <div className="absolute inset-0 bg-black/15"></div>
     </div>
   )
 }
@@ -130,12 +130,12 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-              className="text-4xl md:text-6xl lg:text-7xl font-light mb-8 leading-tight tracking-tight text-white drop-shadow-2xl"
+              className="text-4xl md:text-6xl lg:text-7xl font-light mb-8 leading-tight tracking-tight text-white"
               style={{ textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.6)' }}
             >
               Gateway da
               <br />
-              <span className="font-semibold bg-gradient-to-r from-green-300 via-green-400 to-emerald-300 bg-clip-text text-transparent drop-shadow-lg">
+              <span className="font-semibold text-white">
                 América Latina
               </span>
             </motion.h1>
@@ -144,7 +144,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl md:text-2xl mb-12 text-gray-100 font-light leading-relaxed drop-shadow-lg"
+              className="text-xl md:text-2xl mb-12 text-white font-light leading-relaxed"
               style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}
             >
               Conectamos o Brasil ao mundo com eficiência, tecnologia e sustentabilidade
