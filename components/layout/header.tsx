@@ -120,56 +120,79 @@ export function Header() {
     }
   }
 
+  // Determinar se estamos na página inicial para aplicar o efeito transparente
+  const isHomePage = pathname === "/"
+
   return (
     <>
-      {/* Top Bar */}
-      <div className="bg-green-800 text-white py-2 px-8 hidden lg:block">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4" />
-              <span>Av. Beira Mar 5, 2900 • Itapoá/SC</span>
+      {/* Top Bar - apenas quando scrolled ou não for home */}
+      <AnimatePresence>
+        {(scrolled || !isHomePage) && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="bg-green-800 text-white py-2 px-8 hidden lg:block"
+          >
+            <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-4 w-4" />
+                  <span>Av. Beira Mar 5, 2900 • Itapoá/SC</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Phone className="h-4 w-4" />
+                  <span>+55 (47) 3441-8000</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Mail className="h-4 w-4" />
+                  <span>atendimento@portoitapoa.com</span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Globe className="h-4 w-4" />
+                  <span>PT</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  {quickLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className="flex items-center space-x-1 hover:text-green-200 transition-colors"
+                    >
+                      <link.icon className="h-3 w-3" />
+                      <span className="text-xs">{link.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Phone className="h-4 w-4" />
-              <span>+55 (47) 3441-8000</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Mail className="h-4 w-4" />
-              <span>atendimento@portoitapoa.com</span>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Globe className="h-4 w-4" />
-              <span>PT</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              {quickLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="flex items-center space-x-1 hover:text-green-200 transition-colors"
-                >
-                  <link.icon className="h-3 w-3" />
-                  <span className="text-xs">{link.name}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Header */}
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled 
-            ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xl" 
-            : "bg-white/90 backdrop-blur-sm"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isHomePage 
+            ? scrolled 
+              ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xl" 
+              : "bg-transparent"
+            : "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xl"
         }`}
+        style={
+          isHomePage && !scrolled 
+            ? {
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%)',
+                backdropFilter: 'blur(8px)'
+              }
+            : {}
+        }
       >
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-20">
@@ -184,14 +207,24 @@ export function Header() {
                   src="/logo-grande-1.png"
                   alt="Porto Itapoá"
                   fill
-                  className="object-contain"
+                  className={`object-contain transition-all duration-500 ${
+                    isHomePage && !scrolled ? 'brightness-0 invert' : ''
+                  }`}
                 />
               </motion.div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-green-800 group-hover:text-green-600 transition-colors">
+                <span className={`text-xl font-bold transition-colors duration-500 group-hover:text-green-600 ${
+                  isHomePage && !scrolled 
+                    ? 'text-white' 
+                    : 'text-green-800'
+                }`}>
                   PORTO ITAPOÁ
                 </span>
-                <span className="text-xs text-green-600 font-medium tracking-wider">
+                <span className={`text-xs font-medium tracking-wider transition-colors duration-500 ${
+                  isHomePage && !scrolled 
+                    ? 'text-green-200' 
+                    : 'text-green-600'
+                }`}>
                   BUILDING THE FUTURE
                 </span>
               </div>
@@ -208,12 +241,16 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`flex items-center text-sm font-semibold transition-all duration-300 hover:text-green-600 px-4 py-3 rounded-xl relative overflow-hidden ${
+                    className={`flex items-center text-sm font-semibold transition-all duration-300 px-4 py-3 rounded-xl relative overflow-hidden ${
                       pathname === item.href || (item.submenu && item.submenu.some(section => 
                         section.items.some(subItem => pathname === subItem.href)
                       ))
-                        ? "text-green-600 bg-green-50" 
-                        : "text-gray-700 hover:bg-green-50"
+                        ? isHomePage && !scrolled
+                          ? "text-green-300 bg-white/10 backdrop-blur-sm" 
+                          : "text-green-600 bg-green-50"
+                        : isHomePage && !scrolled
+                          ? "text-white hover:text-green-200 hover:bg-white/10"
+                          : "text-gray-700 hover:text-green-600 hover:bg-green-50"
                     }`}
                   >
                     <span className="relative z-10">{item.name}</span>
@@ -230,7 +267,11 @@ export function Header() {
                     
                     {/* Hover Effect */}
                     <motion.div 
-                      className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" 
+                      className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl ${
+                        isHomePage && !scrolled
+                          ? 'bg-white/10 backdrop-blur-sm'
+                          : 'bg-gradient-to-r from-green-50 to-emerald-50'
+                      }`}
                       initial={{ scale: 0.8 }}
                       whileHover={{ scale: 1 }}
                       transition={{ duration: 0.3 }}
@@ -379,9 +420,13 @@ export function Header() {
                         variant="ghost"
                         size="sm"
                         onClick={toggleSearch}
-                        className="p-2 hover:bg-green-50 rounded-full"
+                        className={`p-2 rounded-full transition-colors duration-300 ${
+                          isHomePage && !scrolled
+                            ? 'hover:bg-white/10 text-white'
+                            : 'hover:bg-green-50 text-gray-600'
+                        }`}
                       >
-                        <Search className="h-5 w-5 text-gray-600" />
+                        <Search className="h-5 w-5" />
                       </Button>
                     </motion.div>
                   )}
@@ -394,7 +439,11 @@ export function Header() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-full px-6 py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Button className={`rounded-full px-6 py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
+                    isHomePage && !scrolled
+                      ? 'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30'
+                      : 'bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white'
+                  }`}>
                     Fale Conosco
                   </Button>
                 </motion.div>
@@ -405,14 +454,18 @@ export function Header() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="lg:hidden p-2 hover:bg-green-50 rounded-xl" 
+              className={`lg:hidden p-2 rounded-xl transition-colors duration-300 ${
+                isHomePage && !scrolled
+                  ? 'hover:bg-white/10 text-white'
+                  : 'hover:bg-green-50 text-gray-700'
+              }`}
               onClick={() => setIsOpen(!isOpen)}
             >
               <motion.div
                 animate={{ rotate: isOpen ? 180 : 0 }}
                 transition={{ duration: 0.3 }}
               >
-                {isOpen ? <X className="h-6 w-6 text-gray-700" /> : <Menu className="h-6 w-6 text-gray-700" />}
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </motion.div>
             </Button>
           </div>
