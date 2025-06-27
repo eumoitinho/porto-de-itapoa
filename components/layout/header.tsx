@@ -130,51 +130,6 @@ export function Header() {
 
   return (
     <>
-      {/* Top Bar - apenas quando scrolled ou não for home */}
-      <AnimatePresence>
-        {(scrolled || !isHomePage) && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="bg-green-800 text-white py-2 px-8 hidden lg:block"
-          >
-            <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>Av. Beira Mar 5, 2900 • Itapoá/SC</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4" />
-                  <span>+55 (47) 3441-8000</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4" />
-                  <span>atendimento@portoitapoa.com</span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <LanguageSelector />
-                <div className="flex items-center space-x-3">
-                  {quickLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className="flex items-center space-x-1 hover:text-green-200 transition-colors"
-                    >
-                      <link.icon className="h-3 w-3" />
-                      <span className="text-xs">{link.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Main Header */}
       <motion.header
         initial={{ y: -100 }}
@@ -190,12 +145,57 @@ export function Header() {
         style={
           isHomePage && !scrolled 
             ? {
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%)',
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.05) 100%)',
                 backdropFilter: 'blur(8px)'
               }
             : {}
         }
       >
+        {/* Top Bar - apenas quando scrolled ou não for home */}
+        <AnimatePresence>
+          {(scrolled || !isHomePage) && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-green-800 text-white py-2 px-8 hidden lg:block"
+            >
+              <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="h-4 w-4" />
+                    <span>Av. Beira Mar 5, 2900 • Itapoá/SC</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Phone className="h-4 w-4" />
+                    <span>+55 (47) 3441-8000</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Mail className="h-4 w-4" />
+                    <span>atendimento@portoitapoa.com</span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <LanguageSelector />
+                  <div className="flex items-center space-x-3">
+                    {quickLinks.map((link) => (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        className="flex items-center space-x-1 hover:text-green-200 transition-colors"
+                      >
+                        <link.icon className="h-3 w-3" />
+                        <span className="text-xs">{link.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo - Aumentado */}
@@ -386,6 +386,11 @@ export function Header() {
 
             {/* Search & Actions */}
             <div className="hidden lg:flex items-center space-x-4">
+              {/* Language Selector - apenas quando não scrolled na home */}
+              {isHomePage && !scrolled && (
+                <LanguageSelector />
+              )}
+
               {/* Search */}
               <div className="relative">
                 <AnimatePresence>
@@ -554,6 +559,11 @@ export function Header() {
                     <Mail className="h-4 w-4" />
                     <span>atendimento@portoitapoa.com</span>
                   </div>
+                </div>
+
+                {/* Mobile Language Selector */}
+                <div className="pt-4 border-t border-gray-200">
+                  <LanguageSelector variant="footer" />
                 </div>
               </div>
             </motion.div>
