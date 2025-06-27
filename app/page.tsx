@@ -1,11 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, Ship, Globe, Users, TrendingUp, MapPin } from "lucide-react"
+import { ArrowRight, Ship, Globe, Users, TrendingUp, MapPin, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
+import { useState, useEffect } from "react"
 
 const stats = [
   { icon: Ship, label: "TEUs/ano", value: "1.2M", description: "Capacidade anual de movimentação" },
@@ -41,56 +42,130 @@ const featuredServices = [
   },
 ]
 
+// Video Background Component
+function VideoBackground() {
+  const [isClient, setIsClient] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
+  if (!isClient || isMobile) {
+    return (
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
+        <Image
+          src="/placeholder.jpg"
+          alt="Porto Itapoá"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-green-900/70 via-green-900/50 to-green-900/70"></div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden">
+      {/* Fallback background */}
+      <Image
+        src="/placeholder.jpg"
+        alt="Porto Itapoá"
+        fill
+        className="object-cover"
+        priority
+      />
+      
+      {/* Video element */}
+      <video
+        className="absolute inset-0 object-cover w-full h-full"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster="/placeholder.jpg"
+      >
+        <source src="/porto-video.mp4" type="video/mp4" />
+        {/* Fallback for browsers that don't support video */}
+      </video>
+      
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-green-900/60 via-green-900/40 to-green-900/60"></div>
+    </div>
+  )
+}
+
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <iframe
-            src="https://www.youtube.com/embed/kvhDJrbeEKE?autoplay=1&mute=1&loop=1&playlist=kvhDJrbeEKE&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1"
-            className="video-background"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-          />
-          <div className="video-overlay" />
-        </div>
+      {/* Hero Section - Estilo Motin Films */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <VideoBackground />
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 text-center px-8 max-w-6xl mx-auto"
-        >
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-16 shadow-2xl border border-white/20">
-            <div className="mb-8">
-              <h1 className="text-6xl md:text-8xl font-light text-green-800 mb-4 tracking-tight">PORTO ITAPOÁ</h1>
-              <h2 className="text-3xl md:text-4xl font-light text-green-700 mb-6">PORTFÓLIO DE SERVIÇOS MARÍTIMOS</h2>
-              <div className="text-2xl md:text-3xl font-bold text-green-800 mb-8">2025</div>
-            </div>
+        <div className="container mx-auto px-6 z-20 relative text-center">
+          <div className="max-w-5xl mx-auto">
+            
 
-            <div className="border-t border-green-200 pt-8 mb-8">
-              <p className="text-xl md:text-2xl text-green-700 font-medium mb-4">BUILDING THE FUTURE</p>
-              <div className="flex flex-wrap justify-center gap-4 text-lg text-green-600">
-                <span>CONSTRUINDO O FUTURO</span>
-                <span>•</span>
-                <span>CONSTRUIRE L'AVENIR</span>
-                <span>•</span>
-                <span>建设未来</span>
-              </div>
-            </div>
+            <motion.h1
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
+              className="text-4xl md:text-6xl lg:text-7xl font-light mb-8 leading-tight tracking-tight text-white"
+            >
+              Gateway da
+              <br />
+              <span className="font-semibold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
+                América Latina
+              </span>
+            </motion.h1>
 
-            <Link href="/portfolio">
-              <Button
-                size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white rounded-full px-12 py-6 text-xl font-medium transition-all duration-300 hover:scale-105 shadow-xl"
-              >
-                Conheça Nossos Serviços
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </Button>
-            </Link>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-xl md:text-2xl mb-12 text-gray-200 font-light leading-relaxed"
+            >
+              Conectamos o Brasil ao mundo com eficiência, tecnologia e sustentabilidade
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            >
+              <Link href="/portfolio">
+                <Button
+                  size="lg"
+                  className="bg-green-600 hover:bg-green-700 text-white rounded-full px-12 py-6 text-xl font-medium transition-all duration-300 hover:scale-105 shadow-xl flex items-center gap-3"
+                >
+                  Conheça nossos serviços
+                  <ArrowRight size={20} />
+                </Button>
+              </Link>
+              
+              <Link href="/contato">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-2 border-white text-white hover:bg-white hover:text-green-900 rounded-full px-12 py-6 text-xl font-medium transition-all duration-300 bg-transparent"
+                >
+                  Fale conosco
+                </Button>
+              </Link>
+            </motion.div>
+
+            
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Statistics Section */}
@@ -103,7 +178,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl font-light text-green-800 mb-6">Números que Impressionam</h2>
+            <h2 className="text-5xl font-light text-green-900 mb-6">Números que Impressionam</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Dados que demonstram nossa capacidade e eficiência operacional no cenário portuário brasileiro
             </p>
@@ -124,7 +199,7 @@ export default function HomePage() {
                     <div className="w-16 h-16 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
                       <stat.icon className="h-8 w-8 text-green-600" />
                     </div>
-                    <h3 className="text-4xl font-bold text-green-800 mb-3">{stat.value}</h3>
+                    <h3 className="text-4xl font-bold text-green-900 mb-3">{stat.value}</h3>
                     <p className="text-lg font-semibold text-gray-800 mb-2">{stat.label}</p>
                     <p className="text-sm text-gray-600 leading-relaxed">{stat.description}</p>
                   </CardContent>
@@ -145,7 +220,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl font-light text-green-800 mb-6">Serviços Marítimos Regulares</h2>
+            <h2 className="text-5xl font-light text-green-900 mb-6">Serviços Marítimos Regulares</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Conectamos o Brasil aos principais mercados mundiais através de parcerias com os maiores armadores globais
             </p>
@@ -163,7 +238,7 @@ export default function HomePage() {
               >
                 <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl h-full hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold text-green-800 mb-3">{service.title}</h3>
+                    <h3 className="text-2xl font-bold text-green-900 mb-3">{service.title}</h3>
                     <p className="text-green-600 font-semibold mb-4">{service.routes}</p>
                     <p className="text-gray-600 mb-6 leading-relaxed">{service.description}</p>
                     <div className="space-y-2">
@@ -215,7 +290,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-5xl font-light text-green-800 mb-8">Localização Estratégica</h2>
+              <h2 className="text-5xl font-light text-green-900 mb-8">Localização Estratégica</h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 Situado no litoral norte de Santa Catarina, o Porto Itapoá oferece acesso privilegiado aos principais
                 mercados do Mercosul e conexões diretas com os maiores portos mundiais.
@@ -274,14 +349,14 @@ export default function HomePage() {
             >
               <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-200">
                 <Image
-                  src="/foto-porto-patio-1024x721.webp"
+                  src="/placeholder.jpg"
                   alt="Vista aérea do Porto Itapoá"
                   width={700}
                   height={500}
                   className="rounded-2xl w-full"
                 />
                 <div className="mt-6 text-center">
-                  <h4 className="text-lg font-semibold text-green-800 mb-2">Terminal Portuário de Itapoá</h4>
+                  <h4 className="text-lg font-semibold text-green-900 mb-2">Terminal Portuário de Itapoá</h4>
                   <p className="text-gray-600">Vista aérea das instalações modernas e eficientes</p>
                 </div>
               </div>
@@ -291,7 +366,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-8 bg-green-800">
+      <section className="py-20 px-8 bg-green-900">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -309,7 +384,7 @@ export default function HomePage() {
               <Link href="/contato">
                 <Button
                   size="lg"
-                  className="bg-white text-green-800 hover:bg-gray-100 rounded-full px-12 py-6 text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl"
+                  className="bg-white text-green-900 hover:bg-gray-100 rounded-full px-12 py-6 text-xl font-semibold transition-all duration-300 hover:scale-105 shadow-xl"
                 >
                   Fale Conosco
                   <ArrowRight className="ml-3 h-6 w-6" />
@@ -319,7 +394,7 @@ export default function HomePage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-2 border-white text-white hover:bg-white hover:text-green-800 rounded-full px-12 py-6 text-xl font-semibold transition-all duration-300 bg-transparent"
+                  className="border-2 border-white text-white hover:bg-white hover:text-green-900 rounded-full px-12 py-6 text-xl font-semibold transition-all duration-300 bg-transparent"
                 >
                   Ver Serviços Completos
                 </Button>
