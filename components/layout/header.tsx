@@ -217,7 +217,7 @@ export function Header() {
             {/* Logo - Apenas o logo sem texto */}
             <Link href="/" className="flex items-center group">
               <motion.div
-                className="relative w-16 h-16 transition-transform group-hover:scale-105"
+                className="relative w-24 h-24 transition-transform group-hover:scale-105"
                 whileHover={{ rotate: 5 }}
                 transition={{ duration: 0.3 }}
               >

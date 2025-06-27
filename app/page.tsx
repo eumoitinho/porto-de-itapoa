@@ -415,7 +415,7 @@ export default function HomePage() {
                 transition={{ duration: 0.3 }}
               >
                 <Image
-                  src="/placeholder.jpg"
+                  src="/foto-porto-patio-1024x721.webp"
                   alt="Vista aérea do Porto Itapoá"
                   width={700}
                   height={500}
