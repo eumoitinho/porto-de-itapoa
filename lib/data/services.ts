@@ -293,4 +293,76 @@ export const outrosServicos = [
     armadores: ["Mercosul Line"],
     escala: "Mensal",
   },
+  {
+    nome: "PORTAL DE COMPRAS",
+    cobertura: "Plataforma digital para aquisições",
+    armadores: ["Porto Itapoá"],
+    escala: "Online 24/7",
+  },
+  {
+    nome: "CADASTRO DE CLIENTE",
+    cobertura: "Registro e gestão de clientes",
+    armadores: ["Porto Itapoá"],
+    escala: "Online",
+  },
+  {
+    nome: "CADASTRO DE MOTORISTA",
+    cobertura: "Credenciamento de motoristas",
+    armadores: ["Porto Itapoá"],
+    escala: "Online",
+  },
+  {
+    nome: "CÂMERA ONLINE",
+    cobertura: "Monitoramento em tempo real",
+    armadores: ["Porto Itapoá"],
+    escala: "24/7",
+  },
+  {
+    nome: "CONSULTAS",
+    cobertura: "Sistema de consultas diversas",
+    armadores: ["Porto Itapoá"],
+    escala: "Online",
+  },
+  {
+    nome: "LINHAS DE NAVEGAÇÃO",
+    cobertura: "Informações sobre linhas marítimas",
+    armadores: ["Diversos"],
+    escala: "Atualização contínua",
+  },
+  {
+    nome: "SIMULADORES DE PREÇO",
+    cobertura: "Calculadora de custos portuários",
+    armadores: ["Porto Itapoá"],
+    escala: "Online",
+  },
+  {
+    nome: "PROCEDIMENTOS",
+    cobertura: "Documentação operacional",
+    armadores: ["Porto Itapoá"],
+    escala: "Atualização periódica",
+  },
+  {
+    nome: "CARTAS PROTESTOS",
+    cobertura: "Documentos de protesto marítimo",
+    armadores: ["Porto Itapoá"],
+    escala: "Sob demanda",
+  },
+  {
+    nome: "PROGRAMAÇÃO DE NAVIOS",
+    cobertura: "Cronograma de chegadas e partidas",
+    armadores: ["Diversos"],
+    escala: "Atualização diária",
+  },
+  {
+    nome: "INTEGRAÇÃO DE MOTORISTAS",
+    cobertura: "Sistema de integração para motoristas",
+    armadores: ["Porto Itapoá"],
+    escala: "Online",
+  },
+  {
+    nome: "INTEGRAÇÃO DE TERCEIROS",
+    cobertura: "Plataforma para parceiros",
+    armadores: ["Porto Itapoá"],
+    escala: "Online",
+  }
 ]

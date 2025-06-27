@@ -164,14 +164,18 @@ export function Header() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="relative w-12 h-12 transition-transform group-hover:scale-105">
+              <motion.div 
+                className="relative w-12 h-12 transition-transform group-hover:scale-105"
+                whileHover={{ rotate: 5 }}
+                transition={{ duration: 0.3 }}
+              >
                 <Image
                   src="/logo-grande-1.png"
                   alt="Porto Itapoá"
                   fill
                   className="object-contain"
                 />
-              </div>
+              </motion.div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-green-800 group-hover:text-green-600 transition-colors">
                   PORTO ITAPOÁ
@@ -198,18 +202,28 @@ export function Header() {
                         section.items.some(subItem => pathname === subItem.href)
                       ))
                         ? "text-green-600 bg-green-50" 
-                        : "text-gray-700 hover:bg-gray-50"
+                        : "text-gray-700 hover:bg-green-50"
                     }`}
                   >
                     <span className="relative z-10">{item.name}</span>
                     {item.submenu && (
-                      <ChevronDown className={`ml-2 h-4 w-4 transition-all duration-300 ${
-                        activeSubmenu === item.name ? 'rotate-180 text-green-600' : ''
-                      }`} />
+                      <motion.div
+                        animate={{ rotate: activeSubmenu === item.name ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ChevronDown className={`ml-2 h-4 w-4 transition-all duration-300 ${
+                          activeSubmenu === item.name ? 'text-green-600' : ''
+                        }`} />
+                      </motion.div>
                     )}
                     
                     {/* Hover Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-green-50 to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" 
+                      initial={{ scale: 0.8 }}
+                      whileHover={{ scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
                   </Link>
 
                   {/* Mega Menu */}
@@ -241,17 +255,22 @@ export function Header() {
                                 </h3>
                                 <div className="space-y-2">
                                   {section.items.map((subItem) => (
-                                    <Link
+                                    <motion.div
                                       key={subItem.name}
-                                      href={subItem.href}
-                                      className={`block text-sm transition-all duration-200 hover:text-green-600 hover:translate-x-1 py-2 px-3 rounded-lg hover:bg-green-50 ${
-                                        pathname === subItem.href 
-                                          ? "text-green-600 bg-green-50 font-medium" 
-                                          : "text-gray-700"
-                                      }`}
+                                      whileHover={{ x: 4 }}
+                                      transition={{ duration: 0.2 }}
                                     >
-                                      {subItem.name}
-                                    </Link>
+                                      <Link
+                                        href={subItem.href}
+                                        className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
+                                          pathname === subItem.href 
+                                            ? "text-green-600 bg-green-50 font-medium" 
+                                            : "text-gray-700"
+                                        }`}
+                                      >
+                                        {subItem.name}
+                                      </Link>
+                                    </motion.div>
                                   ))}
                                 </div>
                               </motion.div>
@@ -259,8 +278,8 @@ export function Header() {
                           </div>
                           
                           {/* Decorative Elements */}
-                          <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-green-100 to-blue-100 rounded-full opacity-20" />
-                          <div className="absolute bottom-4 left-4 w-16 h-16 bg-gradient-to-br from-blue-100 to-green-100 rounded-full opacity-20" />
+                          <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full opacity-20" />
+                          <div className="absolute bottom-4 left-4 w-16 h-16 bg-gradient-to-br from-emerald-100 to-green-100 rounded-full opacity-20" />
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -299,23 +318,33 @@ export function Header() {
                       </Button>
                     </motion.div>
                   ) : (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={toggleSearch}
-                      className="p-2 hover:bg-gray-100 rounded-full"
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
                     >
-                      <Search className="h-5 w-5 text-gray-600" />
-                    </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={toggleSearch}
+                        className="p-2 hover:bg-green-50 rounded-full"
+                      >
+                        <Search className="h-5 w-5 text-gray-600" />
+                      </Button>
+                    </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
               {/* CTA Button */}
               <Link href="/contato">
-                <Button className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-full px-6 py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  Fale Conosco
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button className="bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-full px-6 py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
+                    Fale Conosco
+                  </Button>
+                </motion.div>
               </Link>
             </div>
 
@@ -323,7 +352,7 @@ export function Header() {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-xl" 
+              className="lg:hidden p-2 hover:bg-green-50 rounded-xl" 
               onClick={() => setIsOpen(!isOpen)}
             >
               <motion.div
@@ -401,7 +430,7 @@ export function Header() {
                 {/* Mobile CTA */}
                 <div className="pt-4 border-t border-gray-200">
                   <Link href="/contato" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-full py-3 font-semibold">
+                    <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-full py-3 font-semibold">
                       Fale Conosco
                     </Button>
                   </Link>
