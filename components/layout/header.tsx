@@ -188,7 +188,7 @@ export function Header() {
         style={
           isHomePage && !scrolled 
             ? {
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%)',
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%)',
                 backdropFilter: 'blur(8px)'
               }
             : {}
@@ -196,10 +196,10 @@ export function Header() {
       >
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
+            {/* Logo - Aumentado */}
             <Link href="/" className="flex items-center space-x-3 group">
               <motion.div 
-                className="relative w-12 h-12 transition-transform group-hover:scale-105"
+                className="relative w-16 h-16 transition-transform group-hover:scale-105"
                 whileHover={{ rotate: 5 }}
                 transition={{ duration: 0.3 }}
               >
@@ -213,14 +213,14 @@ export function Header() {
                 />
               </motion.div>
               <div className="flex flex-col">
-                <span className={`text-xl font-bold transition-colors duration-500 group-hover:text-green-600 ${
+                <span className={`text-2xl font-bold transition-colors duration-500 group-hover:text-green-600 ${
                   isHomePage && !scrolled 
                     ? 'text-white' 
                     : 'text-green-800'
                 }`}>
                   PORTO ITAPOÁ
                 </span>
-                <span className={`text-xs font-medium tracking-wider transition-colors duration-500 ${
+                <span className={`text-sm font-medium tracking-wider transition-colors duration-500 ${
                   isHomePage && !scrolled 
                     ? 'text-green-200' 
                     : 'text-green-600'
