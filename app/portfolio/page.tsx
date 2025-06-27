@@ -59,15 +59,6 @@ const nomeServicoFiltros = [
   { id: "braco", label: "BRACO" }
 ]
 
-// Filtros de Transit Time
-const transitTimeFiltros = [
-  { id: "ate-15", label: "Até 15 dias", count: 4 },
-  { id: "15-25", label: "15 a 25 dias", count: 6 },
-  { id: "25-35", label: "25 a 35 dias", count: 8 },
-  { id: "35-45", label: "35 a 45 dias", count: 5 },
-  { id: "acima-45", label: "Acima de 45 dias", count: 2 }
-]
-
 export default function PortfolioPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategoria, setSelectedCategoria] = useState<string>("all")
@@ -75,6 +66,42 @@ export default function PortfolioPage() {
   const [selectedNomeServico, setSelectedNomeServico] = useState<Set<string>>(new Set())
   const [selectedTransitTime, setSelectedTransitTime] = useState<Set<string>>(new Set())
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set())
+
+  // Função para calcular o transit time máximo de um serviço
+  const getMaxTransitTime = (servico: any) => {
+    if (!servico.transit_times || servico.transit_times.length === 0) return 0
+    return Math.max(...servico.transit_times.map((t: any) => Math.max(t.importacao || 0, t.exportacao || 0)))
+  }
+
+  // Calcular contadores dos filtros de transit time dinamicamente
+  const transitTimeFiltros = useMemo(() => {
+    const counts = {
+      "ate-15": 0,
+      "15-25": 0,
+      "25-35": 0,
+      "35-45": 0,
+      "acima-45": 0
+    }
+
+    servicosMaritimos.forEach(servico => {
+      const maxTransit = getMaxTransitTime(servico)
+      if (maxTransit > 0) {
+        if (maxTransit <= 15) counts["ate-15"]++
+        else if (maxTransit <= 25) counts["15-25"]++
+        else if (maxTransit <= 35) counts["25-35"]++
+        else if (maxTransit <= 45) counts["35-45"]++
+        else counts["acima-45"]++
+      }
+    })
+
+    return [
+      { id: "ate-15", label: "Até 15 dias", count: counts["ate-15"] },
+      { id: "15-25", label: "15 a 25 dias", count: counts["15-25"] },
+      { id: "25-35", label: "25 a 35 dias", count: counts["25-35"] },
+      { id: "35-45", label: "35 a 45 dias", count: counts["35-45"] },
+      { id: "acima-45", label: "Acima de 45 dias", count: counts["acima-45"] }
+    ]
+  }, [])
 
   const filteredServicos = useMemo(() => {
     return servicosMaritimos.filter((servico) => {
@@ -121,8 +148,8 @@ export default function PortfolioPage() {
 
       const matchesTransitTime = selectedTransitTime.size === 0 ||
         Array.from(selectedTransitTime).some(tempo => {
-          if (servico.transit_times.length === 0) return false
-          const maxTransit = Math.max(...servico.transit_times.map(t => Math.max(t.importacao || 0, t.exportacao || 0)))
+          const maxTransit = getMaxTransitTime(servico)
+          if (maxTransit === 0) return false
           
           switch(tempo) {
             case "ate-15":
@@ -374,7 +401,7 @@ export default function PortfolioPage() {
                 </div>
               </div>
 
-              {/* Transit Time (porto) */}
+              {/* Transit Time (porto) - CORRIGIDO */}
               <div className="mb-6">
                 <label className="text-sm font-medium text-gray-700 mb-3 flex items-center">
                   <Clock className="h-4 w-4 mr-2 text-purple-600" />

@@ -59,10 +59,21 @@ const navigation = [
       { 
         name: "Operacionais", 
         items: [
+          { name: "Portal de Compras", href: "/portal-compras" },
+          { name: "Cadastro de Cliente", href: "/cadastro-cliente" },
+          { name: "Cadastro de Motorista", href: "/cadastro-motorista" },
+          { name: "Câmera Online", href: "/camera-online" },
+          { name: "Consultas", href: "/consultas" },
+          { name: "Linhas de Navegação", href: "/linhas-navegacao" },
+          { name: "Tabela de Preços 2025", href: "/precos" },
+          { name: "Tabela de Preços 2025 (A partir de 21/03)", href: "/precos-21-03" },
+          { name: "Simuladores de Preço", href: "/simuladores" },
           { name: "Portfólio de Serviços", href: "/portfolio" },
-          { name: "Tabela de Preços", href: "/precos" },
-          { name: "Agendamento", href: "/agendamento" },
-          { name: "Rastreamento", href: "/rastreamento" }
+          { name: "Procedimentos", href: "/procedimentos" },
+          { name: "Cartas Protestos", href: "/cartas-protestos" },
+          { name: "Programação de Navios", href: "/programacao-navios" },
+          { name: "Integração de Motoristas", href: "/integracao-motoristas" },
+          { name: "Integração de Terceiros", href: "/integracao-terceiros" }
         ]
       }
     ]
@@ -235,47 +246,89 @@ export function Header() {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 10, scale: 0.95 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 py-6 z-50 min-w-[800px]"
+                          className={`absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 py-6 z-50 ${
+                            item.name === "Serviços" ? "min-w-[600px]" : "min-w-[800px]"
+                          }`}
                           style={{ 
                             background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
                             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)'
                           }}
                         >
-                          <div className="grid grid-cols-4 gap-8 px-8">
-                            {item.submenu.map((section, sectionIndex) => (
-                              <motion.div
-                                key={section.name}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
-                                className="space-y-4"
-                              >
-                                <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
-                                  {section.name}
-                                </h3>
-                                <div className="space-y-2">
-                                  {section.items.map((subItem) => (
-                                    <motion.div
-                                      key={subItem.name}
-                                      whileHover={{ x: 4 }}
-                                      transition={{ duration: 0.2 }}
-                                    >
-                                      <Link
-                                        href={subItem.href}
-                                        className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
-                                          pathname === subItem.href 
-                                            ? "text-green-600 bg-green-50 font-medium" 
-                                            : "text-gray-700"
-                                        }`}
+                          {item.name === "Serviços" ? (
+                            // Layout especial para Serviços - uma coluna
+                            <div className="px-8">
+                              {item.submenu.map((section, sectionIndex) => (
+                                <motion.div
+                                  key={section.name}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
+                                  className="space-y-4"
+                                >
+                                  <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
+                                    {section.name}
+                                  </h3>
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {section.items.map((subItem) => (
+                                      <motion.div
+                                        key={subItem.name}
+                                        whileHover={{ x: 4 }}
+                                        transition={{ duration: 0.2 }}
                                       >
-                                        {subItem.name}
-                                      </Link>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            ))}
-                          </div>
+                                        <Link
+                                          href={subItem.href}
+                                          className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
+                                            pathname === subItem.href 
+                                              ? "text-green-600 bg-green-50 font-medium" 
+                                              : "text-gray-700"
+                                          }`}
+                                        >
+                                          {subItem.name}
+                                        </Link>
+                                      </motion.div>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+                          ) : (
+                            // Layout padrão para outros menus - quatro colunas
+                            <div className="grid grid-cols-4 gap-8 px-8">
+                              {item.submenu.map((section, sectionIndex) => (
+                                <motion.div
+                                  key={section.name}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
+                                  className="space-y-4"
+                                >
+                                  <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
+                                    {section.name}
+                                  </h3>
+                                  <div className="space-y-2">
+                                    {section.items.map((subItem) => (
+                                      <motion.div
+                                        key={subItem.name}
+                                        whileHover={{ x: 4 }}
+                                        transition={{ duration: 0.2 }}
+                                      >
+                                        <Link
+                                          href={subItem.href}
+                                          className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
+                                            pathname === subItem.href 
+                                              ? "text-green-600 bg-green-50 font-medium" 
+                                              : "text-gray-700"
+                                          }`}
+                                        >
+                                          {subItem.name}
+                                        </Link>
+                                      </motion.div>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+                          )}
                           
                           {/* Decorative Elements */}
                           <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full opacity-20" />
