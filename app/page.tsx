@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { useI18n } from "@/lib/i18n/context"
 
 const stats = [
   { icon: Ship, label: "TEUs/ano", value: "1.2M", description: "Capacidade anual de movimentação" },
@@ -118,6 +119,8 @@ function VideoBackground() {
 }
 
 export default function HomePage() {
+  const { t } = useI18n()
+
   return (
     <div className="min-h-screen">
       {/* Hero Section - Estilo Motin Films */}
@@ -133,11 +136,7 @@ export default function HomePage() {
               className="text-4xl md:text-6xl lg:text-7xl font-light mb-8 leading-tight tracking-tight text-white"
               style={{ textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0, 0, 0, 0.6)' }}
             >
-              Gateway da
-              <br />
-              <span className="font-semibold text-white">
-                América Latina
-              </span>
+              {t('heroTitle')}
             </motion.h1>
 
             <motion.p
@@ -147,7 +146,7 @@ export default function HomePage() {
               className="text-xl md:text-2xl mb-12 text-white font-light leading-relaxed"
               style={{ textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}
             >
-              Conectamos o Brasil ao mundo com eficiência, tecnologia e sustentabilidade
+              {t('heroSubtitle')}
             </motion.p>
 
             <motion.div
@@ -161,7 +160,7 @@ export default function HomePage() {
                   size="lg"
                   className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-full px-12 py-6 text-xl font-medium transition-all duration-500 hover:scale-105 shadow-2xl border-2 border-green-400/30 backdrop-blur-sm"
                 >
-                  Conheça nossos serviços
+                  {t('knowOurServices')}
                   <ArrowRight size={20} className="ml-2" />
                 </Button>
               </Link>
@@ -172,7 +171,7 @@ export default function HomePage() {
                   size="lg"
                   className="border-2 border-white/80 text-white hover:bg-white/20 hover:text-white rounded-full px-12 py-6 text-xl font-medium transition-all duration-500 bg-white/10 backdrop-blur-md hover:backdrop-blur-lg hover:border-white"
                 >
-                  Fale conosco
+                  {t('contactUs')}
                 </Button>
               </Link>
             </motion.div>
@@ -213,9 +212,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl font-light text-green-900 mb-6">Números que Impressionam</h2>
+            <h2 className="text-5xl font-light text-green-900 mb-6">{t('impressiveNumbers')}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Dados que demonstram nossa capacidade e eficiência operacional no cenário portuário brasileiro
+              {t('statsDescription')}
             </p>
           </motion.div>
 
@@ -263,9 +262,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl font-light text-green-900 mb-6">Serviços Marítimos Regulares</h2>
+            <h2 className="text-5xl font-light text-green-900 mb-6">{t('regularMaritimeServices')}</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Conectamos o Brasil aos principais mercados mundiais através de parcerias com os maiores armadores globais
+              {t('servicesDescription')}
             </p>
           </motion.div>
 
@@ -328,7 +327,7 @@ export default function HomePage() {
                   size="lg"
                   className="rounded-full px-12 py-6 text-xl border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition-all duration-500 bg-transparent font-semibold shadow-lg hover:shadow-xl"
                 >
-                  Ver Portfólio Completo
+                  {t('seeCompletePortfolio')}
                   <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
               </motion.div>
@@ -347,28 +346,27 @@ export default function HomePage() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-5xl font-light text-green-900 mb-8">Localização Estratégica</h2>
+              <h2 className="text-5xl font-light text-green-900 mb-8">{t('strategicLocation')}</h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Situado no litoral norte de Santa Catarina, o Porto Itapoá oferece acesso privilegiado aos principais
-                mercados do Mercosul e conexões diretas com os maiores portos mundiais.
+                {t('locationDescription')}
               </p>
 
               <div className="space-y-6 mb-8">
                 {[
                   {
                     icon: MapPin,
-                    title: "Acesso Rodoviário Direto",
-                    description: "Conexão direta com a BR-101, principal rodovia do litoral brasileiro"
+                    title: t('directRoadAccess'),
+                    description: t('roadAccessDescription')
                   },
                   {
                     icon: Globe,
-                    title: "Proximidade com Grandes Centros", 
-                    description: "Localização estratégica próxima aos principais centros urbanos e industriais"
+                    title: t('proximityToCenters'), 
+                    description: t('proximityDescription')
                   },
                   {
                     icon: Ship,
-                    title: "Calado Natural Profundo",
-                    description: "17 metros de calado natural, permitindo receber os maiores navios"
+                    title: t('deepNaturalDraft'),
+                    description: t('draftDescription')
                   }
                 ].map((item, index) => (
                   <motion.div
@@ -397,7 +395,7 @@ export default function HomePage() {
               >
                 <div className="flex items-center mb-4">
                   <MapPin className="h-5 w-5 text-green-600 mr-2" />
-                  <span className="font-semibold text-gray-800">Endereço</span>
+                  <span className="font-semibold text-gray-800">{t('address')}</span>
                 </div>
                 <p className="text-gray-600 mb-2">Av. Beira Mar 5, 2900 Figueira do Pontal</p>
                 <p className="text-gray-600">Itapoá/SC - Brasil</p>
@@ -443,10 +441,9 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-white"
           >
-            <h2 className="text-5xl font-light mb-8 drop-shadow-lg">Pronto para Conectar seu Negócio ao Mundo?</h2>
+            <h2 className="text-5xl font-light mb-8 drop-shadow-lg">{t('readyToConnect')}</h2>
             <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed opacity-90 drop-shadow">
-              Entre em contato conosco e descubra como o Porto Itapoá pode otimizar sua cadeia logística com nossos
-              serviços marítimos regulares e infraestrutura de classe mundial.
+              {t('ctaDescription')}
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link href="/contato">
@@ -458,7 +455,7 @@ export default function HomePage() {
                     size="lg"
                     className="bg-white text-green-900 hover:bg-gray-100 rounded-full px-12 py-6 text-xl font-semibold transition-all duration-500 hover:scale-105 shadow-xl"
                   >
-                    Fale Conosco
+                    {t('contactUs')}
                     <ArrowRight className="ml-3 h-6 w-6" />
                   </Button>
                 </motion.div>
@@ -473,7 +470,7 @@ export default function HomePage() {
                     size="lg"
                     className="border-2 border-white text-white hover:bg-white/20 hover:text-white rounded-full px-12 py-6 text-xl font-semibold transition-all duration-500 bg-white/10 backdrop-blur-md"
                   >
-                    Ver Serviços Completos
+                    {t('seeCompleteServices')}
                   </Button>
                 </motion.div>
               </Link>

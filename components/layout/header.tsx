@@ -8,12 +8,15 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
+import { LanguageSelector } from "@/components/language-selector"
+import { useI18n } from "@/lib/i18n/context"
 
 const navigation = [
-  { name: "Home", href: "/" },
+  { name: "Home", href: "/", nameKey: "home" },
   { 
     name: "Institucional", 
     href: "/institucional",
+    nameKey: "institutional",
     submenu: [
       { 
         name: "Sobre o Porto", 
@@ -55,6 +58,7 @@ const navigation = [
   { 
     name: "Serviços", 
     href: "/servicos",
+    nameKey: "services",
     submenu: [
       { 
         name: "Operacionais", 
@@ -78,9 +82,9 @@ const navigation = [
       }
     ]
   },
-  { name: "Notícias", href: "/noticias" },
-  { name: "Sustentabilidade", href: "/sustentabilidade" },
-  { name: "Contato", href: "/contato" }
+  { name: "Notícias", href: "/noticias", nameKey: "news" },
+  { name: "Sustentabilidade", href: "/sustentabilidade", nameKey: "sustainability" },
+  { name: "Contato", href: "/contato", nameKey: "contact" }
 ]
 
 const quickLinks = [
@@ -90,6 +94,7 @@ const quickLinks = [
 ]
 
 export function Header() {
+  const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
@@ -151,10 +156,7 @@ export function Header() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <Globe className="h-4 w-4" />
-                  <span>PT</span>
-                </div>
+                <LanguageSelector />
                 <div className="flex items-center space-x-3">
                   {quickLinks.map((link) => (
                     <Link
@@ -253,7 +255,7 @@ export function Header() {
                           : "text-gray-700 hover:text-green-600 hover:bg-green-50"
                     }`}
                   >
-                    <span className="relative z-10">{item.name}</span>
+                    <span className="relative z-10">{t(item.nameKey as any) || item.name}</span>
                     {item.submenu && (
                       <motion.div
                         animate={{ rotate: activeSubmenu === item.name ? 180 : 0 }}
@@ -433,8 +435,8 @@ export function Header() {
                 </AnimatePresence>
               </div>
 
-              {/* CTA Button */}
-              <Link href="/contato">
+              {/* Portal do Cliente Button */}
+              <Link href="/portal-cliente">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -444,7 +446,7 @@ export function Header() {
                       ? 'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30'
                       : 'bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white'
                   }`}>
-                    Fale Conosco
+                    {t('clientPortal')}
                   </Button>
                 </motion.div>
               </Link>
@@ -503,7 +505,7 @@ export function Header() {
                       }`}
                       onClick={() => setIsOpen(false)}
                     >
-                      {item.name}
+                      {t(item.nameKey as any) || item.name}
                     </Link>
                     {item.submenu && (
                       <div className="ml-4 space-y-3">
@@ -535,9 +537,9 @@ export function Header() {
 
                 {/* Mobile CTA */}
                 <div className="pt-4 border-t border-gray-200">
-                  <Link href="/contato" onClick={() => setIsOpen(false)}>
+                  <Link href="/portal-cliente" onClick={() => setIsOpen(false)}>
                     <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-full py-3 font-semibold">
-                      Fale Conosco
+                      {t('clientPortal')}
                     </Button>
                   </Link>
                 </div>
