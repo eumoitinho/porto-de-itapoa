@@ -111,11 +111,15 @@ export function Header() {
   }, [])
 
   const handleMouseEnter = (itemName: string) => {
-    setActiveSubmenu(itemName)
+    if (scrolled) {
+      setActiveSubmenu(itemName)
+    }
   }
 
   const handleMouseLeave = () => {
-    setActiveSubmenu(null)
+    if (scrolled) {
+      setActiveSubmenu(null)
+    }
   }
 
   const toggleSearch = () => {
@@ -190,7 +194,7 @@ export function Header() {
         style={
           isHomePage && !scrolled 
             ? {
-                background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.05) 100%)',
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.05) 100%)',
                 backdropFilter: 'blur(8px)'
               }
             : {}
@@ -251,8 +255,15 @@ export function Header() {
                           ? "text-green-300 bg-white/10 backdrop-blur-sm" 
                           : "text-green-600 bg-green-50"
                         : isHomePage && !scrolled
-                          ? "text-white hover:text-green-200 hover:bg-white/10"
-                          : "text-gray-700 hover:text-green-600 hover:bg-green-50"
+                          ? "text-white"
+                          : "text-gray-700"
+                    } ${
+                      // Só aplica hover se scrolled ou não for home page
+                      (scrolled || !isHomePage) 
+                        ? isHomePage && !scrolled
+                          ? "hover:text-green-200 hover:bg-white/10"
+                          : "hover:text-green-600 hover:bg-green-50"
+                        : ""
                     }`}
                   >
                     <span className="relative z-10">{t(item.nameKey as any) || item.name}</span>
@@ -267,17 +278,19 @@ export function Header() {
                       </motion.div>
                     )}
                     
-                    {/* Hover Effect */}
-                    <motion.div 
-                      className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl ${
-                        isHomePage && !scrolled
-                          ? 'bg-white/10 backdrop-blur-sm'
-                          : 'bg-gradient-to-r from-green-50 to-emerald-50'
-                      }`}
-                      initial={{ scale: 0.8 }}
-                      whileHover={{ scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
+                    {/* Hover Effect - só quando scrolled ou não for home */}
+                    {(scrolled || !isHomePage) && (
+                      <motion.div 
+                        className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl ${
+                          isHomePage && !scrolled
+                            ? 'bg-white/10 backdrop-blur-sm'
+                            : 'bg-gradient-to-r from-green-50 to-emerald-50'
+                        }`}
+                        initial={{ scale: 0.8 }}
+                        whileHover={{ scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
                   </Link>
 
                   {/* Mega Menu */}
