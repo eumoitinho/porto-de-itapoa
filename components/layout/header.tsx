@@ -198,8 +198,8 @@ export function Header() {
 
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo - Aumentado */}
-            <Link href="/" className="flex items-center space-x-3 group">
+            {/* Logo - Apenas o logo sem texto */}
+            <Link href="/" className="flex items-center group">
               <motion.div 
                 className="relative w-16 h-16 transition-transform group-hover:scale-105"
                 whileHover={{ rotate: 5 }}
@@ -214,22 +214,6 @@ export function Header() {
                   }`}
                 />
               </motion.div>
-              <div className="flex flex-col">
-                <span className={`text-2xl font-bold transition-colors duration-500 group-hover:text-green-600 ${
-                  isHomePage && !scrolled 
-                    ? 'text-white' 
-                    : 'text-green-800'
-                }`}>
-                  PORTO ITAPOÁ
-                </span>
-                <span className={`text-sm font-medium tracking-wider transition-colors duration-500 ${
-                  isHomePage && !scrolled 
-                    ? 'text-green-200' 
-                    : 'text-green-600'
-                }`}>
-                  BUILDING THE FUTURE
-                </span>
-              </div>
             </Link>
 
             {/* Desktop Navigation */}
@@ -549,6 +533,11 @@ export function Header() {
                   </Link>
                 </div>
 
+                {/* Mobile Language Selector */}
+                <div className="pt-4 border-t border-gray-200">
+                  <LanguageSelector variant="footer" />
+                </div>
+
                 {/* Mobile Contact Info */}
                 <div className="pt-4 border-t border-gray-200 space-y-2 text-sm text-gray-600">
                   <div className="flex items-center space-x-2">
@@ -559,11 +548,6 @@ export function Header() {
                     <Mail className="h-4 w-4" />
                     <span>atendimento@portoitapoa.com</span>
                   </div>
-                </div>
-
-                {/* Mobile Language Selector */}
-                <div className="pt-4 border-t border-gray-200">
-                  <LanguageSelector variant="footer" />
                 </div>
               </div>
             </motion.div>
