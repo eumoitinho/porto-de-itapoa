@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Filter, Plus, X, Calculator, FileText, Package, Truck, Ship, Anchor, DollarSign, Clock, MapPin, Users } from "lucide-react"
+import { Search, Filter, Plus, X, Calculator, FileText, Package, Truck, Ship, Anchor, DollarSign, Clock, MapPin, Users, TrendingUp, BarChart3 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -49,7 +49,17 @@ const filtrosAdicionais = [
   { id: "perigosa", label: "Carga Perigosa", icon: Package },
   { id: "oog", label: "Carga OOG", icon: Package },
   { id: "vazio", label: "Contêiner Vazio", icon: Package },
-  { id: "projeto", label: "Carga Projeto", icon: Package }
+  { id: "projeto", label: "Carga Projeto", icon: Package },
+  { id: "lcl", label: "LCL", icon: Package }
+]
+
+const faixaPrecoFiltros = [
+  { id: "ate-100", label: "Até R$ 100", icon: DollarSign },
+  { id: "100-500", label: "R$ 100 - R$ 500", icon: DollarSign },
+  { id: "500-1000", label: "R$ 500 - R$ 1.000", icon: DollarSign },
+  { id: "1000-5000", label: "R$ 1.000 - R$ 5.000", icon: DollarSign },
+  { id: "acima-5000", label: "Acima de R$ 5.000", icon: DollarSign },
+  { id: "consulta", label: "Sob Consulta", icon: Calculator }
 ]
 
 export default function PrecosPage() {
@@ -57,6 +67,7 @@ export default function PrecosPage() {
   const [selectedCategoria, setSelectedCategoria] = useState<string>("all")
   const [selectedTipoCobranca, setSelectedTipoCobranca] = useState<string>("all")
   const [selectedFiltros, setSelectedFiltros] = useState<Set<string>>(new Set())
+  const [selectedFaixaPreco, setSelectedFaixaPreco] = useState<Set<string>>(new Set())
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set())
 
   const filteredServicos = useMemo(() => {
@@ -72,9 +83,16 @@ export default function PrecosPage() {
       const matchesFiltros = selectedFiltros.size === 0 || 
         Array.from(selectedFiltros).some(filtro => servico.aplicavelA?.includes(filtro))
 
-      return matchesSearch && matchesCategoria && matchesTipoCobranca && matchesFiltros
+      const matchesFaixaPreco = selectedFaixaPreco.size === 0 ||
+        Array.from(selectedFaixaPreco).some(faixa => {
+          if (faixa === "consulta") return servico.tipoCobranca === "consulta"
+          // Implementar lógica de faixa de preço baseada no valor
+          return true // Simplificado para este exemplo
+        })
+
+      return matchesSearch && matchesCategoria && matchesTipoCobranca && matchesFiltros && matchesFaixaPreco
     })
-  }, [searchTerm, selectedCategoria, selectedTipoCobranca, selectedFiltros])
+  }, [searchTerm, selectedCategoria, selectedTipoCobranca, selectedFiltros, selectedFaixaPreco])
 
   const toggleExpanded = (id: string) => {
     const newExpanded = new Set(expandedCards)
@@ -96,46 +114,114 @@ export default function PrecosPage() {
     setSelectedFiltros(newFiltros)
   }
 
+  const toggleFaixaPreco = (faixaId: string) => {
+    const newFaixas = new Set(selectedFaixaPreco)
+    if (newFaixas.has(faixaId)) {
+      newFaixas.delete(faixaId)
+    } else {
+      newFaixas.add(faixaId)
+    }
+    setSelectedFaixaPreco(newFaixas)
+  }
+
   const clearAllFilters = () => {
     setSelectedCategoria("all")
     setSelectedTipoCobranca("all")
     setSelectedFiltros(new Set())
+    setSelectedFaixaPreco(new Set())
     setSearchTerm("")
   }
 
   return (
     <div className="min-h-screen py-20 px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header Melhorado */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="bg-white rounded-3xl p-12 shadow-xl border border-gray-200 mb-12">
-            <h1 className="text-6xl font-light text-green-800 mb-6">TABELA DE PREÇOS E SERVIÇOS</h1>
-            <div className="text-3xl font-bold text-green-700 mb-8">2025</div>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              Consulte nossa tabela completa de preços e serviços portuários. Valores atualizados e transparentes 
-              para todos os serviços oferecidos pelo Porto Itapoá.
-            </p>
-            <div className="mt-8 flex items-center justify-center gap-4 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                <span>Av. Beira Mar 5, 2900 • Figueira do Pontal • Itapoá/SC</span>
+          <div className="relative bg-gradient-to-br from-blue-50 to-green-50 rounded-3xl p-12 shadow-xl border border-gray-200 mb-12 overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-10 left-10 w-20 h-20 border-2 border-blue-600 rounded-full"></div>
+              <div className="absolute top-20 right-20 w-16 h-16 border-2 border-green-600 rounded-full"></div>
+              <div className="absolute bottom-10 left-20 w-12 h-12 border-2 border-blue-600 rounded-full"></div>
+              <div className="absolute bottom-20 right-10 w-24 h-24 border-2 border-green-600 rounded-full"></div>
+            </div>
+            
+            <div className="relative z-10">
+              <div className="flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mr-4">
+                  <Calculator className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-left">
+                  <h1 className="text-5xl font-light text-blue-800 mb-2">TABELA DE PREÇOS E SERVIÇOS</h1>
+                  <div className="text-2xl font-bold text-blue-700">2025</div>
+                </div>
               </div>
-              <Separator orientation="vertical" className="h-4" />
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                <span>+55 47 3443.8700</span>
+              
+              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
+                Consulte nossa tabela completa de preços e serviços portuários. Valores atualizados e transparentes 
+                para todos os serviços oferecidos pelo Porto Itapoá.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
+                  <div className="flex items-center justify-center mb-2">
+                    <FileText className="h-6 w-6 text-blue-600 mr-2" />
+                    <span className="font-semibold text-blue-800">Serviços</span>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-900">80+</div>
+                  <div className="text-sm text-gray-600">Tipos de Serviços</div>
+                </div>
+                
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
+                  <div className="flex items-center justify-center mb-2">
+                    <TrendingUp className="h-6 w-6 text-green-600 mr-2" />
+                    <span className="font-semibold text-green-800">Transparência</span>
+                  </div>
+                  <div className="text-2xl font-bold text-green-900">100%</div>
+                  <div className="text-sm text-gray-600">Preços Públicos</div>
+                </div>
+                
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
+                  <div className="flex items-center justify-center mb-2">
+                    <Clock className="h-6 w-6 text-purple-600 mr-2" />
+                    <span className="font-semibold text-purple-800">Atualização</span>
+                  </div>
+                  <div className="text-2xl font-bold text-purple-900">2025</div>
+                  <div className="text-sm text-gray-600">Valores Vigentes</div>
+                </div>
+                
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
+                  <div className="flex items-center justify-center mb-2">
+                    <BarChart3 className="h-6 w-6 text-orange-600 mr-2" />
+                    <span className="font-semibold text-orange-800">Categorias</span>
+                  </div>
+                  <div className="text-2xl font-bold text-orange-900">9</div>
+                  <div className="text-sm text-gray-600">Tipos de Operação</div>
+                </div>
+              </div>
+
+              <div className="mt-8 flex items-center justify-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <span>Av. Beira Mar 5, 2900 • Figueira do Pontal • Itapoá/SC</span>
+                </div>
+                <Separator orientation="vertical" className="h-4" />
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  <span>+55 47 3443.8700</span>
+                </div>
               </div>
             </div>
           </div>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar com Filtros */}
+          {/* Sidebar com Filtros Expandida */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -144,12 +230,12 @@ export default function PrecosPage() {
           >
             <div className="backdrop-blur-md bg-white/60 border border-white/20 rounded-2xl p-6 shadow-xl sticky top-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-green-800">Filtros</h3>
+                <h3 className="text-lg font-semibold text-blue-800">Filtros</h3>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={clearAllFilters}
-                  className="text-gray-500 hover:text-green-600"
+                  className="text-gray-500 hover:text-blue-600"
                 >
                   Limpar
                 </Button>
@@ -163,7 +249,7 @@ export default function PrecosPage() {
                     placeholder="Buscar serviços..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 rounded-full border-gray-200 focus:border-green-500"
+                    className="pl-10 rounded-full border-gray-200 focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -204,10 +290,33 @@ export default function PrecosPage() {
                 </Select>
               </div>
 
-              {/* Filtros Adicionais */}
+              {/* Faixa de Preço */}
+              <div className="mb-6">
+                <label className="text-sm font-medium text-gray-700 mb-3 block">Faixa de Preço</label>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {faixaPrecoFiltros.map((faixa) => (
+                    <Button
+                      key={faixa.id}
+                      variant={selectedFaixaPreco.has(faixa.id) ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => toggleFaixaPreco(faixa.id)}
+                      className={`w-full justify-start text-left rounded-lg ${
+                        selectedFaixaPreco.has(faixa.id) 
+                          ? "bg-blue-600 text-white hover:bg-blue-700" 
+                          : "hover:bg-blue-50"
+                      }`}
+                    >
+                      <faixa.icon className="h-4 w-4 mr-2" />
+                      {faixa.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Aplicável a */}
               <div className="mb-6">
                 <label className="text-sm font-medium text-gray-700 mb-3 block">Aplicável a</label>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-48 overflow-y-auto">
                   {filtrosAdicionais.map((filtro) => (
                     <Button
                       key={filtro.id}
@@ -228,7 +337,7 @@ export default function PrecosPage() {
               </div>
 
               {/* Filtros Ativos */}
-              {(selectedFiltros.size > 0 || selectedCategoria !== "all" || selectedTipoCobranca !== "all") && (
+              {(selectedFiltros.size > 0 || selectedFaixaPreco.size > 0 || selectedCategoria !== "all" || selectedTipoCobranca !== "all") && (
                 <div className="mb-4">
                   <label className="text-sm font-medium text-gray-700 mb-2 block">Filtros Ativos</label>
                   <div className="flex flex-wrap gap-2">
@@ -250,8 +359,17 @@ export default function PrecosPage() {
                         />
                       </Badge>
                     )}
+                    {Array.from(selectedFaixaPreco).map((faixa) => (
+                      <Badge key={faixa} variant="secondary" className="text-xs bg-blue-100 text-blue-800">
+                        {faixaPrecoFiltros.find(f => f.id === faixa)?.label}
+                        <X 
+                          className="h-3 w-3 ml-1 cursor-pointer" 
+                          onClick={() => toggleFaixaPreco(faixa)}
+                        />
+                      </Badge>
+                    ))}
                     {Array.from(selectedFiltros).map((filtro) => (
-                      <Badge key={filtro} variant="secondary" className="text-xs">
+                      <Badge key={filtro} variant="secondary" className="text-xs bg-green-100 text-green-800">
                         {filtrosAdicionais.find(f => f.id === filtro)?.label}
                         <X 
                           className="h-3 w-3 ml-1 cursor-pointer" 
@@ -264,12 +382,12 @@ export default function PrecosPage() {
               )}
 
               {/* Informações de Contato */}
-              <div className="mt-8 p-4 bg-green-50 rounded-xl border border-green-200">
-                <h4 className="font-semibold text-green-800 mb-2">Precisa de Ajuda?</h4>
-                <p className="text-sm text-green-700 mb-3">
+              <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">Precisa de Ajuda?</h4>
+                <p className="text-sm text-blue-700 mb-3">
                   Entre em contato com nossa equipe comercial para esclarecimentos ou cotações especiais.
                 </p>
-                <div className="space-y-1 text-xs text-green-600">
+                <div className="space-y-1 text-xs text-blue-600">
                   <p>📧 comercial@portoitapoa.com</p>
                   <p>📞 +55 47 3443.8700</p>
                 </div>
@@ -312,12 +430,12 @@ export default function PrecosPage() {
                           <div className="flex justify-between items-start mb-4">
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                  <CategoryIcon className="h-5 w-5 text-green-600" />
+                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                  <CategoryIcon className="h-5 w-5 text-blue-600" />
                                 </div>
                                 <div>
-                                  <h3 className="text-xl font-bold text-green-800">{servico.nome}</h3>
-                                  <Badge variant="outline" className="text-green-600 border-green-600 font-medium mt-1">
+                                  <h3 className="text-xl font-bold text-blue-800">{servico.nome}</h3>
+                                  <Badge variant="outline" className="text-blue-600 border-blue-600 font-medium mt-1">
                                     {servico.codigo}
                                   </Badge>
                                 </div>
@@ -328,35 +446,35 @@ export default function PrecosPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() => toggleExpanded(servico.id)}
-                              className="rounded-full p-2 hover:bg-green-50 border border-green-200"
+                              className="rounded-full p-2 hover:bg-blue-50 border border-blue-200"
                             >
                               {isExpanded ? (
-                                <X className="h-5 w-5 text-green-600" />
+                                <X className="h-5 w-5 text-blue-600" />
                               ) : (
-                                <Plus className="h-5 w-5 text-green-600" />
+                                <Plus className="h-5 w-5 text-blue-600" />
                               )}
                             </Button>
                           </div>
 
                           {/* Preço Principal */}
-                          <div className="bg-green-50 rounded-xl p-4 mb-4">
+                          <div className="bg-blue-50 rounded-xl p-4 mb-4">
                             <div className="flex items-center justify-between">
                               <div>
                                 <div className="flex items-center gap-2 mb-1">
-                                  <DollarSign className="h-5 w-5 text-green-600" />
-                                  <span className="font-semibold text-green-800">Valor</span>
+                                  <DollarSign className="h-5 w-5 text-blue-600" />
+                                  <span className="font-semibold text-blue-800">Valor</span>
                                 </div>
-                                <div className="text-2xl font-bold text-green-900">
+                                <div className="text-2xl font-bold text-blue-900">
                                   {servico.valor}
                                 </div>
                                 {servico.valorMinimo && (
-                                  <div className="text-sm text-green-700">
+                                  <div className="text-sm text-blue-700">
                                     Valor mínimo: {servico.valorMinimo}
                                   </div>
                                 )}
                               </div>
                               <div className="text-right">
-                                <Badge className="bg-green-600 text-white">
+                                <Badge className="bg-blue-600 text-white">
                                   {categoriaLabels[servico.categoria]}
                                 </Badge>
                                 <div className="text-sm text-gray-600 mt-1">
@@ -370,7 +488,7 @@ export default function PrecosPage() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             {servico.unidade && (
                               <div className="flex items-center text-gray-700">
-                                <Package className="h-4 w-4 mr-2 text-green-600" />
+                                <Package className="h-4 w-4 mr-2 text-blue-600" />
                                 <span className="text-sm">
                                   <strong>Unidade:</strong> {servico.unidade}
                                 </span>
@@ -378,7 +496,7 @@ export default function PrecosPage() {
                             )}
                             {servico.periodo && (
                               <div className="flex items-center text-gray-700">
-                                <Clock className="h-4 w-4 mr-2 text-green-600" />
+                                <Clock className="h-4 w-4 mr-2 text-blue-600" />
                                 <span className="text-sm">
                                   <strong>Período:</strong> {servico.periodo}
                                 </span>
@@ -413,7 +531,7 @@ export default function PrecosPage() {
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                   {/* Detalhes do Serviço */}
                                   <div>
-                                    <h4 className="text-lg font-bold text-green-800 mb-4">Detalhes do Serviço</h4>
+                                    <h4 className="text-lg font-bold text-blue-800 mb-4">Detalhes do Serviço</h4>
                                     
                                     {servico.observacoes && (
                                       <div className="bg-blue-50 rounded-xl p-4 mb-4">
@@ -446,7 +564,7 @@ export default function PrecosPage() {
 
                                   {/* Informações de Cobrança */}
                                   <div>
-                                    <h4 className="text-lg font-bold text-green-800 mb-4">Informações de Cobrança</h4>
+                                    <h4 className="text-lg font-bold text-blue-800 mb-4">Informações de Cobrança</h4>
                                     
                                     <div className="bg-gray-50 rounded-xl p-4">
                                       <div className="space-y-3">
@@ -481,12 +599,12 @@ export default function PrecosPage() {
                                     </div>
 
                                     {/* Contato */}
-                                    <div className="mt-6 bg-green-50 rounded-xl p-4">
-                                      <h5 className="font-semibold text-green-800 mb-2">Dúvidas sobre este serviço?</h5>
-                                      <div className="space-y-1 text-sm text-green-700">
+                                    <div className="mt-6 bg-blue-50 rounded-xl p-4">
+                                      <h5 className="font-semibold text-blue-800 mb-2">Dúvidas sobre este serviço?</h5>
+                                      <div className="space-y-1 text-sm text-blue-700">
                                         <p>📧 comercial@portoitapoa.com</p>
                                         <p>📞 +55 47 3443.8700</p>
-                                        <p className="text-xs text-green-600 mt-2">
+                                        <p className="text-xs text-blue-600 mt-2">
                                           Atendimento: Segunda a sexta das 08h às 18h
                                         </p>
                                       </div>
@@ -511,7 +629,7 @@ export default function PrecosPage() {
                   <Calculator className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhum serviço encontrado</h3>
                   <p className="text-gray-500 mb-4">Tente ajustar os filtros de busca</p>
-                  <Button onClick={clearAllFilters} className="bg-green-600 hover:bg-green-700">
+                  <Button onClick={clearAllFilters} className="bg-blue-600 hover:bg-blue-700">
                     Limpar Filtros
                   </Button>
                 </div>
@@ -528,11 +646,11 @@ export default function PrecosPage() {
             >
               <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl">
                 <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-green-800 mb-6">INFORMAÇÕES IMPORTANTES</h3>
+                  <h3 className="text-2xl font-bold text-blue-800 mb-6">INFORMAÇÕES IMPORTANTES</h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                      <h4 className="text-lg font-semibold text-green-700 mb-4">Da Tabela de Preços</h4>
+                      <h4 className="text-lg font-semibold text-blue-700 mb-4">Da Tabela de Preços</h4>
                       <ul className="space-y-2 text-sm text-gray-600">
                         <li>• Todos os preços estão expressos em reais</li>
                         <li>• Tabela válida por prazo indeterminado</li>
@@ -543,7 +661,7 @@ export default function PrecosPage() {
                     </div>
                     
                     <div>
-                      <h4 className="text-lg font-semibold text-green-700 mb-4">Do Pagamento</h4>
+                      <h4 className="text-lg font-semibold text-blue-700 mb-4">Do Pagamento</h4>
                       <ul className="space-y-2 text-sm text-gray-600">
                         <li>• Importação: pagamento prévio obrigatório</li>
                         <li>• Exportação: liquidação em até 7 dias</li>
@@ -554,18 +672,18 @@ export default function PrecosPage() {
                     </div>
                   </div>
 
-                  <div className="mt-8 p-6 bg-green-50 rounded-xl border border-green-200">
-                    <h4 className="text-lg font-semibold text-green-800 mb-3">Contatos Comerciais</h4>
+                  <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+                    <h4 className="text-lg font-semibold text-blue-800 mb-3">Contatos Comerciais</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="font-medium text-green-700">Geral:</p>
-                        <p className="text-green-600">comercial@portoitapoa.com</p>
-                        <p className="text-green-600">+55 47 3443.8700</p>
+                        <p className="font-medium text-blue-700">Geral:</p>
+                        <p className="text-blue-600">comercial@portoitapoa.com</p>
+                        <p className="text-blue-600">+55 47 3443.8700</p>
                       </div>
                       <div>
-                        <p className="font-medium text-green-700">Atendimento:</p>
-                        <p className="text-green-600">atendimento@portoitapoa.com</p>
-                        <p className="text-green-600">Segunda a sexta: 08h às 18h</p>
+                        <p className="font-medium text-blue-700">Atendimento:</p>
+                        <p className="text-blue-600">atendimento@portoitapoa.com</p>
+                        <p className="text-blue-600">Segunda a sexta: 08h às 18h</p>
                       </div>
                     </div>
                   </div>

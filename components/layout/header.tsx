@@ -35,7 +35,7 @@ const navigation = [
     name: "Serviços", 
     href: "/servicos",
     submenu: [
-      { name: "Portfólio", href: "/portfolio" },
+      { name: "Portfólio de Serviços", href: "/portfolio" },
       { name: "Tabela de Preços", href: "/precos" },
       { name: "Agendamento", href: "/agendamento" },
       { name: "Rastreamento", href: "/rastreamento" }
