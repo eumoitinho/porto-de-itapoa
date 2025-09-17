@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin, Clock } from 'lucide-react'
+import { Menu, X, ChevronDown, Search, Phone, Mail, MapPin, Clock, Download } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
@@ -12,7 +12,12 @@ import { LanguageSelector } from "@/components/language-selector"
 import { useI18n } from "@/lib/i18n/context"
 
 const navigation = [
-  { name: "Home", href: "/", nameKey: "home" },
+  { 
+    name: "Home", 
+    href: "/", 
+    nameKey: "home",
+    // Missão e Valores serão seções dentro da página Home
+  },
   {
     name: "Institucional",
     href: "/institucional",
@@ -21,36 +26,61 @@ const navigation = [
       {
         name: "Sobre o Porto",
         items: [
-          { name: "Porto Itapoá", href: "/porto-itapoa" },
-          { name: "Infraestrutura", href: "/infraestrutura" },
-          { name: "Localização", href: "/localizacao" },
-          { name: "Tour 360°", href: "/tour-360" },
+          { 
+            name: "Porto Itapoá", 
+            href: "/institucional/porto-itapoa",
+            description: "História, Linha do Tempo e Localização"
+          },
+          { 
+            name: "Acionistas", 
+            href: "/institucional/acionistas",
+            description: "Estrutura acionária e governança"
+          },
+          { 
+            name: "Certificações", 
+            href: "/institucional/certificacoes",
+            description: "Certificações e credenciamentos"
+          },
+          { 
+            name: "Premiações", 
+            href: "/institucional/premiacoes",
+            description: "Reconhecimentos e prêmios"
+          },
         ],
       },
       {
-        name: "Governança",
+        name: "Estrutura e Recursos",
         items: [
-          { name: "Acionistas", href: "/acionistas" },
-          { name: "Demonstrações Financeiras", href: "/demonstracoes" },
-          { name: "Política de Gestão Integrada", href: "/politica-gestao" },
-          { name: "LGPD", href: "/lgpd" },
+          { 
+            name: "Infraestrutura", 
+            href: "/institucional/infraestrutura",
+            description: "Infraestrutura portuária e Tour 360°"
+          },
+          { 
+            name: "Downloads", 
+            href: "/institucional/downloads",
+            description: "Demonstrações Financeiras, Pacto Global e Política de Gestão"
+          },
+          { 
+            name: "Portfólio de Serviços", 
+            href: "/institucional/portfolio",
+            description: "Serviços e procedimentos operacionais"
+          },
         ],
       },
       {
-        name: "Transparência",
+        name: "Mídia e Compliance",
         items: [
-          { name: "Denúncias", href: "/denuncias" },
-          { name: "Certificações", href: "/certificacoes" },
-          { name: "Premiações", href: "/premiacao" },
-          { name: "Pacto Global 2021", href: "/pacto-global" },
-        ],
-      },
-      {
-        name: "Recursos",
-        items: [
-          { name: "Downloads", href: "/downloads" },
-          { name: "Galerias", href: "/galerias" },
-          { name: "Linha do Tempo", href: "/linha-tempo" },
+          { 
+            name: "Galerias", 
+            href: "/institucional/galerias",
+            description: "Fotos e vídeos institucionais"
+          },
+          { 
+            name: "LGPD", 
+            href: "/institucional/lgpd",
+            description: "Proteção de dados e privacidade"
+          },
         ],
       },
     ],
@@ -60,53 +90,97 @@ const navigation = [
     href: "/servicos",
     nameKey: "services",
     submenu: [
-      
       {
-        name: "Consultas e Simuladores",
+        name: "Cadastros e Acessos",
         items: [
-          { name: "Consultas", href: "/consultas" },
-          { name: "Simuladores de Preço", href: "/simuladores" },
+          { 
+            name: "Portal de Compras", 
+            href: "/servicos/portal-compras",
+            icon: "🛒"
+          },
+          { 
+            name: "Cadastro de Cliente", 
+            href: "/servicos/cadastro-cliente",
+            icon: "👤"
+          },
+          { 
+            name: "Cadastro de Motorista", 
+            href: "/servicos/cadastro-motorista",
+            icon: "🚛"
+          },
         ],
       },
       {
-        name: "Operações e Procedimentos",
+        name: "Operações",
         items: [
-          { name: "Procedimentos", href: "/procedimentos" },
-          { name: "Cartas Protestos", href: "/cartas-protestos" },
-          { name: "Programação de Navios", href: "/programacao-navios" },
-          { name: "Integração de Motoristas", href: "/integracao-motoristas" },
-          { name: "Integração de Terceiros", href: "/integracao-terceiros" },
+          { 
+            name: "Programação de Navios", 
+            href: "/servicos/programacao-navios",
+            description: "Programação e Câmera 360°",
+            icon: "🚢"
+          },
+          { 
+            name: "Integração de Motoristas", 
+            href: "/servicos/integracao-motoristas",
+            icon: "🚚"
+          },
+          { 
+            name: "Integração de Serviços", 
+            href: "/servicos/integracao-servicos",
+            icon: "⚙️"
+          },
         ],
       },
       {
-        name: "Preços e Tabelas",
+        name: "Consultas e Simulações",
         items: [
-          { name: "Tabela de Preços 2025", href: "/precos" },
-          { name: "Tabela de Preços 2025 (A partir de 21/03)", href: "/precos-21-03" },
-        ],
-      },
-      {
-        name: "Portais e Ferramentas",
-        items: [
-          { name: "Portal de Compras", href: "/portal-compras" },
-          { name: "Portfólio de Serviços", href: "/portfolio" },
-          { name: "Câmera Online", href: "/camera-online" },
-          { name: "Linhas de Navegação", href: "/linhas-navegacao" },
-          { name: "Cadastro de Cliente", href: "/cadastro-cliente" },
-          { name: "Cadastro de Motorista", href: "/cadastro-motorista" },
+          { 
+            name: "Simuladores de Preços", 
+            href: "/servicos/simuladores",
+            description: "Simulação e Tabela de Preços",
+            icon: "💰",
+            hasDownload: true
+          },
+          { 
+            name: "Consultas", 
+            href: "/servicos/consultas",
+            icon: "🔍"
+          },
         ],
       },
     ],
   },
-  { name: "Notícias", href: "/noticias", nameKey: "news" },
-  { name: "Sustentabilidade", href: "/sustentabilidade", nameKey: "sustainability" },
-  { name: "Contato", href: "/contato", nameKey: "contact" },
+  { 
+    name: "Contato", 
+    href: "/contato", 
+    nameKey: "contact" 
+  },
+  { 
+    name: "Carreiras", 
+    href: "/carreiras", 
+    nameKey: "careers" 
+  },
+  { 
+    name: "Sustentabilidade", 
+    href: "/sustentabilidade", 
+    nameKey: "sustainability" 
+  },
+  { 
+    name: "Notícias", 
+    href: "/noticias", 
+    nameKey: "news" 
+  },
+  { 
+    name: "Blog", 
+    href: "/blog", 
+    nameKey: "blog" 
+  },
 ]
 
 const quickLinks = [
   { name: "Agendamento", href: "/agendamento", icon: Clock },
   { name: "Rastreamento", href: "/rastreamento", icon: Search },
-  { name: "Preços", href: "/precos", icon: Phone },
+  { name: "Preços", href: "/servicos/simuladores", icon: Phone },
 ]
 
 export function Header() {
@@ -141,7 +215,6 @@ export function Header() {
     }
   }
 
-  // Determinar se estamos na página inicial para aplicar o efeito transparente
   const isHomePage = pathname === "/"
 
   return (
@@ -167,7 +240,7 @@ export function Header() {
             : {}
         }
       >
-        {/* Top Bar - apenas quando scrolled ou não for home */}
+        {/* Top Bar */}
         <AnimatePresence>
           {(scrolled || !isHomePage) && (
             <motion.div
@@ -214,7 +287,7 @@ export function Header() {
 
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo - Apenas o logo sem texto */}
+            {/* Logo */}
             <Link href="/" className="flex items-center group">
               <motion.div
                 className="relative w-24 h-24 transition-transform group-hover:scale-105"
@@ -247,7 +320,7 @@ export function Header() {
                       pathname === item.href ||
                       (
                         item.submenu &&
-                          item.submenu.some((section) => section.items.some((subItem) => pathname === subItem.href))
+                          item.submenu.some((section) => section.items.some((subItem) => pathname.startsWith(subItem.href)))
                       )
                         ? isHomePage && !scrolled
                           ? "text-green-300 bg-white/10 backdrop-blur-sm"
@@ -294,17 +367,14 @@ export function Header() {
                           exit={{ opacity: 0, y: 10, scale: 0.95 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
                           className={`absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 py-6 z-50 ${
-                            item.name === "Serviços" ? "min-w-[600px]" : "min-w-[800px]"
+                            item.name === "Serviços" ? "min-w-[700px]" : "min-w-[650px]"
                           }`}
                           style={{
                             background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
                             boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)",
                           }}
                         >
-                          {/* Layout padrão para todos os menus - até 4 colunas para evitar aperto visual */}
-                          <div
-                            className={`grid ${item.submenu.length <= 2 ? "grid-cols-2" : item.submenu.length === 3 ? "grid-cols-3" : "grid-cols-4"} gap-8 px-8`}
-                          >
+                          <div className={`grid grid-cols-${item.submenu.length} gap-8 px-8`}>
                             {item.submenu.map((section, sectionIndex) => (
                               <motion.div
                                 key={section.name}
@@ -327,7 +397,22 @@ export function Header() {
                                             : "text-gray-700"
                                         }`}
                                       >
-                                        {subItem.name}
+                                        <div className="flex items-center justify-between">
+                                          <div className="flex items-center space-x-2">
+                                            {(subItem as any).icon && (
+                                              <span className="text-lg">{(subItem as any).icon}</span>
+                                            )}
+                                            <span>{subItem.name}</span>
+                                          </div>
+                                          {(subItem as any).hasDownload && (
+                                            <Download className="h-3 w-3 text-gray-400" />
+                                          )}
+                                        </div>
+                                        {(subItem as any).description && (
+                                          <p className="text-xs text-gray-500 mt-1 ml-7">
+                                            {(subItem as any).description}
+                                          </p>
+                                        )}
                                       </Link>
                                     </motion.div>
                                   ))}
@@ -349,7 +434,7 @@ export function Header() {
 
             {/* Search & Actions */}
             <div className="hidden lg:flex items-center space-x-4">
-              {/* Language Selector - apenas quando não scrolled na home */}
+              {/* Language Selector */}
               {isHomePage && !scrolled && <LanguageSelector />}
 
               {/* Search */}
@@ -479,7 +564,17 @@ export function Header() {
                                   }`}
                                   onClick={() => setIsOpen(false)}
                                 >
-                                  {subItem.name}
+                                  <div className="flex items-center space-x-2">
+                                    {(subItem as any).icon && (
+                                      <span className="text-base">{(subItem as any).icon}</span>
+                                    )}
+                                    <span>{subItem.name}</span>
+                                  </div>
+                                  {(subItem as any).description && (
+                                    <p className="text-xs text-gray-500 mt-1 ml-6">
+                                      {(subItem as any).description}
+                                    </p>
+                                  )}
                                 </Link>
                               ))}
                             </div>
