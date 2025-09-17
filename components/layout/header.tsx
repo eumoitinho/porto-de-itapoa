@@ -306,7 +306,7 @@ export function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-1">
+            <nav className="hidden lg:flex items-center space-x-6">
               {navigation.map((item) => (
                 <div
                   key={item.name}
@@ -375,50 +375,47 @@ export function Header() {
                           }}
                         >
                           <div className={`grid grid-cols-${item.submenu.length} gap-8 px-8`}>
-                            {item.submenu.map((section, sectionIndex) => (
-                              <motion.div
-                                key={section.name}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
-                                className="space-y-4"
-                              >
-                                <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
-                                  {section.name}
-                                </h3>
-                                <div className="space-y-2">
-                                  {section.items.map((subItem) => (
-                                    <motion.div key={subItem.name} whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
-                                      <Link
-                                        href={subItem.href}
-                                        className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
-                                          pathname === subItem.href
-                                            ? "text-green-600 bg-green-50 font-medium"
-                                            : "text-gray-700"
-                                        }`}
-                                      >
-                                        <div className="flex items-center justify-between">
-                                          <div className="flex items-center space-x-2">
-                                            {(subItem as any).icon && (
-                                              <span className="text-lg">{(subItem as any).icon}</span>
-                                            )}
+                            <div className="flex flex-row gap-8 px-4">
+                              {item.submenu.map((section, sectionIndex) => (
+                                <motion.div
+                                  key={section.name}
+                                  initial={{ opacity: 0, x: -20 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.3, delay: sectionIndex * 0.1 }}
+                                  className="flex flex-col gap-4"
+                                >
+                                  <h3 className="text-sm font-bold text-green-800 uppercase tracking-wider border-b border-green-100 pb-2">
+                                    {section.name}
+                                  </h3>
+                                  <div className="flex flex-col gap-2">
+                                    {section.items.map((subItem) => (
+                                      <motion.div key={subItem.name} whileHover={{ x: 4 }} transition={{ duration: 0.2 }}>
+                                        <Link
+                                          href={subItem.href}
+                                          className={`block text-sm transition-all duration-200 hover:text-green-600 py-2 px-3 rounded-lg hover:bg-green-50 ${
+                                            pathname === subItem.href
+                                              ? "text-green-600 bg-green-50 font-medium"
+                                              : "text-gray-700"
+                                          }`}
+                                        >
+                                          <div className="flex items-center justify-between">
                                             <span>{subItem.name}</span>
+                                            {(subItem as any).hasDownload && (
+                                              <Download className="h-3 w-3 text-gray-400" />
+                                            )}
                                           </div>
-                                          {(subItem as any).hasDownload && (
-                                            <Download className="h-3 w-3 text-gray-400" />
+                                          {(subItem as any).description && (
+                                            <p className="text-xs text-gray-500 mt-1 ml-7">
+                                              {(subItem as any).description}
+                                            </p>
                                           )}
-                                        </div>
-                                        {(subItem as any).description && (
-                                          <p className="text-xs text-gray-500 mt-1 ml-7">
-                                            {(subItem as any).description}
-                                          </p>
-                                        )}
-                                      </Link>
-                                    </motion.div>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            ))}
+                                        </Link>
+                                      </motion.div>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
                           </div>
 
                           {/* Decorative Elements */}
