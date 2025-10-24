@@ -1,0 +1,24 @@
+{
+  "name": "porto-itapoa-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sanity Studio for Porto Itapoá",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "keywords": [
+    "sanity"
+  ],
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "sanity": "^3.0.0",
+    "@sanity/vision": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0"
+  }
+}
