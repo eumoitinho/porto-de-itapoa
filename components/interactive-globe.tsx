@@ -223,7 +223,6 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
   }, [])
 
   const handlePointClick = (point: any, event?: any) => {
-    console.log('Point clicked:', point) // Debug
     setSelectedPoint(point)
     
     // Calcular posição do card baseado na posição do marker na tela
