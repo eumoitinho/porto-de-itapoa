@@ -192,20 +192,21 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
       // Zoom automático inicial - mais próximo e maior (altitude menor = mais zoom)
       globeRef.current.pointOfView({ lat: -26, lng: -48, altitude: 0.4 }, 2000)
       
-      // Permitir zoom apenas com Ctrl pressionado
+      // Permitir scroll normal - desabilitar interação do globo com wheel
       const handleWheelZoom = () => {
         const canvas = globeRef.current?.getGlobeCanvas?.()
         if (canvas) {
           const handleWheel = (e: WheelEvent) => {
-            // Permitir zoom apenas se Ctrl estiver pressionado
-            if (!e.ctrlKey && !e.metaKey) {
-              e.preventDefault()
-              e.stopPropagation()
-              return false
-            }
+            // Sempre prevenir o zoom do globo para permitir scroll normal
+            e.preventDefault()
+            e.stopPropagation()
+            // Permitir scroll da página
+            window.scrollBy(0, e.deltaY)
+            return false
           }
           canvas.addEventListener('wheel', handleWheel, { passive: false })
           canvas.style.touchAction = 'pan-x pan-y'
+          canvas.style.pointerEvents = 'auto'
         }
       }
       

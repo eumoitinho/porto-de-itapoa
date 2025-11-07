@@ -1,12 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight, Ship, Globe, Users, TrendingUp, MapPin, Play, Calendar, ShoppingCart, DollarSign, Calculator, Package, Menu, Twitter, Instagram, Linkedin, Mail, Star } from "lucide-react"
+import { ArrowRight, Ship, Globe, Users, TrendingUp, MapPin, Play, Calendar, ShoppingCart, DollarSign, Calculator, Package, Menu, Twitter, Instagram, Linkedin, Mail, Star, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { 
   useHomepageData, 
@@ -20,84 +20,31 @@ import {
 } from "@/hooks/useSanityData"
 import { InteractiveGlobe } from "@/components/interactive-globe"
 
-const stats = [
-  { icon: Ship, label: "Navios operados mensalmente", value: "180", description: "Movimentação mensal média" },
-  { icon: Globe, label: "Capacidade de atracação", value: "3", description: "Berços disponíveis" },
-  { icon: Users, label: "Transações do gate", value: "50.851", description: "Movimentações registradas" },
-  { icon: TrendingUp, label: "TEU's movimentados", value: "10 milhões", description: "Volume total movimentado" },
-]
-
-const featuredServices = [
-  {
-    title: "ÁSIA",
-    routes: "3 serviços regulares",
-    description: "Conexões diretas com os principais portos asiáticos.",
-    carriers: ["Maersk", "HMM", "PIL", "Cosco", "ONE"],
-  },
-  {
-    title: "EUROPA",
-    routes: "2 serviços regulares", 
-    description: "Acesso aos principais hubs europeus.",
-    carriers: ["Hapag-Lloyd", "Cosco", "MSC", "ONE", "OOCL"],
-  },
-  {
-    title: "AMÉRICA DO NORTE",
-    routes: "1 serviço regular",
-    description: "Costa Leste das Américas do Sul e Norte.",
-    carriers: ["Maersk", "Hapag-Lloyd"],
-  },
-  {
-    title: "CABOTAGEM",
-    routes: "3 serviços regulares",
-    description: "Costa leste da América do Sul e Costa Brasileira.",
-    carriers: ["Aliança", "Maersk", "CMA CGM"],
-  },
-  {
-    title: "MEDITERRÂNEO",
-    routes: "2 serviços regulares",
-    description: "Costa Leste da América do Sul e Mediterrâneo",
-    carriers: ["Hapag Lloyd", "MSC", "CMA CGM", "Maersk"],
-  },
-  {
-    title: "GOLFO DO MÉXICO",
-    routes: "2 serviços regulares",
-    description: "Costa Leste dos EUA e América do Sul e Golfo dos EUA",
-    carriers: ["Maersk", "MSC", "ZIM"],
-  },
-]
-
 // Video Background Component com efeito parallax
 function VideoBackground() {
   const [isClient, setIsClient] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     setIsClient(true)
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  if (!isClient || isMobile) {
-    return (
-      <div className="absolute inset-0 w-full h-full overflow-hidden" id="parallax-bg">
-        <Image
-          src="/placeholder.jpg"
-          alt="Porto Itapoá"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-tr from-green-900/80 via-green-800/40 to-transparent"></div>
-      </div>
-    )
-  }
+  useEffect(() => {
+    // Parallax effect for video
+    const handleScroll = () => {
+      if (videoRef.current) {
+        const scrolled = window.pageYOffset
+        const rate = scrolled * -0.5
+        videoRef.current.style.transform = `translateY(${rate}px)`
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden group" id="parallax-bg">
+    <div className="absolute inset-0 w-full h-full overflow-hidden hero-parallax-bg" id="parallax-bg">
       {/* Fallback background */}
       <Image
         src="/placeholder.jpg"
@@ -108,20 +55,23 @@ function VideoBackground() {
       />
       
       {/* Video element */}
-      <video
-        className="absolute inset-0 object-cover w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster="/placeholder.jpg"
-      >
-        <source src="/porto-video.mp4" type="video/mp4" />
-      </video>
+      {isClient && (
+        <video
+          ref={videoRef}
+          className="absolute inset-0 object-cover w-full h-full"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/placeholder.jpg"
+        >
+          <source src="/Design sem nome.mp4" type="video/mp4" />
+        </video>
+      )}
       
-      {/* Overlay com gradiente */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-green-900/80 via-green-800/40 to-transparent"></div>
+      {/* Enhanced gradient overlay */}
+      <div className="absolute inset-0 hero-gradient-overlay"></div>
     </div>
   )
 }
@@ -141,47 +91,47 @@ export default function HomePage() {
 
   // Dados padrão como fallback
   const defaultStats = [
-    { icon: Ship, label: "Navios operados mensalmente", value: "180", description: "Movimentação mensal média" },
-    { icon: Globe, label: "Capacidade de atracação", value: "3", description: "Berços disponíveis" },
-    { icon: Users, label: "Transações do gate", value: "50.851", description: "Movimentações registradas" },
-    { icon: TrendingUp, label: "TEU's movimentados", value: "10 milhões", description: "Volume total movimentado" },
+    { icon: Ship, label: t("shipsOperatedMonthly"), value: "180", description: t("monthlyAverageMovement") },
+    { icon: Globe, label: t("dockingCapacity"), value: "3", description: t("availableBerths") },
+    { icon: Users, label: t("gateTransactions"), value: "50.851", description: t("registeredMovements") },
+    { icon: TrendingUp, label: t("teusMoved"), value: "10 milhões", description: t("totalVolumeMoved") },
   ]
 
   const defaultFeaturedServices = [
     {
-      title: "ÁSIA",
-      routes: "3 serviços regulares",
-      description: "Conexões diretas com os principais portos asiáticos.",
+      title: t("asiaHome"),
+      routes: t("asiaRoutes"),
+      description: t("asiaDescription"),
       carriers: ["Maersk", "HMM", "PIL", "Cosco", "ONE"],
     },
     {
-      title: "EUROPA",
-      routes: "2 serviços regulares", 
-      description: "Acesso aos principais hubs europeus.",
+      title: t("europeHome"),
+      routes: t("europeRoutes"), 
+      description: t("europeDescription"),
       carriers: ["Hapag-Lloyd", "Cosco", "MSC", "ONE", "OOCL"],
     },
     {
-      title: "AMÉRICA DO NORTE",
-      routes: "1 serviço regular",
-      description: "Costa Leste das Américas do Sul e Norte.",
+      title: t("northAmericaHome"),
+      routes: t("northAmericaRoutes"),
+      description: t("northAmericaDescription"),
       carriers: ["Maersk", "Hapag-Lloyd"],
     },
     {
-      title: "CABOTAGEM",
-      routes: "3 serviços regulares",
-      description: "Costa leste da América do Sul e Costa Brasileira.",
+      title: t("cabotageHome"),
+      routes: t("cabotageRoutes"),
+      description: t("cabotageDescription"),
       carriers: ["Aliança", "Maersk", "CMA CGM"],
     },
     {
-      title: "MEDITERRÂNEO",
-      routes: "2 serviços regulares",
-      description: "Costa Leste da América do Sul e Mediterrâneo",
+      title: t("mediterraneanHome"),
+      routes: t("mediterraneanRoutes"),
+      description: t("mediterraneanDescription"),
       carriers: ["Hapag Lloyd", "MSC", "CMA CGM", "Maersk"],
     },
     {
-      title: "GOLFO DO MÉXICO",
-      routes: "2 serviços regulares",
-      description: "Costa Leste dos EUA e América do Sul e Golfo dos EUA",
+      title: t("gulfOfMexicoHome"),
+      routes: t("gulfOfMexicoRoutes"),
+      description: t("gulfOfMexicoDescription"),
       carriers: ["Maersk", "MSC", "ZIM"],
     },
   ]
@@ -198,11 +148,114 @@ export default function HomePage() {
     return iconMap[iconName] || Package
   }
 
-  // Usar dados do Sanity ou fallbacks
-  const currentStats = statsData?.statistics || defaultStats
+  const currentStats = statsData?.stats || defaultStats
   const currentFeaturedServices = maritimeServicesData?.services || defaultFeaturedServices
 
-  // Efeito parallax
+  // Estilos para cards de estatísticas
+  const statAccentClasses = [
+    {
+      card: "bg-gradient-to-br from-emerald-50 via-white to-white border-l-4 border-emerald-500 shadow-lg",
+      circle: "bg-emerald-500 text-white shadow-lg",
+      value: "text-emerald-600"
+    },
+    {
+      card: "bg-white border-2 border-green-200 shadow-md rounded-2xl",
+      circle: "bg-gradient-to-br from-green-400 to-green-600 text-white",
+      value: "text-green-600"
+    },
+    {
+      card: "bg-gradient-to-tr from-lime-50 to-white border border-lime-300 shadow-sm rounded-xl",
+      circle: "bg-lime-100 text-lime-700 border-2 border-lime-300",
+      value: "text-lime-600"
+    },
+    {
+      card: "bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800 shadow-2xl",
+      circle: "bg-white text-emerald-600 ring-2 ring-emerald-300",
+      value: "text-white"
+    },
+  ]
+
+  const valueCardStyles = [
+    {
+      card: "bg-gradient-to-br from-emerald-50 via-white to-white border-l-4 border-emerald-500 shadow-lg",
+      badge: "text-emerald-600",
+      dot: "bg-emerald-500"
+    },
+    {
+      card: "bg-white border-2 border-green-200 shadow-md rounded-2xl",
+      badge: "text-green-600",
+      dot: "bg-green-500"
+    },
+    {
+      card: "bg-gradient-to-tr from-lime-50 to-white border border-lime-300 shadow-sm rounded-xl",
+      badge: "text-lime-600",
+      dot: "bg-lime-500"
+    }
+  ]
+
+  const otherServiceStyles = [
+    {
+      border: "border-l-4 border-emerald-500",
+      bg: "bg-gradient-to-br from-emerald-50 to-white",
+      icon: "bg-emerald-500 text-white shadow-lg",
+      hover: "hover:border-emerald-600"
+    },
+    {
+      border: "border-2 border-green-300 rounded-2xl",
+      bg: "bg-white",
+      icon: "bg-gradient-to-br from-green-400 to-green-600 text-white",
+      hover: "hover:border-green-400"
+    },
+    {
+      border: "border border-lime-300 rounded-xl",
+      bg: "bg-gradient-to-tr from-lime-50 to-white",
+      icon: "bg-lime-100 text-lime-700 border-2 border-lime-300",
+      hover: "hover:border-lime-400"
+    },
+    {
+      border: "border-l-4 border-emerald-500",
+      bg: "bg-white",
+      icon: "bg-emerald-50 text-emerald-600 ring-2 ring-emerald-200",
+      hover: "hover:border-emerald-600"
+    },
+    {
+      border: "border-2 border-green-200 rounded-2xl",
+      bg: "bg-gradient-to-br from-green-50 to-white",
+      icon: "bg-green-500 text-white shadow-md",
+      hover: "hover:border-green-400"
+    }
+  ]
+
+  // Enhanced scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate')
+        }
+      })
+    }, { 
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    })
+
+    // Observe all animated elements
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el)
+    })
+
+    // Initialize hero content animation
+    setTimeout(() => {
+      const heroContent = document.querySelector('.hero-content')
+      if (heroContent) {
+        heroContent.classList.add('animate')
+      }
+    }, 500)
+
+    return () => observer.disconnect()
+  }, [])
+
+  // Parallax effects
   useEffect(() => {
     let ticking = false;
     
@@ -222,13 +275,6 @@ export default function HomePage() {
       if (parallaxCrosses) {
         const speed = 0.3;
         parallaxCrosses.style.transform = `translateY(${scrolled * speed}px)`;
-      }
-      
-      // Hero wordmark
-      const parallaxWordmark = document.getElementById('parallax-wordmark');
-      if (parallaxWordmark) {
-        const speed = 0.7;
-        parallaxWordmark.style.transform = `translateY(${scrolled * speed}px)`;
       }
       
       // Second section background
@@ -275,8 +321,6 @@ export default function HomePage() {
     }
     
     window.addEventListener('scroll', requestTick);
-    
-    // Initial call
     updateParallax();
 
     return () => {
@@ -287,7 +331,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-black text-white antialiased overflow-hidden">
       {/* Main Hero Section */}
-      <main className="min-h-screen overflow-hidden relative">
+      <main className="min-h-screen overflow-hidden relative pt-20">
         {/* Background */}
         <VideoBackground />
 
@@ -301,66 +345,42 @@ export default function HomePage() {
           <div className="absolute right-8 bottom-12 text-white/40">+</div>
         </div>
 
-        {/* Top Bar */}
-        <header className="z-10 flex md:px-10 pt-5 pr-6 pb-5 pl-6 relative items-center justify-between">
-          <div className="flex gap-3 items-center">
-            <div className="h-2.5 w-2.5 rounded-full bg-green-500"></div>
-            <span className="md:text-base text-sm font-semibold tracking-tight cursor-pointer" onClick={() => window.location.href = '/'} role="button">
-              PORTO ITAPOÁ
-            </span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm text-white/80">
-            <Link href="/servicos" className="hover:text-white transition">Serviços</Link>
-            <Link href="/portfolio" className="hover:text-white transition">Portfólio</Link>
-            <Link href="/institucional" className="hover:text-white transition">Institucional</Link>
-            <Link href="/contato" className="hover:text-white transition">Contato</Link>
-            <div className="h-5 w-px bg-white/20"></div>
-            <div className="flex items-center gap-4">
-              <a href="#" aria-label="LinkedIn"><Linkedin className="h-4 w-4" /></a>
-              <a href="#" aria-label="Instagram"><Instagram className="h-4 w-4" /></a>
-              <a href="#" aria-label="Email"><Mail className="h-4 w-4" /></a>
-            </div>
-          </nav>
-          <button className="md:hidden inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/10 transition">
-            <Menu className="h-4 w-4" />
-          </button>
-        </header>
-
         {/* Content */}
-        <section className="z-10 relative">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:px-10 lg:pb-36 lg:pt-20 max-w-7xl mr-auto ml-auto pt-10 pr-6 pb-28 pl-6 items-center">
-            <div className="max-w-xl">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight">
-                {homepageData?.title || "Soluções portuárias com tecnologia e inteligência logística"}
-              </h1>
-              <p className="mt-5 text-base sm:text-lg text-white/80">
-                Conectando o Brasil ao mundo com eficiência, tecnologia e sustentabilidade através de um dos terminais mais modernos da América do Sul.
-              </p>
-              
-                    <div className="mt-8 flex flex-wrap items-center gap-3">
-                      <Link href={homepageData?.ctaButtonLink || "/servicos"}>
-                        <button className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-6 py-3 text-sm font-medium hover:bg-white/90 transition">
-                          {homepageData?.ctaButtonText || "CONHEÇA NOSSOS SERVIÇOS"}
-                          <ArrowRight className="h-4 w-4" />
-                        </button>
-                      </Link>
-                      <Link href="/contato">
-                        <button className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm text-white/90 backdrop-blur hover:bg-white/10 transition">
-                          Entre em Contato
-                          <Calendar className="h-4 w-4" />
-                        </button>
-                      </Link>
-                    </div>
+        <section className="z-10 relative flex h-full max-w-7xl mx-auto px-6 items-center pt-10 pb-20">
+          <div className="max-w-xl text-white hero-content">
+            <p className="text-sm/6 uppercase tracking-widest opacity-80 animate-on-scroll text-reveal stagger-1">
+              {t("heroSubtitle")}
+            </p>
+            <h1 className="mt-3 text-5xl md:text-6xl tracking-tight font-semibold animate-on-scroll text-reveal stagger-2">
+              {homepageData?.title || t("heroTitle")}
+            </h1>
+            <p className="text-base/7 md:text-lg/8 opacity-90 mt-4 animate-on-scroll text-reveal stagger-3">
+              {homepageData?.subtitle || t("heroSubtitleText")}
+            </p>
+            <div className="mt-8 flex items-center gap-3">
+              <Link href={homepageData?.ctaButtonLink || "/servicos"}>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative flex items-center gap-2 rounded-full bg-white text-black px-6 py-3 text-sm font-medium hover:bg-white/90 transition shadow-lg overflow-hidden"
+                >
+                  <span className="relative z-10">{homepageData?.ctaButtonText || t("knowOurServices")}</span>
+                  <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              </Link>
+              <Link href="/contato">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/30 hover:bg-white/10 backdrop-blur transition transform hover:scale-105 animate-on-scroll slide-left stagger-5"
+                >
+                  {t("contactButton")}
+                  <Play className="w-4 h-4" />
+                </motion.button>
+              </Link>
             </div>
           </div>
         </section>
-
-        {/* Massive brand wordmark */}
-        <div className="pointer-events-none z-0 select-none absolute right-0 left-0" id="parallax-wordmark">
-          <div className="md:px-10 max-w-full mr-auto ml-auto pr-6 pl-6 items-center justify-center">
-            <div className="whitespace-nowrap text-[20vw] leading-none font-semibold text-green-500/95 tracking-tight text-center">ITAPOÁ</div>
-          </div>
-        </div>
       </main>
 
       {/* Statistics Section */}
@@ -373,36 +393,39 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              {statsData?.title || "Números que Impressionam"}
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
+              {statsData?.title || t("impressiveNumbers")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {statsData?.description || "Conheça os números que fazem do Porto Itapoá um dos terminais mais eficientes do Brasil"}
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
+              {statsData?.description || t("statsDescription")}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {currentStats.map((stat: any, index: number) => (
+            {currentStats.map((stat: any, index: number) => {
+              const accent = statAccentClasses[index % statAccentClasses.length]
+              return (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group"
+                className="group h-full"
               >
-                <div className="overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
-                  <div className="p-8 text-center">
-                    <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center group-hover:from-green-200 group-hover:to-emerald-200 transition-all duration-300">
-                      <stat.icon className="h-8 w-8 text-green-600" />
+                <div className={`h-full flex flex-col overflow-hidden rounded-2xl relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${accent.card}`}>
+                  <div className="p-8 text-center flex flex-col flex-1">
+                    <div className={`w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center transition-all duration-300 ${accent.circle}`}>
+                      <stat.icon className="h-8 w-8" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-4xl font-bold text-green-900 mb-3 group-hover:text-green-700 transition-colors">{stat.value}</h3>
-                    <p className="text-lg font-semibold text-gray-800 mb-2">{stat.label}</p>
-                    <p className="text-sm text-gray-600 leading-relaxed">{stat.description}</p>
+                    <h3 className={`text-4xl font-bold mb-3 transition-colors ${accent.value}`}>{stat.value}</h3>
+                    <p className={`text-lg font-semibold ${index === 3 ? 'text-white' : 'text-gray-800'} mb-2`}>{stat.label}</p>
+                    <p className={`text-sm ${index === 3 ? 'text-white/80' : 'text-gray-600'} leading-relaxed flex-1`}>{stat.description}</p>
                   </div>
                 </div>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
@@ -431,15 +454,50 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <section className="z-10 relative">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:px-10 lg:pb-36 lg:pt-20 max-w-7xl mr-auto ml-auto pt-10 pr-6 pb-28 pl-6 items-center">
-            <div className="max-w-xl">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white">
-                {terminalData?.title || "O Terminal"}
-              </h2>
-              <p className="mt-5 text-base sm:text-lg text-white/80">
-                {terminalData?.description || "O Porto Itapoá é um dos maiores e mais eficientes terminais de contêineres do Brasil, com capacidade atual para movimentar 1,8 milhão de TEUs por ano e em expansão para 2 milhões."}
-              </p>
+        <section className="z-10 relative flex h-full max-w-7xl mx-auto px-6 items-center pt-20 pb-20">
+          <div className="max-w-2xl text-white hero-content">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white animate-on-scroll text-reveal stagger-1">
+              {terminalData?.title || t("terminalTitle")}
+            </h2>
+            <p className="mt-5 text-base sm:text-lg text-white/90 leading-relaxed animate-on-scroll text-reveal stagger-2">
+              {terminalData?.description || t("terminalDescription")}
+            </p>
+            {/* Trust Bar Content dentro da seção do terminal */}
+            <div className="mt-12 text-center animate-on-scroll blur-slide">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+                <span className="animate-on-scroll slide-left stagger-1 text-2xl sm:text-3xl md:text-4xl tracking-tight font-semibold italic text-white">
+                  {t("strategicLocation")},
+                </span>
+                <Image
+                  src="/foto-porto-patio-1024x721.webp"
+                  alt="Porto Itapoá"
+                  width={48}
+                  height={48}
+                  className="animate-on-scroll rotate-in stagger-2 inline-block sm:h-10 sm:w-10 md:h-12 md:w-12 bg-white w-8 h-8 object-cover ring-white ring-2 rounded-xl shadow-lg -rotate-6"
+                />
+                <span className="animate-on-scroll slide-right stagger-3 text-2xl sm:text-3xl md:text-4xl tracking-tight font-semibold italic text-white">
+                  {t("connectivity")},
+                </span>
+                <Image
+                  src="/placeholder.jpg"
+                  alt="Porto Itapoá"
+                  width={48}
+                  height={48}
+                  className="animate-on-scroll rotate-in stagger-4 inline-block sm:h-10 sm:w-10 md:h-12 md:w-12 ring-white ring-2 bg-white w-8 h-8 object-cover rounded-xl shadow-lg rotate-6"
+                />
+              </div>
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+                <Image
+                  src="/placeholder.jpg"
+                  alt="Porto Itapoá"
+                  width={80}
+                  height={48}
+                  className="animate-on-scroll scale-up stagger-5 inline-block sm:h-10 sm:w-16 md:h-12 md:w-20 ring-white ring-2 w-0 h-0 object-cover rounded-xl shadow-lg -rotate-3"
+                />
+                <span className="animate-on-scroll slide-up stagger-6 text-2xl sm:text-3xl md:text-4xl tracking-tight font-semibold italic text-white">
+                  {t("sustainable")}.
+                </span>
+              </div>
             </div>
           </div>
         </section>
@@ -462,117 +520,102 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              {terminalData?.title || "Nossos Valores"}
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
+              {terminalData?.title || t("ourValues")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Conheça os pilares que guiam nossas operações e nosso compromisso com a excelência.
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
+              {t("valuesDescription")}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {[{
+              title: t("mission"),
+              heading: t("missionHeading"),
+              content: terminalData?.mission || t("missionContent")
+            }, {
+              title: t("vision"),
+              heading: t("visionHeading"),
+              content: terminalData?.vision || t("visionContent")
+            }, {
+              title: t("values"),
+              heading: t("valuesHeading"),
+              content: terminalData?.values || t("valuesContent")
+            }].map((item, index) => (
             <motion.div
+                key={item.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+                transition={{ duration: 0.6, delay: (index + 1) * 0.1 }}
               viewport={{ once: true }}
-              className="group"
+              className="group h-full"
             >
-              <div className="overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
-                <div className="p-8 text-center">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                    <span className="text-sm font-medium text-green-600">Missão</span>
+                <div className={`h-full flex flex-col overflow-hidden rounded-2xl relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${valueCardStyles[index % valueCardStyles.length].card}`}>
+                  <div className="p-8 text-left flex flex-col flex-1">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`h-2 w-2 rounded-full ${valueCardStyles[index % valueCardStyles.length].dot}`}></div>
+                      <span className={`text-sm font-medium ${valueCardStyles[index % valueCardStyles.length].badge}`}>{item.title}</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">{item.heading}</h3>
+                    <p className="text-gray-600 leading-relaxed flex-1">
+                      {item.content}
+                    </p>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Integrar negócios</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {terminalData?.mission || "Integrar negócios com modernidade, sustentabilidade e eficiência."}
-                  </p>
                 </div>
-              </div>
             </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="group"
-            >
-              <div className="overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
-                <div className="p-8 text-center">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                    <span className="text-sm font-medium text-green-600">Visão</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Liderança regional</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {terminalData?.vision || "Ser o maior e mais eficiente terminal da América do Sul."}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="group"
-            >
-              <div className="overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
-                <div className="p-8 text-center">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                    <span className="text-sm font-medium text-green-600">Valores</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Excelência operacional</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {terminalData?.values || "Comprometimento, leveza, conduta íntegra, inovação e excelência em sustentabilidade e segurança."}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Services Overview */}
       <section className="bg-zinc-200 border-gray-200 border-t relative">
-        <div className="relative w-full h-[600px] lg:h-[800px] xl:h-[900px]">
+        <div className="relative w-full h-[600px] lg:h-[800px] xl:h-[900px] pointer-events-none">
           {/* Globo Interativo - ocupa toda a seção incluindo título */}
           <InteractiveGlobe 
-            className="w-full h-full"
-            title={maritimeServicesData?.title || "Serviços Marítimos Regulares"}
-            description={maritimeServicesData?.description || "Conecte-se a todos os continentes com rotas de longo curso e cabotagem."}
+            className="w-full h-full pointer-events-auto"
+            title={maritimeServicesData?.title || t("regularMaritimeServices")}
+            description={maritimeServicesData?.description || t("servicesDescription")}
           />
-        </div>
+            </div>
 
-        {/* Services Grid */}
+            {/* Services Grid */}
         <div className="md:px-10 lg:py-28 max-w-7xl mr-auto ml-auto pt-20 pr-6 pb-20 pl-6">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {currentFeaturedServices.slice(0, 3).map((service: any, index: number) => (
-              <div key={service.title} className="group overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
-                <div className="overflow-hidden h-64 relative">
+            <div className="flex mb-8 items-end justify-between animate-on-scroll fade-in">
+              <div>
+                <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600 animate-on-scroll text-reveal stagger-1">
+                  {t("regularMaritimeServices")}
+                </h2>
+                <p className="mt-2 text-neutral-600 dark:text-neutral-400 animate-on-scroll text-reveal stagger-2">
+                  {t("servicesDescription")}
+                </p>
+              </div>
+              <Link href="/portfolio" className="hidden sm:inline-flex items-center gap-2 text-sm hover:text-neutral-600 dark:hover:text-neutral-400 transition animate-on-scroll slide-left stagger-3">
+                {t("seeCompletePortfolio")}
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="flex gap-1.5 bg-[#ffffff] w-full max-w-none rounded-3xl pt-6 pr-6 pb-6 pl-6 shadow-2xl space-x-4 animate-on-scroll scale-in overflow-x-auto">
+              {currentFeaturedServices.slice(0, 5).map((service: any, index: number) => (
+                <div 
+                  key={service.title} 
+                  className="card-panel flex-1 min-w-[200px] overflow-hidden cursor-pointer transition-all duration-500 flex hover:flex-[4] group bg-gray-800 h-[464px] rounded-3xl relative top-0 right-0 bottom-0 left-0 items-center justify-center animate-on-scroll blur-in"
+                  style={{ transitionDelay: `${index * 0.1}s` }}
+                >
                   <Image
                     src="/placeholder.jpg"
                     alt={service.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="card-image w-full h-full object-cover rounded-sm"
                   />
-                  <div className="bg-gradient-to-t from-white/80 via-transparent to-transparent absolute top-0 right-0 bottom-0 left-0"></div>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="h-1 w-1 rounded-full bg-green-500"></div>
-                    <span className="text-xs font-medium text-green-600">{service.title}</span>
+                  <div className="card-overlay group-hover:opacity-100 transition-opacity duration-300 flex flex-col bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 rounded-3xl pt-6 pr-6 pb-6 pl-6 absolute top-0 right-0 bottom-0 left-0 justify-end">
+                    <h3 className="text-white text-xl font-medium mb-1 tracking-tight">{service.title}</h3>
+                    <p className="text-gray-200 text-sm">{service.routes}</p>
+                    <p className="text-gray-400 text-xs mt-2">{service.description}</p>
                   </div>
-                  <h4 className="font-semibold text-gray-900 mb-1">{service.routes}</h4>
-                  <p className="text-sm text-gray-700">{service.description}</p>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
         </div>
       </section>
 
@@ -586,48 +629,49 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              {otherServicesData?.title || "Outros serviços"}
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
+              {otherServicesData?.title || t("otherServices")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {otherServicesData?.description || "O Porto de Itapoá oferece soluções logísticas locais e globais que impulsionam empresas de todos os portes."}
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
+              {otherServicesData?.description || t("otherServicesDescription")}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {(otherServicesData?.services || [
               {
-                title: "Programação de navios",
-                description: "Acompanhe em tempo real chegadas, atracações e saídas de navios.",
+                title: t("shipScheduling"),
+                description: t("shipSchedulingDesc"),
                 link: "/agendamento",
                 icon: "Calendar"
               },
               {
-                title: "Portal de Compras",
-                description: "Participe de cotações e forneça produtos e serviços ao Porto.",
+                title: t("purchasePortal"),
+                description: t("purchasePortalDesc"),
                 link: "/portal-cliente",
                 icon: "ShoppingCart"
               },
               {
-                title: "Tabela de preços",
-                description: "Consulte as tarifas atualizadas de todos os serviços disponíveis.",
+                title: t("priceTableTitle"),
+                description: t("priceTableDesc"),
                 link: "/precos",
                 icon: "DollarSign"
               },
               {
-                title: "Simuladores de preço",
-                description: "Calcule valores de importação e exportação de forma prática.",
+                title: t("priceSimulators"),
+                description: t("priceSimulatorsDesc"),
                 link: "/precos",
                 icon: "Calculator"
               },
               {
-                title: "Rastreamento de contêineres",
-                description: "Monitore a localização e o status da sua carga em tempo real.",
+                title: t("containerTracking"),
+                description: t("containerTrackingDesc"),
                 link: "/rastreamento",
                 icon: "Package"
               }
             ]).map((service: any, index: number) => {
               const IconComponent = getIcon(service.icon)
+              const style = otherServiceStyles[index % otherServiceStyles.length]
               return (
               <motion.div
                 key={service.title}
@@ -635,16 +679,22 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group"
+                className="group h-full"
               >
-                <Link href={service.link}>
-                  <div className="overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur cursor-pointer">
-                    <div className="p-8 text-center">
-                      <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center group-hover:from-green-200 group-hover:to-emerald-200 transition-all duration-300">
-                        <IconComponent className="h-8 w-8 text-green-600" />
+                <Link href={service.link} className="h-full flex">
+                  <div className={`h-full flex flex-col w-full overflow-hidden rounded-2xl relative ${style.bg} border border-gray-100 ${style.border} ${style.hover} transition-all duration-300 cursor-pointer shadow-sm hover:-translate-y-1 hover:shadow-xl`}>
+                    <div className="p-8 text-left flex flex-col flex-1">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${style.icon}`}>
+                          <IconComponent className="h-6 w-6" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">{service.title}</h3>
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4 group-hover:text-green-700 transition-colors">{service.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{service.description}</p>
+                      <p className="text-gray-600 leading-relaxed mb-6 flex-1">{service.description}</p>
+                      <div className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600">
+                        {t("accessService")}
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -665,25 +715,24 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              Últimas Notícias
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
+              {t("latestNews")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Acompanhe as novidades e atualizações do Porto Itapoá
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
+              {t("latestNewsDescription")}
             </p>
           </motion.div>
 
           <div className="text-center">
             <Link href="/noticias">
-              <motion.div
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 rounded-full bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors animate-on-scroll scale-in stagger-3"
               >
-                <button className="inline-flex items-center gap-2 rounded-xl bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors">
-                  Ver todas as notícias
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </motion.div>
+                {t("seeAllNews")}
+                <ArrowRight className="h-5 w-5" />
+              </motion.button>
             </Link>
           </div>
         </div>
@@ -692,25 +741,25 @@ export default function HomePage() {
       {/* Why Choose Section */}
       <section className="bg-zinc-950 border-white/5 border-t relative">
         <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:py-28">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-white">
-              {whyChooseData?.title || "Por que escolher o Porto Itapoá?"}
+          <div className="text-center mb-16 animate-on-scroll blur-slide">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-white animate-on-scroll text-reveal stagger-1">
+              {whyChooseData?.title || t("whyChoose")}
             </h2>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">
-              {whyChooseData?.description || "Descubra os diferenciais que fazem do nosso terminal a melhor escolha para sua operação"}
+            <p className="text-lg text-white/60 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
+              {whyChooseData?.description || t("whyChooseDescription")}
             </p>
           </div>
 
           {/* Featured Benefit */}
-          <div className="overflow-hidden bg-zinc-900/50 ring-slate-50/10 ring-1 rounded-2xl mb-12 relative backdrop-blur">
+          <div className="overflow-hidden bg-zinc-900/50 ring-slate-50/10 ring-1 rounded-2xl mb-12 relative backdrop-blur animate-on-scroll card-reveal stagger-1">
             <div className="grid lg:grid-cols-2 items-center">
               <div className="lg:p-12 order-2 lg:order-1 pt-8 pr-8 pb-8 pl-8">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                  <span className="text-sm font-medium text-green-400">Diferencial Principal</span>
+                  <span className="text-sm font-medium text-green-400">{t("mainDifferential")}</span>
                 </div>
                 <blockquote className="lg:text-2xl leading-relaxed text-xl font-medium text-white/90 mb-6">
-                  "Tecnologia de ponta combinada com localização estratégica, oferecendo eficiência operacional e conectividade global incomparáveis."
+                  "{t("mainDifferentialQuote")}"
                 </blockquote>
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-full bg-zinc-800 flex items-center justify-center">
@@ -718,11 +767,11 @@ export default function HomePage() {
                   </div>
                   <div>
                     <div className="font-medium text-white">Porto Itapoá</div>
-                    <div className="text-sm text-white/60">Terminal de Contêineres</div>
+                    <div className="text-sm text-white/60">{t("terminalContainers")}</div>
                   </div>
                 </div>
               </div>
-              <div className="relative h-80 lg:h-96 overflow-hidden order-1 lg:order-2">
+              <div className="relative h-80 lg:h-96 overflow-hidden order-1 lg:order-2 animate-on-scroll image-reveal stagger-2">
                 <Image
                   src="/placeholder.jpg"
                   alt="Terminal Porto Itapoá"
@@ -738,19 +787,19 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
             {(whyChooseData?.benefits || [
               {
-                title: "Serviços de ponta a ponta",
-                description: "Soluções logísticas completas e flexíveis para gerenciar sua carga da origem ao destino."
+                title: t("endToEndServices"),
+                description: t("endToEndServicesDesc")
               },
               {
-                title: "Visibilidade total",
-                description: "Monitoramento em tempo real da sua carga e controle total sobre sua operação em portos e armazéns."
+                title: t("totalVisibility"),
+                description: t("totalVisibilityDesc")
               },
               {
-                title: "Previsibilidade de custos",
-                description: "Preços definidos no momento da reserva e total transparência financeira."
+                title: t("costPredictability"),
+                description: t("costPredictabilityDesc")
               }
                   ]).slice(0, 3).map((item: any, index: number) => (
-              <div key={item.title} className="overflow-hidden bg-zinc-900/50 ring-slate-50/10 ring-1 rounded-xl pt-6 pr-6 pb-6 pl-6 relative backdrop-blur">
+              <div key={item.title} className="overflow-hidden bg-zinc-900/50 ring-slate-50/10 ring-1 rounded-xl pt-6 pr-6 pb-6 pl-6 relative backdrop-blur animate-on-scroll card-reveal" style={{ transitionDelay: `${(index + 1) * 0.1}s` }}>
                 <div className="mb-6">
                   <div className="flex items-center gap-1 mb-4">
                     <Star className="h-4 w-4 fill-green-400 stroke-green-400" />
@@ -767,24 +816,24 @@ export default function HomePage() {
           </div>
 
           {/* Stats */}
-          <div className="text-center">
-            <h3 className="text-xl font-semibold tracking-tight mb-8 text-white/90">Números que Comprovam</h3>
+          <div className="text-center animate-on-scroll blur-slide">
+            <h3 className="text-xl font-semibold tracking-tight mb-8 text-white/90 animate-on-scroll text-reveal stagger-1">{t("numbersThatProve")}</h3>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="text-center">
+              <div className="text-center animate-on-scroll slide-up stagger-2">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">180</div>
-                <div className="text-sm text-white/60">Navios/mês</div>
+                <div className="text-sm text-white/60">{t("shipsPerMonth")}</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-on-scroll slide-up stagger-3">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">1.8M</div>
-                <div className="text-sm text-white/60">TEUs/ano</div>
+                <div className="text-sm text-white/60">{t("teusPerYear")}</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-on-scroll slide-up stagger-4">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">50K+</div>
-                <div className="text-sm text-white/60">Transações</div>
+                <div className="text-sm text-white/60">{t("transactions")}</div>
               </div>
-              <div className="text-center lg:border-l lg:border-white/10">
+              <div className="text-center lg:border-l lg:border-white/10 animate-on-scroll slide-up stagger-5">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">15+</div>
-                <div className="text-sm text-white/60">Países conectados</div>
+                <div className="text-sm text-white/60">{t("connectedCountries")}</div>
               </div>
             </div>
           </div>
@@ -799,25 +848,24 @@ export default function HomePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center"
+            className="text-center animate-on-scroll blur-slide"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              {sustainabilityData?.title || "Compromisso com a sustentabilidade"}
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
+              {sustainabilityData?.title || t("sustainabilityTitle")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-12">
-              {sustainabilityData?.description || "Projetado para ser sustentável e integrado ao meio ambiente, o Porto Itapoá segue a tendência dos portos mais modernos do mundo, priorizando a mínima interferência ambiental."}
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-12 animate-on-scroll text-reveal stagger-2">
+              {sustainabilityData?.description || t("sustainabilityDescription")}
             </p>
             
             <Link href="/sustentabilidade">
-              <motion.div
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 rounded-full bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors animate-on-scroll scale-in stagger-3"
               >
-                <button className="inline-flex items-center gap-2 rounded-xl bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors">
-                  {sustainabilityData?.ctaButtonText || "ACESSE NOSSO PORTAL DE SUSTENTABILIDADE!"}
-                  <ArrowRight className="h-5 w-5" />
-                </button>
-              </motion.div>
+                {sustainabilityData?.ctaButtonText || t("accessSustainabilityPortal")}
+                <ArrowRight className="h-5 w-5" />
+              </motion.button>
             </Link>
           </motion.div>
         </div>
@@ -828,16 +876,16 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:py-28">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
-            <div>
+            <div className="animate-on-scroll slide-left stagger-1">
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                <span className="text-sm font-medium text-green-600">Vamos Trabalhar Juntos</span>
+                <span className="text-sm font-medium text-green-600">{t("letsWorkTogether")}</span>
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-                Pronto para criar algo extraordinário?
+                {t("readyToCreate")}
               </h2>
               <p className="text-lg text-gray-600 mb-8 max-w-lg">
-                Seja para importação, exportação ou serviços logísticos, estamos aqui para tornar sua operação mais eficiente e conectada ao mundo.
+                {t("contactDescriptionHome")}
               </p>
               
               {/* Contact Methods */}
@@ -847,7 +895,7 @@ export default function HomePage() {
                     <Mail className="h-5 w-5 text-green-500" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-gray-900">Email</div>
+                    <div className="text-sm font-medium text-gray-900">{t("email")}</div>
                     <div className="text-sm text-gray-600">{contactData?.email || "contato@portoitapoa.com.br"}</div>
                   </div>
                 </div>
@@ -857,7 +905,7 @@ export default function HomePage() {
                     <MapPin className="h-5 w-5 text-green-500" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-gray-900">Endereço</div>
+                    <div className="text-sm font-medium text-gray-900">{t("address")}</div>
                     <div className="text-sm text-gray-600">{contactData?.address || "Rod. SC-415, Km 5 - Itapoá/SC"}</div>
                   </div>
                 </div>
@@ -867,73 +915,73 @@ export default function HomePage() {
                     <Ship className="h-5 w-5 text-green-500" />
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-gray-900">Localização</div>
-                    <div className="text-sm text-gray-600">Santa Catarina, Brasil</div>
+                    <div className="text-sm font-medium text-gray-900">{t("location")}</div>
+                    <div className="text-sm text-gray-600">{t("santaCatarinaBrazil")}</div>
                   </div>
                 </div>
               </div>
 
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
-                <div>
-                  <div className="text-xl font-semibold text-gray-900 mb-1">24h</div>
-                  <div className="text-xs text-gray-600">Resposta</div>
+                <div className="animate-on-scroll fade-in stagger-2">
+                  <div className="text-xl font-semibold text-gray-900 mb-1">{t("response24h")}</div>
+                  <div className="text-xs text-gray-600">{t("response")}</div>
                 </div>
-                <div>
-                  <div className="text-xl font-semibold text-gray-900 mb-1">Global</div>
-                  <div className="text-xs text-gray-600">Conectividade</div>
+                <div className="animate-on-scroll fade-in stagger-3">
+                  <div className="text-xl font-semibold text-gray-900 mb-1">{t("global")}</div>
+                  <div className="text-xs text-gray-600">{t("connectivity")}</div>
                 </div>
-                <div>
-                  <div className="text-xl font-semibold text-gray-900 mb-1">Sustentável</div>
-                  <div className="text-xs text-gray-600">Operação</div>
+                <div className="animate-on-scroll fade-in stagger-4">
+                  <div className="text-xl font-semibold text-gray-900 mb-1">{t("sustainable")}</div>
+                  <div className="text-xs text-gray-600">{t("operation")}</div>
                 </div>
               </div>
             </div>
 
             {/* Right Content - Contact Form */}
-            <div className="relative">
+            <div className="relative animate-on-scroll slide-right stagger-1">
               <div className="relative overflow-hidden rounded-2xl bg-gray-50 backdrop-blur border border-gray-200 p-8">
                 <form className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-900 mb-2">Nome</label>
-                      <input type="text" id="firstName" name="firstName" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder="Seu nome" />
+                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-900 mb-2">{t("firstName")}</label>
+                      <input type="text" id="firstName" name="firstName" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder={t("yourNamePlaceholder")} />
                     </div>
                     <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-900 mb-2">Sobrenome</label>
-                      <input type="text" id="lastName" name="lastName" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder="Seu sobrenome" />
+                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-900 mb-2">{t("lastName")}</label>
+                      <input type="text" id="lastName" name="lastName" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder={t("yourLastNamePlaceholder")} />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">Email</label>
-                    <input type="email" id="email" name="email" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder="seu.email@exemplo.com" />
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-2">{t("email")}</label>
+                    <input type="email" id="email" name="email" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder={t("emailPlaceholder")} />
                   </div>
 
                   <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-900 mb-2">Empresa</label>
-                    <input type="text" id="company" name="company" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder="Sua empresa" />
+                    <label htmlFor="company" className="block text-sm font-medium text-gray-900 mb-2">{t("companyName")}</label>
+                    <input type="text" id="company" name="company" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition" placeholder={t("companyName")} />
                   </div>
 
                   <div>
-                    <label htmlFor="serviceType" className="block text-sm font-medium text-gray-900 mb-2">Tipo de Serviço</label>
+                    <label htmlFor="serviceType" className="block text-sm font-medium text-gray-900 mb-2">{t("serviceCategory")}</label>
                     <select id="serviceType" name="serviceType" className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition">
-                      <option value="">Selecione o tipo de serviço</option>
-                      <option value="import">Importação</option>
-                      <option value="export">Exportação</option>
-                      <option value="logistics">Serviços Logísticos</option>
-                      <option value="storage">Armazenagem</option>
-                      <option value="other">Outros</option>
+                      <option value="">{t("selectLanguage")}</option>
+                      <option value="import">{t("import")}</option>
+                      <option value="export">{t("export")}</option>
+                      <option value="logistics">{t("otherServices")}</option>
+                      <option value="storage">{t("storage")}</option>
+                      <option value="other">{t("otherServices")}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-900 mb-2">Mensagem</label>
-                    <textarea id="message" name="message" rows={4} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition resize-none" placeholder="Conte-nos sobre sua necessidade, prazo e visão..."></textarea>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-900 mb-2">{t("yourMessage")}</label>
+                    <textarea id="message" name="message" rows={4} className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition resize-none" placeholder={t("messagePlaceholder")}></textarea>
                   </div>
 
-                  <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 text-white px-6 py-3 font-medium hover:bg-green-400 transition-colors">
-                    Enviar Mensagem
+                  <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-green-500 text-white px-6 py-3 font-medium hover:bg-green-400 transition-colors">
+                    {t("sendMessageButton")}
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </form>
@@ -946,90 +994,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="relative z-10 bg-black/95 border-t border-white/10 backdrop-blur">
-        <div className="md:px-10 lg:py-20 max-w-7xl mr-auto ml-auto pt-16 pr-6 pb-16 pl-6">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-            {/* Left section */}
-            <div className="space-y-8">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500"></div>
-                  <span className="text-lg font-semibold tracking-tight cursor-pointer" onClick={() => window.location.href = '/'} role="button">PORTO ITAPOÁ</span>
-                </div>
-                <p className="text-white/60 max-w-md">
-                  Terminal portuário de última geração, conectando o Brasil ao mundo com eficiência, tecnologia e sustentabilidade.
-                </p>
-              </div>
-              
-              <div className="flex items-center gap-4">
-                <a href="#" className="text-white/60 hover:text-white transition">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-white/60 hover:text-white transition">
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-white/60 hover:text-white transition">
-                  <Mail className="h-5 w-5" />
-                </a>
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-sm font-medium text-white/90">Pronto para colaborar?</p>
-                <div className="flex flex-wrap gap-3">
-                  <Link href="/contato">
-                    <button className="inline-flex items-center gap-2 rounded-xl bg-green-500 text-black px-4 py-2 text-sm font-medium hover:bg-green-400 transition">
-                      Entre em contato
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
-                  </Link>
-                  <Link href="/servicos">
-                    <button className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/90 backdrop-blur hover:bg-white/10 transition">
-                      Nossos serviços
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Right section */}
-            <div className="grid gap-8 sm:grid-cols-2 lg:gap-12">
-              <div>
-                <h3 className="text-sm font-medium text-white mb-4">Serviços</h3>
-                <ul className="space-y-3">
-                  <li><Link href="/servicos" className="text-sm text-white/60 hover:text-white transition">Serviços Marítimos</Link></li>
-                  <li><Link href="/agendamento" className="text-sm text-white/60 hover:text-white transition">Programação de Navios</Link></li>
-                  <li><Link href="/rastreamento" className="text-sm text-white/60 hover:text-white transition">Rastreamento</Link></li>
-                  <li><Link href="/precos" className="text-sm text-white/60 hover:text-white transition">Tabela de Preços</Link></li>
-                  <li><Link href="/portal-cliente" className="text-sm text-white/60 hover:text-white transition">Portal do Cliente</Link></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-medium text-white mb-4">Institucional</h3>
-                <ul className="space-y-3">
-                  <li><Link href="/institucional" className="text-sm text-white/60 hover:text-white transition">Sobre Nós</Link></li>
-                  <li><Link href="/sustentabilidade" className="text-sm text-white/60 hover:text-white transition">Sustentabilidade</Link></li>
-                  <li><Link href="/noticias" className="text-sm text-white/60 hover:text-white transition">Notícias</Link></li>
-                  <li><Link href="/contato" className="text-sm text-white/60 hover:text-white transition">Contato</Link></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom section */}
-          <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-white/60">
-              © 2024 Porto Itapoá. Todos os direitos reservados.
-            </p>
-            <div className="flex items-center gap-6 text-sm text-white/60">
-              <a href="#" className="hover:text-white transition">Termos de Uso</a>
-              <a href="#" className="hover:text-white transition">Privacidade</a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

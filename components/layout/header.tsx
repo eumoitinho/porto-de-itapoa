@@ -24,61 +24,82 @@ const navigation = [
     submenu: [
       {
         name: "Sobre o Porto",
+        nameKey: "aboutPort",
         items: [
           {
             name: "Porto Itapoá",
+            nameKey: "portItapoa",
             href: "/institucional/porto-itapoa",
-            description: "História, Linha do Tempo e Localização"
+            description: "História, Linha do Tempo e Localização",
+            descriptionKey: "portItapoaDescription"
           },
           {
             name: "Acionistas",
+            nameKey: "shareholders",
             href: "/institucional/acionistas",
-            description: "Estrutura acionária e governança"
+            description: "Estrutura acionária e governança",
+            descriptionKey: "shareholdersDescription"
           },
           {
             name: "Certificações",
+            nameKey: "certifications",
             href: "/institucional/certificacoes",
-            description: "Certificações e credenciamentos"
+            description: "Certificações e credenciamentos",
+            descriptionKey: "certificationsDescription"
           },
           {
             name: "Premiações",
+            nameKey: "awards",
             href: "/institucional/premiacoes",
-            description: "Reconhecimentos e prêmios"
+            description: "Reconhecimentos e prêmios",
+            descriptionKey: "awardsDescription"
           },
         ],
       },
       {
         name: "Estrutura e Recursos",
+        nameKey: "structureAndResources",
         items: [
           {
             name: "Infraestrutura",
+            nameKey: "infrastructure",
             href: "/institucional/infraestrutura",
-            description: "Infraestrutura portuária e Tour 360°"
+            description: "Infraestrutura portuária e Tour 360°",
+            descriptionKey: "infrastructureDescription"
           },
           {
             name: "Downloads",
+            nameKey: "downloads",
             href: "/institucional/downloads",
-            description: "Demonstrações Financeiras, Pacto Global e Política de Gestão"
+            description: "Demonstrações Financeiras, Pacto Global e Política de Gestão",
+            descriptionKey: "downloadsDescription"
           },
           {
             name: "Portfólio de Serviços",
+            nameKey: "servicePortfolio",
             href: "/institucional/portfolio",
-            description: "Serviços e procedimentos operacionais"
+            description: "Serviços e procedimentos operacionais",
+            descriptionKey: "servicePortfolioDescription"
           },
         ],
       },
       {
         name: "Mídia e Compliance",
+        nameKey: "mediaAndCompliance",
         items: [
           {
             name: "Galerias",
+            nameKey: "galleries",
             href: "/institucional/galerias",
-            description: "Fotos e vídeos institucionais"
+            description: "Fotos e vídeos institucionais",
+            descriptionKey: "galleriesDescription"
           },
           {
             name: "LGPD",
+            nameKey: "lgpd",
             href: "/institucional/lgpd",
-            description: "Proteção de dados e privacidade"
+            description: "Proteção de dados e privacidade",
+            descriptionKey: "lgpdDescription"
           },
         ],
       },
@@ -91,49 +112,62 @@ const navigation = [
     submenu: [
       {
         name: "Cadastros e Acessos",
+        nameKey: "registrationsAndAccess",
         items: [
           {
             name: "Portal de Compras",
+            nameKey: "purchasePortal",
             href: "/servicos/portal-compras",
           },
           {
             name: "Cadastro de Cliente",
+            nameKey: "clientRegistration",
             href: "/servicos/cadastro-cliente",
           },
           {
             name: "Cadastro de Motorista",
+            nameKey: "driverRegistration",
             href: "/servicos/cadastro-motorista",
           },
         ],
       },
       {
         name: "Operações",
+        nameKey: "operations",
         items: [
           {
             name: "Programação de Navios",
+            nameKey: "shipScheduling",
             href: "/servicos/programacao-navios",
             description: "Programação e Câmera 360°",
+            descriptionKey: "shipSchedulingDescription"
           },
           {
             name: "Integração de Motoristas",
+            nameKey: "driverIntegration",
             href: "/servicos/integracao-motoristas",
           },
           {
             name: "Integração de Serviços",
+            nameKey: "serviceIntegration",
             href: "/servicos/integracao-servicos",
           },
         ],
       },
       {
         name: "Consultas e Simulações",
+        nameKey: "queriesAndSimulations",
         items: [
           {
             name: "Simuladores de Preços",
+            nameKey: "priceSimulators",
             href: "/servicos/simuladores",
             description: "Simulação e Tabela de Preços",
+            descriptionKey: "priceSimulatorsDescription"
           },
           {
             name: "Consultas",
+            nameKey: "queries",
             href: "/servicos/consultas",
           },
         ],
@@ -170,19 +204,10 @@ const navigation = [
 export function Header() {
   const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const pathname = usePathname()
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
 
   const handleMouseEnter = (itemName: string) => {
     setActiveSubmenu(itemName)
@@ -205,11 +230,7 @@ export function Header() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-white shadow-md border-b border-gray-100"
-            : "bg-white border-b border-gray-100"
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-gray-100"
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
@@ -273,7 +294,7 @@ export function Header() {
                             {item.submenu.map((section) => (
                               <div key={section.name} className="space-y-4">
                                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                  {section.name}
+                                  {t(section.nameKey as any) || section.name}
                                 </h3>
                                 <div className="space-y-3">
                                   {section.items.map((subItem) => (
@@ -287,10 +308,10 @@ export function Header() {
                                       }`}
                                     >
                                       <div>
-                                        <div>{subItem.name}</div>
+                                        <div>{t(subItem.nameKey as any) || subItem.name}</div>
                                         {(subItem as any).description && (
                                           <p className="text-xs text-gray-500 mt-1">
-                                            {(subItem as any).description}
+                                            {t((subItem as any).descriptionKey as any) || (subItem as any).description}
                                           </p>
                                         )}
                                       </div>

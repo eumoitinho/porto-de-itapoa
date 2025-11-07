@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { MapPin, Phone, Mail, Facebook, Twitter, Linkedin, Instagram, ExternalLink } from "lucide-react"
+import { MapPin, Phone, Mail, Facebook, Twitter, Linkedin, Instagram, ExternalLink, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { LanguageSelector } from "@/components/language-selector"
@@ -39,19 +39,14 @@ export function Footer() {
   const { t } = useI18n()
 
   return (
-    <footer className="bg-white border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-          {/* Logo and Description */}
-          <div className="lg:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <Link href="/" className="flex items-center space-x-3 mb-6">
-                <div className="relative w-12 h-12">
+    <footer className="relative z-10 bg-white border-t border-gray-200">
+    <div className="md:px-10 lg:py-20 max-w-7xl mr-auto ml-auto pt-16 pr-6 pb-16 pl-6">
+      <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        {/* Left section */}
+        <div className="space-y-8">
+          <div>
+          <Link href="/" className="flex items-center space-x-3 mb-2">
+                <div className="relative w-28 h-28">
                   <Image
                     src="/logo-grande-1.png"
                     alt="Porto Itapoá"
@@ -59,127 +54,80 @@ export function Footer() {
                     className="object-contain"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-xl font-bold text-green-800">PORTO ITAPOÁ</span>
-                  <span className="text-xs text-green-600 font-medium">BUILDING THE FUTURE</span>
-                </div>
+               
               </Link>
-
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                {t('footerDescription')}
-              </p>
-
-              <div className="space-y-3">
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="h-4 w-4 mr-3 flex-shrink-0 text-green-600" />
-                  <span className="text-sm">Rod. SC-415, Km 5 - Itapoá/SC</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <Phone className="h-4 w-4 mr-3 flex-shrink-0 text-green-600" />
-                  <span className="text-sm">+55 (47) 3441-8000</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <Mail className="h-4 w-4 mr-3 flex-shrink-0 text-green-600" />
-                  <span className="text-sm">contato@portoitapoa.com.br</span>
-                </div>
-              </div>
-            </motion.div>
+            <p className="text-gray-600 max-w-md">
+              {t("footerDescription")}
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+              <Linkedin className="h-5 w-5" />
+            </a>
+            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+              <Instagram className="h-5 w-5" />
+            </a>
+            <a href="#" className="text-gray-600 hover:text-gray-900 transition">
+              <Mail className="h-5 w-5" />
+            </a>
           </div>
 
-          {/* Links Sections */}
-          {Object.entries(footerLinks).map(([category, links], index) => (
-            <motion.div
-              key={category}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <h3 className="text-lg font-semibold mb-4 text-green-800 capitalize">
-                {category === "servicos" ? t("services") : category === "empresa" ? "Empresa" : "Suporte"}
-              </h3>
-              <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-gray-600 hover:text-green-600 transition-colors duration-200 text-sm flex items-center group"
-                    >
-                      <span>{link.name}</span>
-                      <ExternalLink className="h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-gray-900">{t("readyToCollaborate")}</p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/contato">
+                <button className="inline-flex items-center gap-2 rounded-xl bg-green-500 text-white px-4 py-2 text-sm font-medium hover:bg-green-400 transition">
+                  {t("contactUsFooter")}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </Link>
+              <Link href="/servicos">
+                <button className="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                  {t("ourServices")}
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
 
-        {/* Portal do Cliente Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="mt-12 pt-8 border-t border-gray-200"
-        >
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8 border border-green-200">
-            <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="mb-6 md:mb-0">
-                <h3 className="text-xl font-bold text-green-800 mb-2">Portal do Cliente</h3>
-                <p className="text-gray-600 mb-4">
-                  Acesse nossos serviços digitais para agendamentos, rastreamento e muito mais.
-                </p>
-                <div className="flex items-center text-sm text-gray-500">
-                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                  <span>Disponível 24/7</span>
-                </div>
-              </div>
-              <Link href="/portal-cliente">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center"
-                >
-                  Acessar Portal
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </motion.button>
-              </Link>
-            </div>
+        {/* Right section */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:gap-12">
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-4">{t("services")}</h3>
+            <ul className="space-y-3">
+              <li><Link href="/servicos" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("maritimeServices")}</Link></li>
+              <li><Link href="/agendamento" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("shipSchedulingNav")}</Link></li>
+              <li><Link href="/rastreamento" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("tracking")}</Link></li>
+              <li><Link href="/precos" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("priceTable")}</Link></li>
+              <li><Link href="/portal-cliente" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("clientPortal")}</Link></li>
+            </ul>
           </div>
-        </motion.div>
-
-        {/* Bottom Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="border-t border-gray-200 mt-12 pt-8"
-        >
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mb-4 md:mb-0">
-              <p className="text-gray-600 text-sm">
-                © 2024 Porto Itapoá. {t('allRightsReserved')}
-              </p>
-              <LanguageSelector variant="footer" />
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {socialLinks.map((social) => (
-                <Link
-                  key={social.label}
-                  href={social.href}
-                  className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors duration-200 group"
-                  aria-label={social.label}
-                >
-                  <social.icon className="h-4 w-4 text-green-600 group-hover:text-green-700" />
-                </Link>
-              ))}
-            </div>
+          
+          <div>
+            <h3 className="text-sm font-medium text-gray-900 mb-4">{t("institutional")}</h3>
+            <ul className="space-y-3">
+              <li><Link href="/institucional" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("aboutUs")}</Link></li>
+              <li><Link href="/sustentabilidade" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("sustainability")}</Link></li>
+              <li><Link href="/noticias" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("news")}</Link></li>
+              <li><Link href="/contato" className="text-sm text-gray-600 hover:text-gray-900 transition">{t("contact")}</Link></li>
+            </ul>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </footer>
+
+      {/* Bottom section */}
+      <div className="mt-12 pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-sm text-gray-600">
+          © 2025 Porto Itapoá. {t("allRightsReserved")}
+        </p>
+        <div className="flex items-center gap-6 text-sm text-gray-600">
+          <a href="#" className="hover:text-gray-900 transition">{t("termsOfUse")}</a>
+          <a href="#" className="hover:text-gray-900 transition">{t("privacy")}</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
   )
 }
