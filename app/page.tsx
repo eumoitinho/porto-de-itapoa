@@ -136,39 +136,15 @@ export default function HomePage() {
     },
   ]
 
-  const maritimeGalleryImages = [
-    {
-      src: "/48.jpg",
-      alt: "Operações portuárias Porto Itapoá"
-    },
-    {
-      src: "/210302-porto-de-los-angeles-1.jpg",
-      alt: "Porto de Los Angeles com navios"
-    },
-    {
-      src: "/2025102199458f0bf5e147a6b6ccf979943e6230_20251021bc9a169f1791497a858fe90eecad0894.jpeg",
-      alt: "Terminal logístico movimentado"
-    },
-    {
-      src: "/aerea-porto-scaled.jpg",
-      alt: "Vista aérea Porto Itapoá"
-    },
-    {
-      src: "/048-navio-20log-in-20logistica-20intermodal.webp",
-      alt: "Navio logístico"
-    },
-    {
-      src: "/downloads.jpg",
-      alt: "Movimentação de contêineres"
-    },
-    {
-      src: "/laem-chabang-1024x767.jpg",
-      alt: "Porto Laem Chabang"
-    },
-    {
-      src: "/turquia-istambul-canal-do-bosforo-ponte-do-bosforo-um-navio-de-carga-no-canal-da-mancha_857279-14188.avif",
-      alt: "Navio no estreito de Bósforo"
-    }
+  const maritimeCardImages = [
+    "/48.jpg",
+    "/210302-porto-de-los-angeles-1.jpg",
+    "/2025102199458f0bf5e147a6b6ccf979943e6230_20251021bc9a169f1791497a858fe90eecad0894.jpeg",
+    "/aerea-porto-scaled.jpg",
+    "/048-navio-20log-in-20logistica-20intermodal.webp",
+    "/downloads.jpg",
+    "/laem-chabang-1024x767.jpg",
+    "/turquia-istambul-canal-do-bosforo-ponte-do-bosforo-um-navio-de-carga-no-canal-da-mancha_857279-14188.avif"
   ]
 
   // Função para mapear ícones
@@ -626,21 +602,6 @@ export default function HomePage() {
                 <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-              {maritimeGalleryImages.map((image) => (
-                <div key={image.src} className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-md">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover transition-transform duration-500 hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
-                    priority={image.src === "/aerea-porto-scaled.jpg"}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
-                </div>
-              ))}
-            </div>
             <div className="flex gap-1.5 bg-[#ffffff] w-full max-w-none rounded-3xl pt-6 pr-6 pb-6 pl-6 shadow-2xl space-x-4 animate-on-scroll scale-in overflow-x-auto">
               {currentFeaturedServices.slice(0, 5).map((service: any, index: number) => (
                 <div 
@@ -649,7 +610,7 @@ export default function HomePage() {
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
                     <Image
-                      src="/placeholder.jpg"
+                      src={maritimeCardImages[index % maritimeCardImages.length]}
                       alt={service.title}
                       fill
                     className="card-image w-full h-full object-cover rounded-sm"
