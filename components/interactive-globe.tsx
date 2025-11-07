@@ -8,9 +8,11 @@ import { motion, AnimatePresence } from "framer-motion"
 // Importação dinâmica do Globe para evitar problemas de SSR
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false })
 
-// Cor verde padrão
-const GREEN_COLOR = "#16a34a"
-const GREEN_GLOW = "#22c55e"
+// Cores do tema Gradient Network - roxo/azul/ciano
+const PRIMARY_COLOR = "#8B5CF6" // roxo vibrante
+const SECONDARY_COLOR = "#3B82F6" // azul
+const ACCENT_COLOR = "#06B6D4" // ciano
+const GLOW_COLOR = "#A78BFA" // roxo claro para glow
 
 // Coordenadas do Porto Itapoá (Itapoá, SC, Brasil)
 const PORTO_ITAPOA = {
@@ -135,21 +137,21 @@ const arcs = destinations.map((dest) => ({
   startLng: PORTO_ITAPOA.lng,
   endLat: dest.lat,
   endLng: dest.lng,
-  color: GREEN_COLOR,
+  color: ACCENT_COLOR,
   region: dest.region,
 }))
 
-// Todos os pontos (Porto Itapoá + destinos) - todos verdes
+// Todos os pontos (Porto Itapoá + destinos) - com cores gradientes
 const points = [
   {
     ...PORTO_ITAPOA,
     size: 50,
-    color: GREEN_COLOR,
+    color: PRIMARY_COLOR,
   },
   ...destinations.map((dest) => ({
     ...dest,
     size: 30,
-    color: GREEN_COLOR,
+    color: SECONDARY_COLOR,
   })),
 ]
 
@@ -176,7 +178,7 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
           ...feature,
           properties: {
             ...feature.properties,
-            color: GREEN_COLOR,
+            color: PRIMARY_COLOR,
           }
         }))
         setCountriesData(countries)
@@ -291,16 +293,16 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
       }}
       style={{ touchAction: 'pan-x pan-y' }}
     >
-      {/* Overlay com título e descrição integrados - verde */}
+      {/* Overlay com título e descrição integrados - gradiente roxo/azul */}
       {(title || description) && (
-        <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-green-900/90 via-green-800/80 to-transparent backdrop-blur-md pt-8 pb-6 px-6 lg:px-10">
+        <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-purple-900/90 via-blue-900/80 to-transparent backdrop-blur-md pt-8 pb-6 px-6 lg:px-10">
           <div className="max-w-7xl mx-auto text-center">
             {title && (
               <motion.h2
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4 text-white drop-shadow-lg"
+                className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4 text-white drop-shadow-lg bg-gradient-to-r from-purple-200 via-blue-200 to-cyan-200 bg-clip-text text-transparent"
               >
                 {title}
               </motion.h2>
@@ -310,7 +312,7 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-lg text-green-50 max-w-2xl mx-auto drop-shadow-md"
+                className="text-lg text-purple-50 max-w-2xl mx-auto drop-shadow-md"
               >
                 {description}
               </motion.p>
@@ -320,7 +322,7 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-4 flex items-center justify-center gap-2 text-green-200 text-sm"
+              className="mt-4 flex items-center justify-center gap-2 text-cyan-200 text-sm"
             >
               <MapPin className="h-4 w-4 animate-pulse" />
               <span>Clique nos marcadores para ver detalhes</span>
@@ -329,61 +331,95 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
         </div>
       )}
 
-      {/* Background tech distópico */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden">
+      {/* Background tech futurista - gradientes roxo/azul/ciano */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-blue-950 to-black overflow-hidden">
         {/* Grid tech pattern */}
-        <div 
-          className="absolute inset-0 opacity-30"
+        <div
+          className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(34, 197, 94, 0.15) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(34, 197, 94, 0.15) 1px, transparent 1px)
+              linear-gradient(rgba(139, 92, 246, 0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59, 130, 246, 0.15) 1px, transparent 1px)
             `,
             backgroundSize: '50px 50px',
           }}
         />
-        {/* Linhas de conexão animadas */}
+        {/* Linhas de conexão animadas com gradiente */}
         <div className="absolute inset-0">
-          {[...Array(15)].map((_, i) => (
+          {[...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-full h-px bg-gradient-to-r from-transparent via-green-500/40 to-transparent"
+              className="absolute w-full h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"
               style={{
-                top: `${(i * 6.67) % 100}%`,
+                top: `${(i * 5) % 100}%`,
               }}
               animate={{
-                opacity: [0.2, 0.6, 0.2],
+                opacity: [0.1, 0.5, 0.1],
+                x: ['-100%', '100%'],
               }}
               transition={{
-                duration: 4,
+                duration: 8,
                 repeat: Infinity,
-                delay: i * 0.2,
+                delay: i * 0.3,
+                ease: "linear",
               }}
             />
           ))}
         </div>
-        {/* Círculos tech decorativos */}
-        {[...Array(8)].map((_, i) => (
+        {/* Círculos tech decorativos com glow */}
+        {[...Array(12)].map((_, i) => (
           <motion.div
             key={`circle-${i}`}
-            className="absolute rounded-full border border-green-500/20"
+            className="absolute rounded-full"
             style={{
-              width: `${100 + i * 50}px`,
-              height: `${100 + i * 50}px`,
-              left: `${(i * 12.5) % 80}%`,
-              top: `${(i * 15) % 80}%`,
+              width: `${80 + i * 40}px`,
+              height: `${80 + i * 40}px`,
+              left: `${(i * 10) % 90}%`,
+              top: `${(i * 12) % 90}%`,
+              border: `1px solid ${i % 3 === 0 ? 'rgba(139, 92, 246, 0.2)' : i % 3 === 1 ? 'rgba(59, 130, 246, 0.2)' : 'rgba(6, 182, 212, 0.2)'}`,
+              boxShadow: `0 0 20px ${i % 3 === 0 ? 'rgba(139, 92, 246, 0.1)' : i % 3 === 1 ? 'rgba(59, 130, 246, 0.1)' : 'rgba(6, 182, 212, 0.1)'}`,
             }}
             animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.15, 1],
+              opacity: [0.1, 0.4, 0.1],
+              rotate: [0, 360],
             }}
             transition={{
-              duration: 5,
+              duration: 15,
               repeat: Infinity,
-              delay: i * 0.5,
+              delay: i * 0.7,
+              ease: "easeInOut",
             }}
           />
         ))}
+        {/* Partículas flutuantes */}
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={`particle-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: `${2 + (i % 3)}px`,
+              height: `${2 + (i % 3)}px`,
+              left: `${(i * 3.33) % 100}%`,
+              top: `${(i * 7) % 100}%`,
+              backgroundColor: i % 3 === 0 ? '#8B5CF6' : i % 3 === 1 ? '#3B82F6' : '#06B6D4',
+              boxShadow: `0 0 10px ${i % 3 === 0 ? '#8B5CF6' : i % 3 === 1 ? '#3B82F6' : '#06B6D4'}`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 5 + (i % 5),
+              repeat: Infinity,
+              delay: i * 0.1,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+        {/* Efeito de brilho radial */}
+        <div className="absolute inset-0 bg-gradient-radial from-purple-500/5 via-transparent to-transparent" />
       </div>
 
       <Globe
@@ -392,22 +428,22 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
         showGlobe={true}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
         showAtmosphere={false}
-        // Wireframe dos países usando GeoJSON - mais opaco
+        // Wireframe dos países usando GeoJSON - tons roxo/azul
         polygonsData={countriesData}
         polygonAltitude={0.01}
-        polygonCapColor={() => 'rgba(34, 197, 94, 0.3)'}
-        polygonSideColor={() => 'rgba(34, 197, 94, 0.4)'}
-        polygonStrokeColor={() => GREEN_COLOR}
+        polygonCapColor={() => 'rgba(139, 92, 246, 0.15)'}
+        polygonSideColor={() => 'rgba(59, 130, 246, 0.2)'}
+        polygonStrokeColor={() => ACCENT_COLOR}
         polygonLabel=""
-        polygonStrokeWidth={1}
+        polygonStrokeWidth={0.5}
         // Carregar dados GeoJSON dos países
         onPolygonHover={(polygon: any) => {}}
-        // Pontos (marcadores) - pins tech melhorados
+        // Pontos (marcadores) - pins tech melhorados com glow
         pointsData={points}
         pointAltitude={0.03}
-        pointColor={(d: any) => hoveredPoint === d ? GREEN_GLOW : GREEN_COLOR}
-        pointRadius={(d: any) => hoveredPoint === d ? 1.2 : (d.size === 50 ? 1.0 : 0.8)}
-        pointResolution={24}
+        pointColor={(d: any) => hoveredPoint === d ? GLOW_COLOR : d.color}
+        pointRadius={(d: any) => hoveredPoint === d ? 1.5 : (d.size === 50 ? 1.2 : 0.9)}
+        pointResolution={32}
         pointLabel={(d: any) => d.name}
         onPointClick={(point: any, event: any) => handlePointClick(point, event)}
         onPointHover={(point: any) => setHoveredPoint(point || null)}
@@ -421,12 +457,12 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
         enablePointerInteraction={true}
         controls={false}
         pointLabelSize={3}
-        pointLabelColor={() => GREEN_COLOR}
+        pointLabelColor={() => ACCENT_COLOR}
         pointLabelPixelOffset={(d: any) => [0, -15]}
-        // Efeitos visuais nos pontos - brilho intenso
+        // Efeitos visuais nos pontos - brilho intenso roxo/azul
         pointMaterial={{
-          emissive: GREEN_COLOR,
-          emissiveIntensity: 1.0,
+          emissive: PRIMARY_COLOR,
+          emissiveIntensity: 1.5,
           transparent: true,
           opacity: 1,
         }}
@@ -475,19 +511,21 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
         backgroundColor="rgba(0,0,0,0)"
       />
       
-      {/* Esfera wireframe decorativa */}
+      {/* Esfera wireframe decorativa com glow */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        <div 
-          className="rounded-full border-2 border-green-500/20"
+        <div
+          className="rounded-full border-2"
           style={{
             width: '60%',
             height: '60%',
             marginTop: '10%',
+            borderColor: 'rgba(139, 92, 246, 0.2)',
+            boxShadow: '0 0 40px rgba(139, 92, 246, 0.15), inset 0 0 40px rgba(59, 130, 246, 0.1)',
           }}
         />
       </div>
-      
-      {/* Tooltip no hover */}
+
+      {/* Tooltip no hover - tema roxo/azul */}
       {hoveredPoint && !selectedPoint && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -500,62 +538,66 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
             transform: 'translateX(-50%)',
           }}
         >
-          <div className="bg-white/95 backdrop-blur-md rounded-lg px-4 py-2 shadow-xl border border-gray-200">
+          <div className="bg-gradient-to-br from-purple-900/95 to-blue-900/95 backdrop-blur-md rounded-lg px-4 py-2 shadow-xl border border-purple-500/30">
             <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-semibold text-gray-900">{hoveredPoint.name}</span>
+              <MapPin className="h-4 w-4 text-cyan-400" />
+              <span className="text-sm font-semibold text-white">{hoveredPoint.name}</span>
             </div>
-            <span className="text-xs text-green-600">{hoveredPoint.region}</span>
+            <span className="text-xs text-cyan-300">{hoveredPoint.region}</span>
           </div>
         </motion.div>
       )}
       
-      {/* Card com informações quando clicar - posicionado ao lado do marker */}
+      {/* Card com informações quando clicar - tema roxo/azul futurista */}
       <AnimatePresence mode="wait">
         {selectedPoint && cardPosition && (
           <motion.div
             key={selectedPoint.name}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="absolute z-30 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-200 p-6 w-80 lg:w-96"
+            className="absolute z-30 rounded-2xl shadow-2xl p-6 w-80 lg:w-96"
             style={{
               left: `${Math.min(cardPosition.x + 30, window.innerWidth - 400)}px`,
               top: `${Math.max(cardPosition.y - 150, 80)}px`,
               maxWidth: 'calc(100vw - 40px)',
+              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.95) 0%, rgba(59, 130, 246, 0.95) 100%)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(167, 139, 250, 0.3)',
+              boxShadow: '0 0 40px rgba(139, 92, 246, 0.3), 0 20px 60px rgba(0, 0, 0, 0.3)',
             }}
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <MapPin className="h-5 w-5 text-green-600" />
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm border border-white/30">
+                  <MapPin className="h-5 w-5 text-cyan-300" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">{selectedPoint.name}</h3>
-                  <span className="text-sm text-green-600 font-medium">{selectedPoint.region}</span>
+                  <h3 className="text-xl font-bold text-white mb-1">{selectedPoint.name}</h3>
+                  <span className="text-sm text-cyan-200 font-medium">{selectedPoint.region}</span>
                 </div>
               </div>
               <button
                 onClick={handleCloseCard}
-                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-1.5 hover:bg-white/20 rounded-full transition-colors"
               >
-                <X className="h-5 w-5 text-gray-500" />
+                <X className="h-5 w-5 text-white/80" />
               </button>
             </div>
-            
-            <p className="text-gray-700 mb-6 text-sm leading-relaxed">
+
+            <p className="text-white/90 mb-6 text-sm leading-relaxed">
               {selectedPoint.description}
             </p>
-            
+
             <div className="space-y-4">
-              <div className="p-3 bg-green-50 rounded-lg border border-green-100">
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">Serviços</span>
-                <p className="text-sm text-gray-900 font-semibold">{selectedPoint.services}</p>
+              <div className="p-3 bg-white/10 rounded-lg border border-white/20 backdrop-blur-sm">
+                <span className="text-xs font-semibold text-cyan-200 uppercase tracking-wide block mb-1">Serviços</span>
+                <p className="text-sm text-white font-semibold">{selectedPoint.services}</p>
               </div>
-              
+
               <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Armadores</span>
+                <span className="text-xs font-semibold text-cyan-200 uppercase tracking-wide block mb-2">Armadores</span>
                 <div className="flex flex-wrap gap-2">
                   {selectedPoint.carriers?.map((carrier: string, index: number) => (
                     <motion.span
@@ -563,7 +605,7 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.05 }}
-                      className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200 shadow-sm"
+                      className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30 shadow-sm backdrop-blur-sm"
                     >
                       {carrier}
                     </motion.span>
