@@ -19,6 +19,7 @@ import {
   useContactData 
 } from "@/hooks/useSanityData"
 import RotatingEarth from "@/components/rotating-earth"
+import { getNoticiasRecentes } from "@/data/noticias"
 
 // Video Background Component com efeito parallax
 function VideoBackground() {
@@ -79,6 +80,11 @@ function VideoBackground() {
 export default function HomePage() {
   const { t } = useI18n()
   
+  const translate = (key: string, fallback: string) => {
+    const value = t(key)
+    return value === key ? fallback : value
+  }
+
   // Buscar dados do Sanity
   const { data: homepageData } = useHomepageData()
   const { data: statsData } = useStatsData()
@@ -89,49 +95,55 @@ export default function HomePage() {
   const { data: sustainabilityData } = useSustainabilityData()
   const { data: contactData } = useContactData()
 
+  const heroEyebrow = homepageData?.kicker || translate("heroSubtitle", "Conectando o Brasil ao mundo")
+  const heroTitle = homepageData?.title || translate("heroTitle", "Gateway da América Latina")
+  const heroDescription = homepageData?.subtitle || translate("heroSubtitleText", "Conectamos o Brasil ao mundo com eficiência, tecnologia e sustentabilidade através de um dos terminais mais modernos da América do Sul.")
+  const primaryCtaLabel = homepageData?.ctaButtonText || translate("knowOurServices", "Conheça nossos serviços")
+  const secondaryCtaLabel = translate("contactButton", "Fale conosco")
+
   // Dados padrão como fallback
   const defaultStats = [
-    { icon: Ship, label: t("shipsOperatedMonthly"), value: "180", description: t("monthlyAverageMovement") },
-    { icon: Globe, label: t("dockingCapacity"), value: "3", description: t("availableBerths") },
-    { icon: Users, label: t("gateTransactions"), value: "50.851", description: t("registeredMovements") },
-    { icon: TrendingUp, label: t("teusMoved"), value: "10 milhões", description: t("totalVolumeMoved") },
+    { icon: Ship, label: translate("shipsOperatedMonthly", "Navios operados por mês"), value: "180", description: translate("monthlyAverageMovement", "Média mensal movimentada") },
+    { icon: Globe, label: translate("dockingCapacity", "Capacidade de atracação"), value: "3", description: translate("availableBerths", "Berços disponíveis") },
+    { icon: Users, label: translate("gateTransactions", "Transações no gate"), value: "50.851", description: translate("registeredMovements", "Movimentos registrados") },
+    { icon: TrendingUp, label: translate("teusMoved", "TEUs movimentados"), value: "10 milhões", description: translate("totalVolumeMoved", "Volume total movimentado") },
   ]
 
   const defaultFeaturedServices = [
     {
-      title: t("asiaHome"),
-      routes: t("asiaRoutes"),
-      description: t("asiaDescription"),
+      title: translate("asiaHome", "Ásia"),
+      routes: translate("asiaRoutes", "Rotas principais"),
+      description: translate("asiaDescription", "Serviços com cobertura completa para os principais portos asiáticos."),
       carriers: ["Maersk", "HMM", "PIL", "Cosco", "ONE"],
     },
     {
-      title: t("europeHome"),
-      routes: t("europeRoutes"), 
-      description: t("europeDescription"),
+      title: translate("europeHome", "Europa"),
+      routes: translate("europeRoutes", "Rotas principais"), 
+      description: translate("europeDescription", "Integração direta com os principais hubs europeus."),
       carriers: ["Hapag-Lloyd", "Cosco", "MSC", "ONE", "OOCL"],
     },
     {
-      title: t("northAmericaHome"),
-      routes: t("northAmericaRoutes"),
-      description: t("northAmericaDescription"),
+      title: translate("northAmericaHome", "América do Norte"),
+      routes: translate("northAmericaRoutes", "Rotas principais"),
+      description: translate("northAmericaDescription", "Serviços semanais para os principais portos norte-americanos."),
       carriers: ["Maersk", "Hapag-Lloyd"],
     },
     {
-      title: t("cabotageHome"),
-      routes: t("cabotageRoutes"),
-      description: t("cabotageDescription"),
+      title: translate("cabotageHome", "Cabotagem"),
+      routes: translate("cabotageRoutes", "Rotas nacionais"),
+      description: translate("cabotageDescription", "Conexões rápidas com os principais portos brasileiros."),
       carriers: ["Aliança", "Maersk", "CMA CGM"],
     },
     {
-      title: t("mediterraneanHome"),
-      routes: t("mediterraneanRoutes"),
-      description: t("mediterraneanDescription"),
+      title: translate("mediterraneanHome", "Mediterrâneo"),
+      routes: translate("mediterraneanRoutes", "Rotas principais"),
+      description: translate("mediterraneanDescription", "Cobertura completa no mediterrâneo com escala contínua."),
       carriers: ["Hapag Lloyd", "MSC", "CMA CGM", "Maersk"],
     },
     {
-      title: t("gulfOfMexicoHome"),
-      routes: t("gulfOfMexicoRoutes"),
-      description: t("gulfOfMexicoDescription"),
+      title: translate("gulfOfMexicoHome", "Golfo do México"),
+      routes: translate("gulfOfMexicoRoutes", "Rotas principais"),
+      description: translate("gulfOfMexicoDescription", "Integrações com os terminais estratégicos do Golfo."),
       carriers: ["Maersk", "MSC", "ZIM"],
     },
   ]
@@ -362,22 +374,22 @@ export default function HomePage() {
         <section className="z-10 relative flex h-full max-w-7xl mx-auto px-6 items-center justify-center min-h-screen pt-20">
           <div className="max-w-xl text-white hero-content">
             <p className="text-sm/6 uppercase tracking-widest opacity-80 animate-on-scroll text-reveal stagger-1">
-              {t("heroSubtitle")}
+              {heroEyebrow}
             </p>
             <h1 className="mt-3 text-5xl md:text-6xl tracking-tight font-semibold animate-on-scroll text-reveal stagger-2">
-              {homepageData?.title || t("heroTitle")}
+              {heroTitle}
               </h1>
             <p className="text-base/7 md:text-lg/8 opacity-90 mt-4 animate-on-scroll text-reveal stagger-3">
-              {homepageData?.subtitle || t("heroSubtitleText")}
+              {heroDescription}
               </p>
-            <div className="mt-8 flex items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-center">
                       <Link href={homepageData?.ctaButtonLink || "/servicos"}>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="group relative flex items-center gap-2 rounded-full bg-white text-black px-6 py-3 text-sm font-medium hover:bg-white/90 transition shadow-lg overflow-hidden"
                 >
-                  <span className="relative z-10">{homepageData?.ctaButtonText || t("knowOurServices")}</span>
+                  <span className="relative z-10">{primaryCtaLabel}</span>
                   <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
                       </Link>
@@ -387,7 +399,7 @@ export default function HomePage() {
                   whileTap={{ scale: 0.95 }}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/30 hover:bg-white/10 backdrop-blur transition transform hover:scale-105 animate-on-scroll slide-left stagger-5"
                 >
-                  {t("contactButton")}
+                  {secondaryCtaLabel}
                   <Play className="w-4 h-4" />
                 </motion.button>
                       </Link>
@@ -407,10 +419,10 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              {statsData?.title || t("impressiveNumbers")}
+              {statsData?.title || translate("impressiveNumbers", "Números que impressionam")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {statsData?.description || t("statsDescription")}
+              {statsData?.description || translate("statsDescription", "Indicadores que reforçam nossa performance e confiabilidade")}
             </p>
           </motion.div>
 
@@ -443,12 +455,12 @@ export default function HomePage() {
         {/* Background */}
         <div className="absolute top-0 right-0 bottom-0 left-0" id="parallax-bg2">
           <Image
-            src="/foto-porto-patio-1024x721.webp"
+            src="/downloads.jpg"
             alt="Terminal Porto Itapoá"
             fill
             className="object-cover"
           />
-          <div className="bg-gradient-to-b from-slate-900/0 to-[#000000]/30 absolute top-0 right-0 bottom-0 left-0"></div>
+          <div className="bg-gradient-to-b from-slate-900/40 via-slate-900/50 to-[#000000]/70 absolute top-0 right-0 bottom-0 left-0"></div>
         </div>
 
         {/* Decorative crosses */}
@@ -462,19 +474,19 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <section className="z-10 relative flex h-full max-w-7xl mx-auto px-6 items-center pt-20 pb-20">
-          <div className="max-w-2xl text-white hero-content">
+        <section className="z-10 relative flex h-full min-h-screen max-w-7xl mx-auto px-6 items-center justify-center pt-20 pb-20">
+          <div className="max-w-3xl text-white hero-content text-center">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white animate-on-scroll text-reveal stagger-1">
-              {terminalData?.title || t("terminalTitle")}
+              {terminalData?.title || translate("terminalTitle", "O terminal mais eficiente do Brasil")}
               </h2>
             <p className="mt-5 text-base sm:text-lg text-white/90 leading-relaxed animate-on-scroll text-reveal stagger-2">
-              {terminalData?.description || t("terminalDescription")}
+              {terminalData?.description || translate("terminalDescription", "Infraestrutura moderna, tecnologia de ponta e processos sustentáveis para potencializar a sua operação.")}
             </p>
             {/* Trust Bar Content dentro da seção do terminal */}
             <div className="mt-12 text-center animate-on-scroll blur-slide">
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
                 <span className="animate-on-scroll slide-left stagger-1 text-2xl sm:text-3xl md:text-4xl tracking-tight font-semibold italic text-white">
-                  {t("strategicLocation")},
+                  {translate("strategicLocation", "Localização estratégica")},
                 </span>
                 <Image
                   src="/aerea-porto-scaled.jpg"
@@ -484,7 +496,7 @@ export default function HomePage() {
                   className="animate-on-scroll rotate-in stagger-2 inline-block sm:h-10 sm:w-10 md:h-12 md:w-12 bg-white w-8 h-8 object-cover ring-white ring-2 rounded-xl shadow-lg -rotate-6"
                 />
                 <span className="animate-on-scroll slide-right stagger-3 text-2xl sm:text-3xl md:text-4xl tracking-tight font-semibold italic text-white">
-                  {t("connectivity")},
+                  {translate("connectivity", "Conectividade global")},
                 </span>
                 <Image
                   src="/placeholder.jpg"
@@ -503,7 +515,7 @@ export default function HomePage() {
                   className="animate-on-scroll scale-up stagger-5 inline-block sm:h-10 sm:w-16 md:h-12 md:w-20 ring-white ring-2 w-0 h-0 object-cover rounded-xl shadow-lg -rotate-3"
                 />
                 <span className="animate-on-scroll slide-up stagger-6 text-2xl sm:text-3xl md:text-4xl tracking-tight font-semibold italic text-white">
-                  {t("sustainable")}.
+                  {translate("sustainable", "Sustentabilidade")}.
                 </span>
               </div>
             </div>
@@ -511,9 +523,9 @@ export default function HomePage() {
         </section>
 
         {/* Massive brand wordmark */}
-        <div className="pointer-events-none z-0 select-none absolute right-0 bottom-0 left-0" id="parallax-wordmark2">
+        <div className="pointer-events-none z-0 select-none absolute right-0 bottom-8 left-0" id="parallax-wordmark2">
           <div className="md:px-10 max-w-full mr-auto ml-auto pr-6 pl-6 items-center justify-center">
-            <div className="whitespace-nowrap text-[20vw] leading-none text-8xl font-semibold text-zinc-50/95 tracking-tight text-center">TERMINAL</div>
+            <div className="whitespace-nowrap text-[20vw] leading-none text-8xl font-semibold text-zinc-50/10 tracking-tight text-center">TERMINAL</div>
           </div>
         </div>
       </main>
@@ -529,10 +541,10 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
-              {terminalData?.title || t("ourValues")}
+              {terminalData?.title || translate("ourValues", "Missão, Visão e Valores")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
-              {t("valuesDescription")}
+              {translate("valuesDescription", "Os princípios que guiam o Porto Itapoá e sustentam nossa cultura de excelência.")}
             </p>
           </motion.div>
 
@@ -540,17 +552,17 @@ export default function HomePage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 md:divide-x divide-gray-200 bg-white/80 backdrop-blur rounded-2xl border border-gray-100">
               {[{
-                title: t('mission'),
-                heading: t('missionHeading'),
-                content: terminalData?.mission || t('missionContent')
+                title: translate('mission', 'Missão'),
+                heading: translate('missionHeading', 'Conectar com eficiência'),
+                content: terminalData?.mission || translate('missionContent', 'Oferecer soluções logísticas completas aliando tecnologia, eficiência e sustentabilidade.')
               }, {
-                title: t('vision'),
-                heading: t('visionHeading'),
-                content: terminalData?.vision || t('visionContent')
+                title: translate('vision', 'Visão'),
+                heading: translate('visionHeading', 'Ser referência global'),
+                content: terminalData?.vision || translate('visionContent', 'Ampliar nossa liderança na América Latina com excelência operacional e ambiental.')
               }, {
-                title: t('values'),
-                heading: t('valuesHeading'),
-                content: terminalData?.values || t('valuesContent')
+                title: translate('values', 'Valores'),
+                heading: translate('valuesHeading', 'Compromisso com o futuro'),
+                content: terminalData?.values || translate('valuesContent', 'Colocamos pessoas, inovação e sustentabilidade no centro de todas as decisões.')
               }].map((sec, i) => (
                 <motion.div
                   key={sec.title}
@@ -575,15 +587,15 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="text-center mb-8">
             <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600 mb-2">
-              {maritimeServicesData?.title || t("regularMaritimeServices")}
+              {maritimeServicesData?.title || translate("regularMaritimeServices", "Serviços marítimos regulares")}
             </h2>
             <p className="text-neutral-600 max-w-2xl mx-auto">
-              {maritimeServicesData?.description || t("servicesDescription")}
+              {maritimeServicesData?.description || translate("servicesDescription", "Conectamos o Brasil aos principais mercados mundiais através de parcerias com os maiores armadores globais.")}
             </p>
           </div>
         </div>
-        <div className="relative w-full h-screen min-h-[100vh] flex items-center justify-center">
-          <RotatingEarth className="w-full h-full max-w-6xl" />
+        <div className="relative w-full min-h-[120vh] flex items-center justify-center py-12">
+          <RotatingEarth className="w-full h-full" />
         </div>
 
         {/* Services Grid */}
@@ -591,14 +603,14 @@ export default function HomePage() {
             <div className="flex mb-8 items-end justify-between">
               <div>
                 <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600">
-                  {t("regularMaritimeServices")}
+                  {translate("regularMaritimeServices", "Serviços marítimos regulares")}
                 </h2>
                 <p className="mt-2 text-neutral-600">
-                  {t("servicesDescription")}
+                  {translate("servicesDescription", "Conectamos o Brasil aos principais mercados mundiais através de parcerias com os maiores armadores globais.")}
                 </p>
                   </div>
               <Link href="/portfolio" className="hidden sm:inline-flex items-center gap-2 text-sm hover:text-neutral-600 transition">
-                {t("seeCompletePortfolio")}
+                {translate("seeCompletePortfolio", "Ver portfólio completo")}
                 <ChevronRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -637,10 +649,10 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
-              {otherServicesData?.title || t("otherServices")}
+              {otherServicesData?.title || translate("otherServices", "Outros serviços")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
-              {otherServicesData?.description || t("otherServicesDescription")}
+              {otherServicesData?.description || translate("otherServicesDescription", "Soluções completas para apoiar a sua logística em todas as etapas.")}
             </p>
           </motion.div>
 
@@ -648,31 +660,31 @@ export default function HomePage() {
             {(otherServicesData?.services || [
               {
                 title: t("shipScheduling"),
-                description: t("shipSchedulingDesc"),
+                description: translate("shipSchedulingDesc", "Agende e acompanhe operações de navios em tempo real."),
                 link: "/agendamento",
                 icon: "Calendar"
               },
               {
                 title: t("purchasePortal"),
-                description: t("purchasePortalDesc"),
+                description: translate("purchasePortalDesc", "Participe das nossas cotações e encontre novas oportunidades."),
                 link: "/portal-cliente",
                 icon: "ShoppingCart"
               },
               {
                 title: t("priceTableTitle"),
-                description: t("priceTableDesc"),
+                description: translate("priceTableDesc", "Consulte a tabela pública de preços atualizada."),
                 link: "/precos",
                 icon: "DollarSign"
               },
               {
                 title: t("priceSimulators"),
-                description: t("priceSimulatorsDesc"),
+                description: translate("priceSimulatorsDesc", "Simule valores para importação e exportação com rapidez."),
                 link: "/precos",
                 icon: "Calculator"
               },
               {
                 title: t("containerTracking"),
-                description: t("containerTrackingDesc"),
+                description: translate("containerTrackingDesc", "Monitore seus contêineres com visibilidade total."),
                 link: "/rastreamento",
                 icon: "Package"
               }
@@ -699,7 +711,7 @@ export default function HomePage() {
                       </div>
                       <p className="text-gray-600 leading-relaxed mb-6 flex-1">{service.description}</p>
                       <div className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600">
-                        {t("accessService")}
+                        {translate("accessService", "Acessar serviço")}
                         <ArrowRight className="h-4 w-4" />
                       </div>
                     </div>
@@ -723,12 +735,65 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
-              {t("latestNews")}
+              {translate("latestNews", "Últimas notícias")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
-              {t("latestNewsDescription")}
+              {translate("latestNewsDescription", "Fique por dentro das novidades e conquistas do Porto Itapoá.")}
             </p>
           </motion.div>
+
+          {/* Featured News Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {getNoticiasRecentes(3).map((noticia, index) => (
+              <motion.div
+                key={noticia.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.03 }}
+              >
+                <Link href={`/noticias/${noticia.slug}`}>
+                  <Card className="h-full overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 bg-white">
+                    <div className="relative h-56">
+                      <Image
+                        src={noticia.imagem}
+                        alt={noticia.titulo}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <span className="inline-block px-3 py-1 bg-green-600 text-white text-xs font-semibold rounded-full">
+                          {noticia.categoria}
+                        </span>
+                      </div>
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <h3 className="text-white font-bold text-lg line-clamp-2 mb-2">
+                          {noticia.titulo}
+                        </h3>
+                      </div>
+                    </div>
+                    <CardContent className="p-6">
+                      <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                        {noticia.resumo}
+                      </p>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          <span>{noticia.data}</span>
+                        </div>
+                        <span className="text-green-600 font-semibold flex items-center gap-1">
+                          {translate("readMore", "Ler mais")}
+                          <ArrowRight className="h-3 w-3" />
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
 
           <div className="text-center">
             <Link href="/noticias">
@@ -737,7 +802,7 @@ export default function HomePage() {
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-2 rounded-full bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors animate-on-scroll scale-in stagger-3"
               >
-                {t("seeAllNews")}
+                {translate("seeAllNews", "Ver todas as notícias")}
                   <ArrowRight className="h-5 w-5" />
               </motion.button>
             </Link>
@@ -750,10 +815,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 lg:py-28">
           <div className="text-center mb-16 animate-on-scroll blur-slide">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-white animate-on-scroll text-reveal stagger-1">
-              {whyChooseData?.title || t("whyChoose")}
+              {whyChooseData?.title || translate("whyChoose", "Por que escolher o Porto Itapoá")}
             </h2>
             <p className="text-lg text-white/60 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
-              {whyChooseData?.description || t("whyChooseDescription")}
+              {whyChooseData?.description || translate("whyChooseDescription", "Oferecemos o equilíbrio ideal entre eficiência, inovação e sustentabilidade.")}
             </p>
           </div>
 
@@ -763,10 +828,10 @@ export default function HomePage() {
               <div className="lg:p-12 order-2 lg:order-1 pt-8 pr-8 pb-8 pl-8">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                  <span className="text-sm font-medium text-green-400">{t("mainDifferential")}</span>
+                  <span className="text-sm font-medium text-green-400">{translate("mainDifferential", "Diferencial principal")}</span>
                 </div>
                 <blockquote className="lg:text-2xl leading-relaxed text-xl font-medium text-white/90 mb-6">
-                  "{t("mainDifferentialQuote")}"
+                  "{translate("mainDifferentialQuote", "Infraestrutura moderna, tecnologia de ponta e equipes dedicadas para elevar o nível da sua operação.")}"
                 </blockquote>
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-full bg-zinc-800 flex items-center justify-center">
@@ -774,13 +839,13 @@ export default function HomePage() {
                   </div>
                   <div>
                     <div className="font-medium text-white">Porto Itapoá</div>
-                    <div className="text-sm text-white/60">{t("terminalContainers")}</div>
+                    <div className="text-sm text-white/60">{translate("terminalContainers", "Terminal de contêineres")}</div>
                   </div>
                 </div>
               </div>
               <div className="relative h-80 lg:h-96 overflow-hidden order-1 lg:order-2 animate-on-scroll image-reveal stagger-2">
                 <Image
-                  src="/placeholder.jpg"
+                  src="/48.jpg"
                   alt="Terminal Porto Itapoá"
                   fill
                   className="object-cover"
@@ -794,16 +859,16 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
             {(whyChooseData?.benefits || [
               {
-                title: t("endToEndServices"),
-                description: t("endToEndServicesDesc")
+                title: translate("endToEndServices", "Serviços ponta a ponta"),
+                description: translate("endToEndServicesDesc", "Soluções completas do porto ao destino final.")
               },
               {
-                title: t("totalVisibility"),
-                description: t("totalVisibilityDesc")
+                title: translate("totalVisibility", "Visibilidade total"),
+                description: translate("totalVisibilityDesc", "Acompanhamento em tempo real de toda a operação.")
               },
               {
-                title: t("costPredictability"),
-                description: t("costPredictabilityDesc")
+                title: translate("costPredictability", "Previsibilidade de custos"),
+                description: translate("costPredictabilityDesc", "Transparência e previsibilidade em cada etapa.")
               }
                   ]).slice(0, 3).map((item: any, index: number) => (
               <div key={item.title} className="overflow-hidden bg-zinc-900/50 ring-slate-50/10 ring-1 rounded-xl pt-6 pr-6 pb-6 pl-6 relative backdrop-blur animate-on-scroll card-reveal" style={{ transitionDelay: `${(index + 1) * 0.1}s` }}>
@@ -824,23 +889,23 @@ export default function HomePage() {
 
           {/* Stats */}
           <div className="text-center animate-on-scroll blur-slide">
-            <h3 className="text-xl font-semibold tracking-tight mb-8 text-white/90 animate-on-scroll text-reveal stagger-1">{t("numbersThatProve")}</h3>
+            <h3 className="text-xl font-semibold tracking-tight mb-8 text-white/90 animate-on-scroll text-reveal stagger-1">{translate("numbersThatProve", "Números que comprovam")}</h3>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center animate-on-scroll slide-up stagger-2">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">180</div>
-                <div className="text-sm text-white/60">{t("shipsPerMonth")}</div>
+                <div className="text-sm text-white/60">{translate("shipsPerMonth", "Navios por mês")}</div>
               </div>
               <div className="text-center animate-on-scroll slide-up stagger-3">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">1.8M</div>
-                <div className="text-sm text-white/60">{t("teusPerYear")}</div>
+                <div className="text-sm text-white/60">{translate("teusPerYear", "TEUs por ano")}</div>
               </div>
               <div className="text-center animate-on-scroll slide-up stagger-4">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">50K+</div>
-                <div className="text-sm text-white/60">{t("transactions")}</div>
+                <div className="text-sm text-white/60">{translate("transactions", "Transações")}</div>
               </div>
               <div className="text-center lg:border-l lg:border-white/10 animate-on-scroll slide-up stagger-5">
                 <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">15+</div>
-                <div className="text-sm text-white/60">{t("connectedCountries")}</div>
+                <div className="text-sm text-white/60">{translate("connectedCountries", "Países conectados")}</div>
               </div>
             </div>
           </div>
@@ -858,10 +923,10 @@ export default function HomePage() {
             className="text-center animate-on-scroll blur-slide"
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
-              {sustainabilityData?.title || t("sustainabilityTitle")}
+              {sustainabilityData?.title || translate("sustainabilityTitle", "Sustentabilidade em ação")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-12 animate-on-scroll text-reveal stagger-2">
-              {sustainabilityData?.description || t("sustainabilityDescription")}
+              {sustainabilityData?.description || translate("sustainabilityDescription", "Compromissos ambientais e sociais integrados ao nosso modelo de negócio.")}
             </p>
             
             <Link href="/sustentabilidade">
@@ -870,7 +935,7 @@ export default function HomePage() {
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-2 rounded-full bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors animate-on-scroll scale-in stagger-3"
               >
-                {sustainabilityData?.ctaButtonText || t("accessSustainabilityPortal")}
+                {sustainabilityData?.ctaButtonText || translate("accessSustainabilityPortal", "Acessar portal de sustentabilidade")}
                   <ArrowRight className="h-5 w-5" />
               </motion.button>
             </Link>
@@ -886,13 +951,13 @@ export default function HomePage() {
             <div className="animate-on-scroll slide-left stagger-1">
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                <span className="text-sm font-medium text-green-600">{t("letsWorkTogether")}</span>
+                <span className="text-sm font-medium text-green-600">{translate("letsWorkTogether", "Vamos trabalhar juntos")}</span>
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-                {t("readyToCreate")}
+                {translate("readyToCreate", "Pronto para criar algo extraordinário?")}
               </h2>
               <p className="text-lg text-gray-600 mb-8 max-w-lg">
-                {t("contactDescriptionHome")}
+                {translate("contactDescriptionHome", "Conte com o Porto Itapoá para impulsionar sua cadeia logística com segurança e eficiência.")}
               </p>
               
               {/* Contact Methods */}
@@ -923,7 +988,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-gray-900">{t("location")}</div>
-                    <div className="text-sm text-gray-600">{t("santaCatarinaBrazil")}</div>
+                    <div className="text-sm text-gray-600">{translate("santaCatarinaBrazil", "Itapoá, Santa Catarina - Brasil")}</div>
                   </div>
                 </div>
               </div>
@@ -931,16 +996,16 @@ export default function HomePage() {
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
                 <div className="animate-on-scroll fade-in stagger-2">
-                  <div className="text-xl font-semibold text-gray-900 mb-1">{t("response24h")}</div>
-                  <div className="text-xs text-gray-600">{t("response")}</div>
+                  <div className="text-xl font-semibold text-gray-900 mb-1">{translate("response24h", "Resposta em até 24h")}</div>
+                  <div className="text-xs text-gray-600">{translate("response", "Equipe especializada à disposição")}</div>
                 </div>
                 <div className="animate-on-scroll fade-in stagger-3">
-                  <div className="text-xl font-semibold text-gray-900 mb-1">{t("global")}</div>
-                  <div className="text-xs text-gray-600">{t("connectivity")}</div>
+                  <div className="text-xl font-semibold text-gray-900 mb-1">{translate("global", "Atuação global")}</div>
+                  <div className="text-xs text-gray-600">{translate("connectivity", "Conectividade")}</div>
                 </div>
                 <div className="animate-on-scroll fade-in stagger-4">
-                  <div className="text-xl font-semibold text-gray-900 mb-1">{t("sustainable")}</div>
-                  <div className="text-xs text-gray-600">{t("operation")}</div>
+                  <div className="text-xl font-semibold text-gray-900 mb-1">{translate("sustainable", "Sustentável")}</div>
+                  <div className="text-xs text-gray-600">{translate("operation", "Operação responsável")}</div>
                 </div>
               </div>
             </div>
@@ -976,9 +1041,9 @@ export default function HomePage() {
                       <option value="">{t("selectLanguage")}</option>
                       <option value="import">{t("import")}</option>
                       <option value="export">{t("export")}</option>
-                      <option value="logistics">{t("otherServices")}</option>
-                      <option value="storage">{t("storage")}</option>
-                      <option value="other">{t("otherServices")}</option>
+                      <option value="logistics">{translate("otherServices", "Outros serviços")}</option>
+                      <option value="storage">{translate("storage", "Armazenagem")}</option>
+                      <option value="other">{translate("otherServices", "Outros serviços")}</option>
                     </select>
                   </div>
 
@@ -988,7 +1053,7 @@ export default function HomePage() {
                   </div>
 
                   <button type="submit" className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-green-500 text-white px-6 py-3 font-medium hover:bg-green-400 transition-colors">
-                    {t("sendMessageButton")}
+                    {translate("sendMessageButton", "Enviar mensagem")}
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </form>

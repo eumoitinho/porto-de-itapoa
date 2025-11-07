@@ -69,23 +69,23 @@ export default function RotatingEarth({ width = 800, height = 600, className = "
     const context = canvas.getContext("2d")
     if (!context) return
 
-    const containerWidth = Math.min(width, window.innerWidth - 40)
-    const containerHeight = Math.min(height, window.innerHeight - 100)
-    const radius = Math.min(containerWidth, containerHeight) / 1.25
-    const dpr = window.devicePixelRatio || 1
-    canvas.width = containerWidth * dpr
-    canvas.height = containerHeight * dpr
-    canvas.style.width = `${containerWidth}px`
-    canvas.style.height = `${containerHeight}px`
-    context.scale(dpr, dpr)
+    const getAvailableSize = () => {
+      const parent = canvas.parentElement as HTMLElement | null
+      const availableWidth = parent?.clientWidth ?? window.innerWidth
+      const availableHeight = parent?.clientHeight ?? window.innerHeight
+      return { width: Math.max(availableWidth, width), height: Math.max(availableHeight, height) }
+    }
 
     const projection = d3
       .geoOrthographic()
-      .scale(radius)
-      .translate([containerWidth / 2, containerHeight / 2])
+      .scale(1)
+      .translate([0, 0])
       .clipAngle(90)
 
     const path = d3.geoPath().projection(projection).context(context)
+    let baseRadius = 1
+    let containerWidth = 1
+    let containerHeight = 1
 
     const pointInPolygon = (point: [number, number], polygon: number[][]): boolean => {
       const [x, y] = point
@@ -139,7 +139,7 @@ export default function RotatingEarth({ width = 800, height = 600, className = "
     const render = () => {
       context.clearRect(0, 0, containerWidth, containerHeight)
       const currentScale = projection.scale()
-      const scaleFactor = currentScale / radius
+      const scaleFactor = baseRadius > 0 ? currentScale / baseRadius : 1
 
       context.beginPath()
       context.arc(containerWidth / 2, containerHeight / 2, currentScale, 0, 2 * Math.PI)
@@ -179,6 +179,24 @@ export default function RotatingEarth({ width = 800, height = 600, className = "
           }
         })
       }
+    }
+
+    const resizeCanvas = () => {
+      const { width: availableWidth, height: availableHeight } = getAvailableSize()
+      containerWidth = availableWidth
+      containerHeight = availableHeight
+      const dpr = window.devicePixelRatio || 1
+      canvas.width = containerWidth * dpr
+      canvas.height = containerHeight * dpr
+      canvas.style.width = `${containerWidth}px`
+      canvas.style.height = `${containerHeight}px`
+      context.setTransform(dpr, 0, 0, dpr, 0, 0)
+      // Aumentar o tamanho do globo (divisor menor = globo maior)
+      baseRadius = Math.min(containerWidth, containerHeight) / 2.2
+      projection
+        .scale(baseRadius)
+        .translate([containerWidth / 2, containerHeight / 2])
+      render()
     }
 
     const loadWorldData = async () => {
@@ -235,15 +253,17 @@ export default function RotatingEarth({ width = 800, height = 600, className = "
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault()
       const scaleFactor = event.deltaY > 0 ? 0.9 : 1.1
-      const newRadius = Math.max(radius * 0.5, Math.min(radius * 3, projection.scale() * scaleFactor))
+      const newRadius = Math.max(baseRadius * 0.5, Math.min(baseRadius * 3, projection.scale() * scaleFactor))
       projection.scale(newRadius); render()
     }
 
     canvas.addEventListener("mousedown", handleMouseDown)
     canvas.addEventListener("click", handleClick)
     canvas.addEventListener("wheel", handleWheel)
+    resizeCanvas()
     loadWorldData()
-    return () => { rotationTimer.stop(); canvas.removeEventListener("mousedown", handleMouseDown); canvas.removeEventListener("click", handleClick); canvas.removeEventListener("wheel", handleWheel) }
+    window.addEventListener("resize", resizeCanvas)
+    return () => { rotationTimer.stop(); canvas.removeEventListener("mousedown", handleMouseDown); canvas.removeEventListener("click", handleClick); canvas.removeEventListener("wheel", handleWheel); window.removeEventListener("resize", resizeCanvas) }
   }, [width, height])
 
   if (error) {
@@ -262,8 +282,8 @@ export default function RotatingEarth({ width = 800, height = 600, className = "
       <div className={`relative flex items-center justify-center ${className}`}>
         <canvas
           ref={canvasRef}
-          className="rounded-3xl bg-white shadow-2xl cursor-grab"
-          style={{ maxWidth: "100%", height: "auto" }}
+          className="w-full h-full cursor-grab"
+          style={{ width: "100%", height: "100%", background: "transparent" }}
         />
       </div>
 

@@ -6,64 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
+import Link from "next/link"
 import { useI18n } from "@/lib/i18n/context"
-
-const noticias = [
-  {
-    id: 1,
-    titulo: "Porto Itapoá Bate Recorde de Movimentação em 2024",
-    resumo: "Terminal registra crescimento de 15% na movimentação de contêineres no primeiro semestre.",
-    categoria: "Operações",
-    data: "15 de Dezembro, 2024",
-    autor: "Assessoria de Imprensa",
-    imagem: "/foto-porto-patio-1024x721.webp",
-  },
-  {
-    id: 2,
-    titulo: "Nova Linha de Serviço Conecta Itapoá à Ásia",
-    resumo: "Parceria com grandes armadores amplia conectividade com mercados asiáticos.",
-    categoria: "Expansão",
-    data: "10 de Dezembro, 2024",
-    autor: "Departamento Comercial",
-    imagem: "/foto-porto-patio-1024x721.webp",
-  },
-  {
-    id: 3,
-    titulo: "Investimento em Sustentabilidade Ambiental",
-    resumo: "Porto Itapoá anuncia programa de redução de emissões e energia renovável.",
-    categoria: "Sustentabilidade",
-    data: "5 de Dezembro, 2024",
-    autor: "Gerência Ambiental",
-    imagem: "/foto-porto-patio-1024x721.webp",
-  },
-  {
-    id: 4,
-    titulo: "Modernização da Infraestrutura Portuária",
-    resumo: "Novos equipamentos aumentam eficiência operacional e capacidade de atendimento.",
-    categoria: "Infraestrutura",
-    data: "28 de Novembro, 2024",
-    autor: "Engenharia",
-    imagem: "/foto-porto-patio-1024x721.webp",
-  },
-  {
-    id: 5,
-    titulo: "Certificação Internacional de Qualidade",
-    resumo: "Porto Itapoá recebe certificação ISO 9001:2015 por excelência operacional.",
-    categoria: "Qualidade",
-    data: "20 de Novembro, 2024",
-    autor: "Qualidade e Processos",
-    imagem: "/foto-porto-patio-1024x721.webp",
-  },
-  {
-    id: 6,
-    titulo: "Programa de Capacitação Profissional",
-    resumo: "Iniciativa visa formar novos talentos para o setor portuário e logístico.",
-    categoria: "Educação",
-    data: "15 de Novembro, 2024",
-    autor: "Recursos Humanos",
-    imagem: "/foto-porto-patio-1024x721.webp",
-  },
-]
+import { noticias } from "@/data/noticias"
 
 export default function NoticiasPage() {
   const { t } = useI18n()
@@ -122,44 +67,46 @@ export default function NoticiasPage() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <Card className="backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl overflow-hidden h-full">
-                    <div className="relative h-48">
-                      <Image
-                        src={noticia.imagem || "/placeholder.svg"}
-                        alt={noticia.titulo}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute top-4 left-4">
-                        <Badge className="bg-green-600 text-white">{noticia.categoria}</Badge>
-                      </div>
-                    </div>
-
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-semibold text-green-800 mb-3 line-clamp-2">{noticia.titulo}</h3>
-
-                      <p className="text-gray-600 mb-4 line-clamp-3">{noticia.resumo}</p>
-
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {noticia.data}
-                        </div>
-                        <div className="flex items-center">
-                          <User className="h-4 w-4 mr-1" />
-                          {noticia.autor}
+                  <Link href={`/noticias/${noticia.slug}`}>
+                    <Card className="backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl overflow-hidden h-full cursor-pointer hover:shadow-2xl transition-shadow">
+                      <div className="relative h-48">
+                        <Image
+                          src={noticia.imagem || "/placeholder.svg"}
+                          alt={noticia.titulo}
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="absolute top-4 left-4">
+                          <Badge className="bg-green-600 text-white">{noticia.categoria}</Badge>
                         </div>
                       </div>
 
-                      <Button
-                        variant="outline"
-                        className="w-full rounded-full border-green-600 text-green-600 hover:bg-green-600 hover:text-white bg-transparent"
-                      >
-                        {t('readMore')}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </CardContent>
-                  </Card>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-semibold text-green-800 mb-3 line-clamp-2">{noticia.titulo}</h3>
+
+                        <p className="text-gray-600 mb-4 line-clamp-3">{noticia.resumo}</p>
+
+                        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                          <div className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {noticia.data}
+                          </div>
+                          <div className="flex items-center">
+                            <User className="h-4 w-4 mr-1" />
+                            {noticia.autor}
+                          </div>
+                        </div>
+
+                        <Button
+                          variant="outline"
+                          className="w-full rounded-full border-green-600 text-green-600 hover:bg-green-600 hover:text-white bg-transparent"
+                        >
+                          {t('readMore') || 'Ler mais'}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </motion.div>
               ))}
             </div>
