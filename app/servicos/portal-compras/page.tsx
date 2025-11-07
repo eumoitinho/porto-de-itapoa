@@ -19,7 +19,7 @@ export default function PortalComprasPage() {
   const description = getTranslatedField(pageData?.description, language, 'Participe de cotações e forneça produtos e serviços ao Porto')
 
   return (
-    <div className="min-h-screen mt-44 py-16 px-8">
+    <div className="min-h-screen bg-white text-gray-900 mt-44 py-16 px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div

@@ -1,16 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Poppins } from "next/font/google"
+import { Open_Sans } from "next/font/google"
 import "./globals.css"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Providers } from "./providers"
 import { ConditionalLayout } from "./conditional-layout"
 
-const poppins = Poppins({ 
+const openSans = Open_Sans({ 
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins"
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-open-sans"
 })
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className={`${poppins.variable} font-poppins`}>
+      <body className={`${openSans.variable} font-sans`}>
         <Providers>
           <ConditionalLayout>{children}</ConditionalLayout>
         </Providers>

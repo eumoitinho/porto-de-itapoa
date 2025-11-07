@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Ship, Globe, Users, TrendingUp, MapPin, Play, Calendar, ShoppingCart, DollarSign, Calculator, Package, Menu, Twitter, Instagram, Linkedin, Mail, Star, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -18,7 +18,7 @@ import {
   useSustainabilityData, 
   useContactData 
 } from "@/hooks/useSanityData"
-import { InteractiveGlobe } from "@/components/interactive-globe"
+import RotatingEarth from "@/components/rotating-earth"
 
 // Video Background Component com efeito parallax
 function VideoBackground() {
@@ -56,18 +56,18 @@ function VideoBackground() {
       
       {/* Video element */}
       {isClient && (
-        <video
+      <video
           ref={videoRef}
           className="absolute inset-0 object-cover w-full h-full"
-          autoPlay
-          loop
-          muted
-          playsInline
+        autoPlay
+        loop
+        muted
+        playsInline
           preload="auto"
-          poster="/placeholder.jpg"
-        >
+        poster="/placeholder.jpg"
+      >
           <source src="/Design sem nome.mp4" type="video/mp4" />
-        </video>
+      </video>
       )}
       
       {/* Enhanced gradient overlay */}
@@ -136,6 +136,41 @@ export default function HomePage() {
     },
   ]
 
+  const maritimeGalleryImages = [
+    {
+      src: "/48.jpg",
+      alt: "Operações portuárias Porto Itapoá"
+    },
+    {
+      src: "/210302-porto-de-los-angeles-1.jpg",
+      alt: "Porto de Los Angeles com navios"
+    },
+    {
+      src: "/2025102199458f0bf5e147a6b6ccf979943e6230_20251021bc9a169f1791497a858fe90eecad0894.jpeg",
+      alt: "Terminal logístico movimentado"
+    },
+    {
+      src: "/aerea-porto-scaled.jpg",
+      alt: "Vista aérea Porto Itapoá"
+    },
+    {
+      src: "/048-navio-20log-in-20logistica-20intermodal.webp",
+      alt: "Navio logístico"
+    },
+    {
+      src: "/downloads.jpg",
+      alt: "Movimentação de contêineres"
+    },
+    {
+      src: "/laem-chabang-1024x767.jpg",
+      alt: "Porto Laem Chabang"
+    },
+    {
+      src: "/turquia-istambul-canal-do-bosforo-ponte-do-bosforo-um-navio-de-carga-no-canal-da-mancha_857279-14188.avif",
+      alt: "Navio no estreito de Bósforo"
+    }
+  ]
+
   // Função para mapear ícones
   const getIcon = (iconName: string) => {
     const iconMap: { [key: string]: any } = {
@@ -150,6 +185,8 @@ export default function HomePage() {
 
   const currentStats = statsData?.stats || defaultStats
   const currentFeaturedServices = maritimeServicesData?.services || defaultFeaturedServices
+
+  // (Valores) exibição simultânea - sem abas
 
   // Estilos para cards de estatísticas
   const statAccentClasses = [
@@ -346,19 +383,19 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <section className="z-10 relative flex h-full max-w-7xl mx-auto px-6 items-center pt-10 pb-20">
+        <section className="z-10 relative flex h-full max-w-7xl mx-auto px-6 items-center justify-center min-h-screen pt-20">
           <div className="max-w-xl text-white hero-content">
             <p className="text-sm/6 uppercase tracking-widest opacity-80 animate-on-scroll text-reveal stagger-1">
               {t("heroSubtitle")}
             </p>
             <h1 className="mt-3 text-5xl md:text-6xl tracking-tight font-semibold animate-on-scroll text-reveal stagger-2">
               {homepageData?.title || t("heroTitle")}
-            </h1>
+              </h1>
             <p className="text-base/7 md:text-lg/8 opacity-90 mt-4 animate-on-scroll text-reveal stagger-3">
               {homepageData?.subtitle || t("heroSubtitleText")}
-            </p>
+              </p>
             <div className="mt-8 flex items-center gap-3">
-              <Link href={homepageData?.ctaButtonLink || "/servicos"}>
+                      <Link href={homepageData?.ctaButtonLink || "/servicos"}>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -367,8 +404,8 @@ export default function HomePage() {
                   <span className="relative z-10">{homepageData?.ctaButtonText || t("knowOurServices")}</span>
                   <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
-              </Link>
-              <Link href="/contato">
+                      </Link>
+                      <Link href="/contato">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -377,14 +414,14 @@ export default function HomePage() {
                   {t("contactButton")}
                   <Play className="w-4 h-4" />
                 </motion.button>
-              </Link>
+                      </Link>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Statistics Section */}
-      <section className="py-20 px-8 bg-zinc-200 border-gray-200 border-t">
+      {/* Statistics Section (mínimo) */}
+      <section className="py-20 px-8 bg-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -393,39 +430,34 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900 animate-on-scroll text-reveal stagger-1">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
               {statsData?.title || t("impressiveNumbers")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-on-scroll text-reveal stagger-2">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               {statsData?.description || t("statsDescription")}
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {currentStats.map((stat: any, index: number) => {
-              const accent = statAccentClasses[index % statAccentClasses.length]
-              return (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group h-full"
-              >
-                <div className={`h-full flex flex-col overflow-hidden rounded-2xl relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${accent.card}`}>
-                  <div className="p-8 text-center flex flex-col flex-1">
-                    <div className={`w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center transition-all duration-300 ${accent.circle}`}>
-                      <stat.icon className="h-8 w-8" strokeWidth={1.5} />
-                    </div>
-                    <h3 className={`text-4xl font-bold mb-3 transition-colors ${accent.value}`}>{stat.value}</h3>
-                    <p className={`text-lg font-semibold ${index === 3 ? 'text-white' : 'text-gray-800'} mb-2`}>{stat.label}</p>
-                    <p className={`text-sm ${index === 3 ? 'text-white/80' : 'text-gray-600'} leading-relaxed flex-1`}>{stat.description}</p>
+          <div className="rounded-2xl border border-gray-100 bg-white/80 backdrop-blur">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+              {currentStats.map((stat: any, index: number) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: index * 0.05 }}
+                  className="px-8 py-10 text-center"
+                >
+                  <div className="mb-3 flex items-center justify-center">
+                    <stat.icon className="h-6 w-6 text-emerald-600" strokeWidth={1.5} />
                   </div>
-                </div>
-              </motion.div>
-              )
-            })}
+                  <div className="text-3xl md:text-4xl font-semibold text-gray-900 leading-none">{stat.value}</div>
+                  <div className="mt-2 text-base font-medium text-gray-800">{stat.label}</div>
+                  <div className="mt-1 text-sm text-gray-600">{stat.description}</div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -458,7 +490,7 @@ export default function HomePage() {
           <div className="max-w-2xl text-white hero-content">
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white animate-on-scroll text-reveal stagger-1">
               {terminalData?.title || t("terminalTitle")}
-            </h2>
+              </h2>
             <p className="mt-5 text-base sm:text-lg text-white/90 leading-relaxed animate-on-scroll text-reveal stagger-2">
               {terminalData?.description || t("terminalDescription")}
             </p>
@@ -469,7 +501,7 @@ export default function HomePage() {
                   {t("strategicLocation")},
                 </span>
                 <Image
-                  src="/foto-porto-patio-1024x721.webp"
+                  src="/aerea-porto-scaled.jpg"
                   alt="Porto Itapoá"
                   width={48}
                   height={48}
@@ -528,72 +560,86 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {[{
-              title: t("mission"),
-              heading: t("missionHeading"),
-              content: terminalData?.mission || t("missionContent")
-            }, {
-              title: t("vision"),
-              heading: t("visionHeading"),
-              content: terminalData?.vision || t("visionContent")
-            }, {
-              title: t("values"),
-              heading: t("valuesHeading"),
-              content: terminalData?.values || t("valuesContent")
-            }].map((item, index) => (
-            <motion.div
-                key={item.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: (index + 1) * 0.1 }}
-              viewport={{ once: true }}
-              className="group h-full"
-            >
-                <div className={`h-full flex flex-col overflow-hidden rounded-2xl relative transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${valueCardStyles[index % valueCardStyles.length].card}`}>
-                  <div className="p-8 text-left flex flex-col flex-1">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`h-2 w-2 rounded-full ${valueCardStyles[index % valueCardStyles.length].dot}`}></div>
-                      <span className={`text-sm font-medium ${valueCardStyles[index % valueCardStyles.length].badge}`}>{item.title}</span>
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">{item.heading}</h3>
-                    <p className="text-gray-600 leading-relaxed flex-1">
-                      {item.content}
-                    </p>
-                  </div>
-                </div>
-            </motion.div>
-            ))}
+          {/* Três colunas abertas com divisórias finas */}
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 md:divide-x divide-gray-200 bg-white/80 backdrop-blur rounded-2xl border border-gray-100">
+              {[{
+                title: t('mission'),
+                heading: t('missionHeading'),
+                content: terminalData?.mission || t('missionContent')
+              }, {
+                title: t('vision'),
+                heading: t('visionHeading'),
+                content: terminalData?.vision || t('visionContent')
+              }, {
+                title: t('values'),
+                heading: t('valuesHeading'),
+                content: terminalData?.values || t('valuesContent')
+              }].map((sec, i) => (
+                <motion.div
+                  key={sec.title}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.1 * i }}
+                  className="px-8 py-10"
+                >
+                  <div className="text-emerald-700 text-base md:text-lg font-semibold tracking-wide mb-3">{sec.title}</div>
+                  <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-3">{sec.heading}</h3>
+                  <p className="text-lg text-gray-600 leading-relaxed">{sec.content}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Services Overview */}
       <section className="bg-zinc-200 border-gray-200 border-t relative">
-        <div className="relative w-full h-[600px] lg:h-[800px] xl:h-[900px] pointer-events-none">
-          {/* Globo Interativo - ocupa toda a seção incluindo título */}
-          <InteractiveGlobe 
-            className="w-full h-full pointer-events-auto"
-            title={maritimeServicesData?.title || t("regularMaritimeServices")}
-            description={maritimeServicesData?.description || t("servicesDescription")}
-          />
-            </div>
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600 mb-2">
+              {maritimeServicesData?.title || t("regularMaritimeServices")}
+            </h2>
+            <p className="text-neutral-600 max-w-2xl mx-auto">
+              {maritimeServicesData?.description || t("servicesDescription")}
+            </p>
+          </div>
+        </div>
+        <div className="relative w-full h-screen min-h-[100vh] flex items-center justify-center">
+          <RotatingEarth className="w-full h-full max-w-6xl" />
+        </div>
 
-            {/* Services Grid */}
+        {/* Services Grid */}
         <div className="md:px-10 lg:py-28 max-w-7xl mr-auto ml-auto pt-20 pr-6 pb-20 pl-6">
-            <div className="flex mb-8 items-end justify-between animate-on-scroll fade-in">
+            <div className="flex mb-8 items-end justify-between">
               <div>
-                <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600 animate-on-scroll text-reveal stagger-1">
+                <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600">
                   {t("regularMaritimeServices")}
                 </h2>
-                <p className="mt-2 text-neutral-600 dark:text-neutral-400 animate-on-scroll text-reveal stagger-2">
+                <p className="mt-2 text-neutral-600">
                   {t("servicesDescription")}
                 </p>
-              </div>
-              <Link href="/portfolio" className="hidden sm:inline-flex items-center gap-2 text-sm hover:text-neutral-600 dark:hover:text-neutral-400 transition animate-on-scroll slide-left stagger-3">
+                  </div>
+              <Link href="/portfolio" className="hidden sm:inline-flex items-center gap-2 text-sm hover:text-neutral-600 transition">
                 {t("seeCompletePortfolio")}
                 <ChevronRight className="w-4 h-4" />
-              </Link>
+                  </Link>
+                </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+              {maritimeGalleryImages.map((image) => (
+                <div key={image.src} className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-md">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover transition-transform duration-500 hover:scale-105"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                    priority={image.src === "/aerea-porto-scaled.jpg"}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+                </div>
+              ))}
             </div>
             <div className="flex gap-1.5 bg-[#ffffff] w-full max-w-none rounded-3xl pt-6 pr-6 pb-6 pl-6 shadow-2xl space-x-4 animate-on-scroll scale-in overflow-x-auto">
               {currentFeaturedServices.slice(0, 5).map((service: any, index: number) => (
@@ -602,10 +648,10 @@ export default function HomePage() {
                   className="card-panel flex-1 min-w-[200px] overflow-hidden cursor-pointer transition-all duration-500 flex hover:flex-[4] group bg-gray-800 h-[464px] rounded-3xl relative top-0 right-0 bottom-0 left-0 items-center justify-center animate-on-scroll blur-in"
                   style={{ transitionDelay: `${index * 0.1}s` }}
                 >
-                  <Image
-                    src="/placeholder.jpg"
-                    alt={service.title}
-                    fill
+                    <Image
+                      src="/placeholder.jpg"
+                      alt={service.title}
+                      fill
                     className="card-image w-full h-full object-cover rounded-sm"
                   />
                   <div className="card-overlay group-hover:opacity-100 transition-opacity duration-300 flex flex-col bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 rounded-3xl pt-6 pr-6 pb-6 pl-6 absolute top-0 right-0 bottom-0 left-0 justify-end">
@@ -615,7 +661,7 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
+          </div>
         </div>
       </section>
 
@@ -687,7 +733,7 @@ export default function HomePage() {
                       <div className="flex items-center gap-4 mb-6">
                         <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${style.icon}`}>
                           <IconComponent className="h-6 w-6" strokeWidth={1.5} />
-                        </div>
+                      </div>
                         <h3 className="text-xl font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors">{service.title}</h3>
                       </div>
                       <p className="text-gray-600 leading-relaxed mb-6 flex-1">{service.description}</p>
@@ -731,7 +777,7 @@ export default function HomePage() {
                 className="inline-flex items-center gap-2 rounded-full bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors animate-on-scroll scale-in stagger-3"
               >
                 {t("seeAllNews")}
-                <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-5 w-5" />
               </motion.button>
             </Link>
           </div>
@@ -864,7 +910,7 @@ export default function HomePage() {
                 className="inline-flex items-center gap-2 rounded-full bg-green-500 text-white px-8 py-4 text-lg font-medium hover:bg-green-400 transition-colors animate-on-scroll scale-in stagger-3"
               >
                 {sustainabilityData?.ctaButtonText || t("accessSustainabilityPortal")}
-                <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-5 w-5" />
               </motion.button>
             </Link>
           </motion.div>

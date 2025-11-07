@@ -360,60 +360,160 @@ export const contact = defineType({
   name: 'contact',
   title: 'Contato',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
     {
-      name: 'title',
-      title: 'Título',
-      type: 'string',
-      initialValue: 'Porto Itapoá',
-    },
+      name: 'atendimentoCliente',
+      title: 'Atendimento ao Cliente',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título'),
+        createLocalizedTextField('descricao', 'Descrição'),
     {
-      name: 'description',
-      title: 'Descrição',
-      type: 'text',
-      initialValue: 'Terminal portuário de última geração, conectando o Brasil ao mundo com eficiência, tecnologia e sustentabilidade.',
-    },
-    {
-      name: 'address',
-      title: 'Endereço',
-      type: 'string',
-      initialValue: 'Rod. SC-415, Km 5 - Itapoá/SC',
-    },
-    {
-      name: 'phone',
+          name: 'telefone',
       title: 'Telefone',
       type: 'string',
-      initialValue: '+55 (47) 3441-8000',
     },
     {
       name: 'email',
       title: 'E-mail',
       type: 'string',
-      initialValue: 'contato@portoitapoa.com.br',
+        },
+        createLocalizedTextField('chatOnline', 'Chat Online'),
+        {
+          name: 'centralAjuda',
+          title: 'URL da Central de Ajuda/FAQ',
+          type: 'url',
+        },
+        createLocalizedTextField('horarios', 'Horários de Atendimento'),
+      ],
     },
     {
-      name: 'ctaButtonText',
-      title: 'Texto do Botão Principal',
+      name: 'ouvidoriaSocial',
+      title: 'Ouvidoria Social',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título'),
+        createLocalizedTextField('descricao', 'Descrição'),
+    {
+          name: 'telefone',
+          title: 'Telefone (Ligação Gratuita)',
       type: 'string',
-      initialValue: 'Entre em Contato',
+        },
+        createLocalizedTextField('disponibilidade', 'Disponibilidade'),
+      ],
     },
     {
-      name: 'ctaButtonLink',
-      title: 'Link do Botão Principal',
+      name: 'sedeAdministrativa',
+      title: 'Sede Administrativa',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título'),
+        createLocalizedTextField('descricao', 'Descrição'),
+        createLocalizedTextField('endereco', 'Endereço'),
+        createLocalizedTextField('horario', 'Horário de Atendimento'),
+        {
+          name: 'cnpj',
+          title: 'CNPJ',
       type: 'string',
-      initialValue: '/contato',
     },
     {
-      name: 'secondaryButtonText',
-      title: 'Texto do Botão Secundário',
+          name: 'inscricaoEstadual',
+          title: 'Inscrição Estadual/SC',
       type: 'string',
-      initialValue: 'Nossos Serviços',
+        },
+      ],
     },
     {
-      name: 'secondaryButtonLink',
-      title: 'Link do Botão Secundário',
-      type: 'string',
-      initialValue: '/servicos',
+      name: 'formulario',
+      title: 'Formulário de Contato',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título'),
+        createLocalizedTextField('descricao', 'Descrição'),
+      ],
+    },
+  ],
+})
+
+export const carreiras = defineType({
+  name: 'carreiras',
+  title: 'Carreiras',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'protecaoDados',
+      title: 'Compromisso com Proteção de Dados',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título'),
+        createLocalizedBlockContentField('descricao', 'Descrição'),
+        {
+          name: 'usoDados',
+          title: 'Uso dos Dados',
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+        {
+          name: 'retencaoDados',
+          title: 'Retenção dos Dados',
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'termoConsentimento',
+      title: 'Termo de Consentimento',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título'),
+        createLocalizedTextField('descricao', 'Descrição'),
+        createLocalizedTextField('declaracaoPEP', 'Declaração PEP'),
+        createLocalizedTextField('textoConsentimento', 'Texto do Consentimento'),
+      ],
+    },
+    {
+      name: 'linkPortalVagas',
+      title: 'Link para Portal de Vagas',
+      type: 'url',
+    },
+    {
+      name: 'beneficios',
+      title: 'Benefícios',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
     },
   ],
 })
@@ -809,6 +909,11 @@ export const programacaoNavios = defineType({
     {
       name: 'linkSistema',
       title: 'Link para Sistema Externo',
+      type: 'url',
+    },
+    {
+      name: 'cameraUrl',
+      title: 'URL da Câmera Online',
       type: 'url',
     },
     createLocalizedBlockContentField('instrucoes', 'Instruções de Uso'),
@@ -1307,6 +1412,280 @@ export const procedimentosOperacionais = defineType({
   ],
 })
 
+export const cadastroCliente = defineType({
+  name: 'cadastroCliente',
+  title: 'Cadastro de Cliente',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'beneficios',
+      title: 'Benefícios',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'linkSistema',
+      title: 'Link para Sistema Externo',
+      type: 'url',
+      initialValue: 'https://api.portoitapoa.com/hub-frontend/public-cadastro-clientes',
+    },
+  ],
+})
+
+export const cadastroMotorista = defineType({
+  name: 'cadastroMotorista',
+  title: 'Cadastro de Motorista',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'beneficios',
+      title: 'Benefícios',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'linkSistema',
+      title: 'Link para Sistema Externo',
+      type: 'url',
+      initialValue: 'https://api.portoitapoa.com/hub-frontend/public-cadastro-motoristas',
+    },
+  ],
+})
+
+export const linhasNavegacao = defineType({
+  name: 'linhasNavegacao',
+  title: 'Linhas de Navegação',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'armadores',
+      title: 'Armadores',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'nome',
+              title: 'Nome do Armador',
+              type: 'string',
+            },
+            {
+              name: 'logo',
+              title: 'Logo do Armador',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    createLocalizedBlockContentField('informacoesAdicionais', 'Informações Adicionais'),
+  ],
+})
+
+export const simuladoresPrecos = defineType({
+  name: 'simuladoresPrecos',
+  title: 'Simuladores de Preços',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'tabelaPdfUrl',
+      title: 'URL da Tabela de Preços (PDF)',
+      type: 'url',
+      initialValue: 'https://www.portoitapoa.com/wp-content/uploads/2025/03/Tabela-Publica-2025-Final-Fevereiro.pdf',
+    },
+  ],
+})
+
+export const consultas = defineType({
+  name: 'consultas',
+  title: 'Consultas',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'linkSistema',
+      title: 'Link para Sistema Externo',
+      type: 'url',
+      initialValue: 'https://prod.portoitapoa.com.br/apex/n4.zul',
+    },
+    {
+      name: 'funcionalidades',
+      title: 'Funcionalidades',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+export const integracaoMotoristas = defineType({
+  name: 'integracaoMotoristas',
+  title: 'Integração de Motoristas',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'linkSistema',
+      title: 'Link para Sistema Externo',
+      type: 'url',
+      initialValue: 'https://forms.office.com/Pages/ResponsePage.aspx?id=QwqdHgbzNk2eLbcz8M_rfnsK8kh9lAs1EGfbjDLbFUMTJEMFJBSUlWWFRSRDhJRDVUU0hNT0EzWS4u',
+    },
+    {
+      name: 'beneficios',
+      title: 'Benefícios',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+export const integracaoServicos = defineType({
+  name: 'integracaoServicos',
+  title: 'Integração de Serviços',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'linkSistema',
+      title: 'Link para Sistema Externo',
+      type: 'url',
+      initialValue: 'https://forms.office.com/Pages/ResponsePage.aspx?id=QwqdHgbzNk2eLbcz8M_rfv0DXNnoEF1DjZa7wG4kOlNUMzdJMlNIOTIwTjY0NVM2RDJGMDJEVVRLTCQlQCN0PWcu',
+    },
+    {
+      name: 'beneficios',
+      title: 'Benefícios',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+export const tour360 = defineType({
+  name: 'tour360',
+  title: 'Tour 360º',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'tourUrl',
+      title: 'URL do Tour 360º',
+      type: 'url',
+      initialValue: 'https://www.portoitapoa.com/tour360/index.htm',
+    },
+  ],
+})
+
 export const schemaTypes = [
   homepage,
   stats,
@@ -1329,4 +1708,13 @@ export const schemaTypes = [
   lgpd,
   canalDenuncias,
   procedimentosOperacionais,
+  cadastroCliente,
+  cadastroMotorista,
+  linhasNavegacao,
+  simuladoresPrecos,
+  consultas,
+  integracaoMotoristas,
+  integracaoServicos,
+  tour360,
+  carreiras,
 ]

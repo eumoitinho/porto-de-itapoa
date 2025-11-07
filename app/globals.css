@@ -2,52 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 13% 13%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 13% 13%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 13%;
-    --primary: 220 13% 13%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 9% 96%;
-    --secondary-foreground: 220 13% 13%;
-    --muted: 220 9% 96%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 142 76% 36%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 220 13% 13%;
+    /* Monochrome tokens */
+    --background: oklch(1 0 0);
+    --foreground: oklch(0 0 0);
+    --card: oklch(0.94 0 0);
+    --card-foreground: oklch(0 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0 0 0);
+    --primary: oklch(0 0 0);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.5 0 0);
+    --secondary-foreground: oklch(1 0 0);
+    --muted: oklch(0.94 0 0);
+    --muted-foreground: oklch(0 0 0);
+    --accent: oklch(0.8 0 0);
+    --accent-foreground: oklch(0 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.5 0 0);
+    --input: oklch(1 0 0);
+    --ring: oklch(0 0 0 / 0.2);
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 220 13% 13%;
-    --foreground: 0 0% 98%;
-    --card: 220 13% 13%;
-    --card-foreground: 0 0% 98%;
-    --popover: 220 13% 13%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 220 13% 13%;
-    --secondary: 220 13% 18%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 220 13% 18%;
-    --muted-foreground: 220 9% 65%;
-    --accent: 142 76% 36%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 18%;
-    --input: 220 13% 18%;
-    --ring: 0 0% 98%;
+    --background: oklch(0 0 0);
+    --foreground: oklch(1 0 0);
+    --card: oklch(0.1 0 0);
+    --card-foreground: oklch(1 0 0);
+    --popover: oklch(0 0 0);
+    --popover-foreground: oklch(1 0 0);
+    --primary: oklch(1 0 0);
+    --primary-foreground: oklch(0 0 0);
+    --secondary: oklch(0.3 0 0);
+    --secondary-foreground: oklch(1 0 0);
+    --muted: oklch(0.3 0 0);
+    --muted-foreground: oklch(0.7 0 0);
+    --accent: oklch(0.3 0 0);
+    --accent-foreground: oklch(1 0 0);
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+    --border: oklch(0.3 0 0);
+    --input: oklch(0.3 0 0);
+    --ring: oklch(1 0 0 / 0.2);
   }
 }
 
@@ -57,12 +56,22 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: var(--font-open-sans), 'Open Sans', system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
+/* Utilitário para esconder barras de rolagem (iframes/conteiners) */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 @layer utilities {
+  /* Project-wide section/typography utilities */
+  .section-container { @apply max-w-7xl mx-auto; }
+  .section-padding { @apply py-20 px-8; }
+  .section-title { @apply text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900; }
+  .section-subtitle { @apply text-lg text-gray-600 max-w-2xl mx-auto; }
+  .divided-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-200; }
   .line-clamp-2 {
     overflow: hidden;
     display: -webkit-box;

@@ -2015,6 +2015,669 @@ async function populateProcedimentosOperacionais() {
   }
 }
 
+// CADASTRO DE CLIENTE
+async function populateCadastroCliente() {
+  const data = {
+    _type: 'cadastroCliente',
+    title: {
+      pt: 'Cadastro de Cliente',
+      en: 'Client Registration',
+      es: 'Registro de Cliente',
+    },
+    description: {
+      pt: 'Cadastre-se para acessar nossos serviços digitais',
+      en: 'Register to access our digital services',
+      es: 'Regístrese para acceder a nuestros servicios digitales',
+    },
+    intro: {
+      pt: createBlockContent('Cadastre-se como cliente para acessar nossos serviços digitais e acompanhar suas operações em tempo real.'),
+      en: createBlockContent('Register as a client to access our digital services and track your operations in real time.'),
+      es: createBlockContent('Regístrese como cliente para acceder a nuestros servicios digitales y seguir sus operaciones en tiempo real.'),
+    },
+    beneficios: [
+      {
+        _key: 'ben1',
+        titulo: {
+          pt: 'Acesso Digital',
+          en: 'Digital Access',
+          es: 'Acceso Digital',
+        },
+        descricao: {
+          pt: 'Acesse todos os serviços digitais do Porto Itapoá',
+          en: 'Access all Porto Itapoá digital services',
+          es: 'Acceda a todos los servicios digitales del Puerto Itapoá',
+        },
+      },
+      {
+        _key: 'ben2',
+        titulo: {
+          pt: 'Acompanhamento em Tempo Real',
+          en: 'Real-Time Tracking',
+          es: 'Seguimiento en Tiempo Real',
+        },
+        descricao: {
+          pt: 'Acompanhe suas operações e cargas em tempo real',
+          en: 'Track your operations and cargo in real time',
+          es: 'Siga sus operaciones y cargas en tiempo real',
+        },
+      },
+    ],
+    linkSistema: 'https://api.portoitapoa.com/hub-frontend/public-cadastro-clientes',
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "cadastroCliente"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Cadastro de Cliente atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Cadastro de Cliente criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Cadastro de Cliente:', error)
+    throw error
+  }
+}
+
+// CADASTRO DE MOTORISTA
+async function populateCadastroMotorista() {
+  const data = {
+    _type: 'cadastroMotorista',
+    title: {
+      pt: 'Cadastro de Motorista',
+      en: 'Driver Registration',
+      es: 'Registro de Conductor',
+    },
+    description: {
+      pt: 'Cadastre-se como motorista para acessar nossos serviços',
+      en: 'Register as a driver to access our services',
+      es: 'Regístrese como conductor para acceder a nuestros servicios',
+    },
+    intro: {
+      pt: createBlockContent('Cadastre-se como motorista para acessar nossos serviços e agendar suas operações no terminal.'),
+      en: createBlockContent('Register as a driver to access our services and schedule your operations at the terminal.'),
+      es: createBlockContent('Regístrese como conductor para acceder a nuestros servicios y programar sus operaciones en el terminal.'),
+    },
+    beneficios: [
+      {
+        _key: 'ben1',
+        titulo: {
+          pt: 'Agendamento Online',
+          en: 'Online Scheduling',
+          es: 'Programación Online',
+        },
+        descricao: {
+          pt: 'Agende suas operações de forma rápida e prática',
+          en: 'Schedule your operations quickly and easily',
+          es: 'Programe sus operaciones de forma rápida y práctica',
+        },
+      },
+    ],
+    linkSistema: 'https://api.portoitapoa.com/hub-frontend/public-cadastro-motoristas',
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "cadastroMotorista"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Cadastro de Motorista atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Cadastro de Motorista criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Cadastro de Motorista:', error)
+    throw error
+  }
+}
+
+// LINHAS DE NAVEGAÇÃO
+async function populateLinhasNavegacao() {
+  const data = {
+    _type: 'linhasNavegacao',
+    title: {
+      pt: 'Linhas de Navegação',
+      en: 'Navigation Lines',
+      es: 'Líneas de Navegación',
+    },
+    description: {
+      pt: 'Porto Itapoá possui acordos comerciais com os principais armadores que operam em todo o mundo',
+      en: 'Porto Itapoá has commercial agreements with the main carriers operating worldwide',
+      es: 'El Puerto Itapoá tiene acuerdos comerciales con los principales armadores que operan en todo el mundo',
+    },
+    intro: {
+      pt: createBlockContent('Porto Itapoá possui acordos comerciais com os principais armadores que operam em todo o mundo, garantindo conectividade global e serviços de alta qualidade.'),
+      en: createBlockContent('Porto Itapoá has commercial agreements with the main carriers operating worldwide, ensuring global connectivity and high-quality services.'),
+      es: createBlockContent('El Puerto Itapoá tiene acuerdos comerciales con los principales armadores que operan en todo el mundo, garantizando conectividad global y servicios de alta calidad.'),
+    },
+    armadores: [
+      { nome: 'Aliança' },
+      { nome: 'CMA CGM' },
+      { nome: 'Cosco Shipping' },
+      { nome: 'OOCL' },
+      { nome: 'Evergreen' },
+      { nome: 'Hamburg Süd' },
+      { nome: 'Hapag-Lloyd' },
+      { nome: 'HMM' },
+      { nome: 'Login' },
+      { nome: 'Maersk' },
+      { nome: 'MSC' },
+      { nome: 'Mercosul Line' },
+      { nome: 'PIL' },
+      { nome: 'One (Ocean Network Express)' },
+      { nome: 'ZIM' },
+    ],
+    informacoesAdicionais: {
+      pt: createBlockContent('Nossos parceiros armadores oferecem rotas para os principais destinos globais, garantindo eficiência e confiabilidade nas operações.'),
+      en: createBlockContent('Our carrier partners offer routes to major global destinations, ensuring efficiency and reliability in operations.'),
+      es: createBlockContent('Nuestros socios armadores ofrecen rutas a los principales destinos globales, garantizando eficiencia y confiabilidad en las operaciones.'),
+    },
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "linhasNavegacao"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Linhas de Navegação atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Linhas de Navegação criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Linhas de Navegação:', error)
+    throw error
+  }
+}
+
+// SIMULADORES DE PREÇOS
+async function populateSimuladoresPrecos() {
+  const data = {
+    _type: 'simuladoresPrecos',
+    title: {
+      pt: 'Simuladores de Preços',
+      en: 'Price Simulators',
+      es: 'Simuladores de Precios',
+    },
+    description: {
+      pt: 'Calcule os custos de importação e exportação',
+      en: 'Calculate import and export costs',
+      es: 'Calcule los costos de importación y exportación',
+    },
+    intro: {
+      pt: createBlockContent('Utilize nossos simuladores para calcular os custos de importação e exportação. Consulte também nossa tabela de preços públicos.'),
+      en: createBlockContent('Use our simulators to calculate import and export costs. Also check our public price table.'),
+      es: createBlockContent('Utilice nuestros simuladores para calcular los costos de importación y exportación. Consulte también nuestra tabla de precios públicos.'),
+    },
+    tabelaPdfUrl: 'https://www.portoitapoa.com/wp-content/uploads/2025/03/Tabela-Publica-2025-Final-Fevereiro.pdf',
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "simuladoresPrecos"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Simuladores de Preços atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Simuladores de Preços criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Simuladores de Preços:', error)
+    throw error
+  }
+}
+
+// CONSULTAS
+async function populateConsultas() {
+  const data = {
+    _type: 'consultas',
+    title: {
+      pt: 'Consultas',
+      en: 'Queries',
+      es: 'Consultas',
+    },
+    description: {
+      pt: 'Acesse o sistema de consultas para informações detalhadas',
+      en: 'Access the query system for detailed information',
+      es: 'Acceda al sistema de consultas para información detallada',
+    },
+    intro: {
+      pt: createBlockContent('Acesse nosso sistema de consultas para obter informações detalhadas sobre suas operações e serviços.'),
+      en: createBlockContent('Access our query system to get detailed information about your operations and services.'),
+      es: createBlockContent('Acceda a nuestro sistema de consultas para obtener información detallada sobre sus operaciones y servicios.'),
+    },
+    linkSistema: 'https://prod.portoitapoa.com.br/apex/n4.zul',
+    funcionalidades: [
+      {
+        _key: 'func1',
+        titulo: {
+          pt: 'Consulta de Contêineres',
+          en: 'Container Query',
+          es: 'Consulta de Contenedores',
+        },
+        descricao: {
+          pt: 'Consulte informações sobre seus contêineres',
+          en: 'Query information about your containers',
+          es: 'Consulte información sobre sus contenedores',
+        },
+      },
+    ],
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "consultas"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Consultas atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Consultas criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Consultas:', error)
+    throw error
+  }
+}
+
+// INTEGRAÇÃO DE MOTORISTAS
+async function populateIntegracaoMotoristas() {
+  const data = {
+    _type: 'integracaoMotoristas',
+    title: {
+      pt: 'Integração de Motoristas',
+      en: 'Driver Integration',
+      es: 'Integración de Conductores',
+    },
+    description: {
+      pt: 'Integre-se como motorista para acessar nossos serviços',
+      en: 'Integrate as a driver to access our services',
+      es: 'Integre como conductor para acceder a nuestros servicios',
+    },
+    intro: {
+      pt: createBlockContent('Integre-se como motorista para acessar nossos serviços e agendar suas operações no terminal.'),
+      en: createBlockContent('Integrate as a driver to access our services and schedule your operations at the terminal.'),
+      es: createBlockContent('Integre como conductor para acceder a nuestros servicios y programar sus operaciones en el terminal.'),
+    },
+    linkSistema: 'https://forms.office.com/Pages/ResponsePage.aspx?id=QwqdHgbzNk2eLbcz8M_rfnsK8kh9lAs1EGfbjDLbFUMTJEMFJBSUlWWFRSRDhJRDVUU0hNT0EzWS4u',
+    beneficios: [
+      {
+        _key: 'ben1',
+        titulo: {
+          pt: 'Agendamento Simplificado',
+          en: 'Simplified Scheduling',
+          es: 'Programación Simplificada',
+        },
+        descricao: {
+          pt: 'Agende suas operações de forma rápida e prática',
+          en: 'Schedule your operations quickly and easily',
+          es: 'Programe sus operaciones de forma rápida y práctica',
+        },
+      },
+    ],
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "integracaoMotoristas"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Integração de Motoristas atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Integração de Motoristas criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Integração de Motoristas:', error)
+    throw error
+  }
+}
+
+// INTEGRAÇÃO DE SERVIÇOS
+async function populateIntegracaoServicos() {
+  const data = {
+    _type: 'integracaoServicos',
+    title: {
+      pt: 'Integração de Serviços',
+      en: 'Service Integration',
+      es: 'Integración de Servicios',
+    },
+    description: {
+      pt: 'Integre-se como terceiro para acessar nossos serviços',
+      en: 'Integrate as a third party to access our services',
+      es: 'Integre como tercero para acceder a nuestros servicios',
+    },
+    intro: {
+      pt: createBlockContent('Integre-se como terceiro para acessar nossos serviços e oferecer soluções complementares.'),
+      en: createBlockContent('Integrate as a third party to access our services and offer complementary solutions.'),
+      es: createBlockContent('Integre como tercero para acceder a nuestros servicios y ofrecer soluciones complementarias.'),
+    },
+    linkSistema: 'https://forms.office.com/Pages/ResponsePage.aspx?id=QwqdHgbzNk2eLbcz8M_rfv0DXNnoEF1DjZa7wG4kOlNUMzdJMlNIOTIwTjY0NVM2RDJGMDJEVVRLTCQlQCN0PWcu',
+    beneficios: [
+      {
+        _key: 'ben1',
+        titulo: {
+          pt: 'Parcerias Estratégicas',
+          en: 'Strategic Partnerships',
+          es: 'Alianzas Estratégicas',
+        },
+        descricao: {
+          pt: 'Torne-se parceiro do Porto Itapoá',
+          en: 'Become a Porto Itapoá partner',
+          es: 'Conviértase en socio del Puerto Itapoá',
+        },
+      },
+    ],
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "integracaoServicos"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Integração de Serviços atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Integração de Serviços criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Integração de Serviços:', error)
+    throw error
+  }
+}
+
+// CONTATO E OUVIDORIA
+async function populateContato() {
+  const data = {
+    _type: 'contact',
+    title: {
+      pt: 'Contato e Ouvidoria',
+      en: 'Contact and Ombudsman',
+      es: 'Contacto y Ombudsman',
+    },
+    description: {
+      pt: 'Seja para questões comerciais, administrativas ou para dialogar com a comunidade, o Porto Itapoá mantém canais de comunicação abertos e acessíveis.',
+      en: 'Whether for commercial, administrative matters or to dialogue with the community, Porto Itapoá maintains open and accessible communication channels.',
+      es: 'Ya sea para cuestiones comerciales, administrativas o para dialogar con la comunidad, el Puerto Itapoá mantiene canales de comunicación abiertos y accesibles.',
+    },
+    intro: {
+      pt: createBlockContent('Seja para questões comerciais, administrativas ou para dialogar com a comunidade, o Porto Itapoá mantém canais de comunicação abertos e acessíveis. Encontre abaixo a melhor forma de entrar em contato conosco.'),
+      en: createBlockContent('Whether for commercial, administrative matters or to dialogue with the community, Porto Itapoá maintains open and accessible communication channels. Find below the best way to contact us.'),
+      es: createBlockContent('Ya sea para cuestiones comerciales, administrativas o para dialogar con la comunidad, el Puerto Itapoá mantiene canales de comunicación abiertos y accesibles. Encuentre a continuación la mejor forma de contactarnos.'),
+    },
+    atendimentoCliente: {
+      titulo: {
+        pt: 'Atendimento ao Cliente',
+        en: 'Customer Service',
+        es: 'Atención al Cliente',
+      },
+      descricao: {
+        pt: 'Canais dedicados para clientes, despachantes e parceiros comerciais.',
+        en: 'Dedicated channels for customers, forwarders and commercial partners.',
+        es: 'Canales dedicados para clientes, despachantes y socios comerciales.',
+      },
+      telefone: '+55 (47) 3443-8700',
+      email: 'atendimento@portoitapoa.com',
+      chatOnline: {
+        pt: 'Disponível via Portal do Cliente',
+        en: 'Available via Client Portal',
+        es: 'Disponible vía Portal del Cliente',
+      },
+      centralAjuda: 'https://suporte.portoitapoa.com/support/home',
+      horarios: {
+        pt: 'Chat, e-mail e telefone: Operação contínua de segunda a sexta (8h às 23h) e sábados (8h às 18h).',
+        en: 'Chat, email and phone: Continuous operation Monday to Friday (8am to 11pm) and Saturdays (8am to 6pm).',
+        es: 'Chat, correo electrónico y teléfono: Operación continua de lunes a viernes (8h a 23h) y sábados (8h a 18h).',
+      },
+    },
+    ouvidoriaSocial: {
+      titulo: {
+        pt: 'Ouvidoria Social',
+        en: 'Social Ombudsman',
+        es: 'Ombudsman Social',
+      },
+      descricao: {
+        pt: 'Um canal direto para a comunidade, motoristas, terceiros e público externo. Utilize este contato para registrar reclamações, sugestões ou tirar dúvidas gerais sobre as atividades do terminal.',
+        en: 'A direct channel for the community, drivers, third parties and external public. Use this contact to register complaints, suggestions or ask general questions about terminal activities.',
+        es: 'Un canal directo para la comunidad, conductores, terceros y público externo. Utilice este contacto para registrar reclamos, sugerencias o resolver dudas generales sobre las actividades del terminal.',
+      },
+      telefone: '0800-7674-558',
+      disponibilidade: {
+        pt: 'Atendimento 24 horas por dia, 7 dias por semana.',
+        en: '24 hours a day, 7 days a week service.',
+        es: 'Atención 24 horas al día, 7 días a la semana.',
+      },
+    },
+    sedeAdministrativa: {
+      titulo: {
+        pt: 'Sede Administrativa',
+        en: 'Administrative Headquarters',
+        es: 'Sede Administrativa',
+      },
+      descricao: {
+        pt: 'Para assuntos administrativos, fornecedores e correspondências.',
+        en: 'For administrative matters, suppliers and correspondence.',
+        es: 'Para asuntos administrativos, proveedores y correspondencia.',
+      },
+      endereco: {
+        pt: 'Itapoá Terminais Portuários S.A.\nAvenida Beira Mar 05, nº 2900, Figueira do Pontal | 89364-658 – Itapoá – SC',
+        en: 'Itapoá Terminais Portuários S.A.\nAvenida Beira Mar 05, nº 2900, Figueira do Pontal | 89364-658 – Itapoá – SC',
+        es: 'Itapoá Terminais Portuários S.A.\nAvenida Beira Mar 05, nº 2900, Figueira do Pontal | 89364-658 – Itapoá – SC',
+      },
+      horario: {
+        pt: 'Segunda a quinta, das 8h às 17h; Sexta, até as 16h.',
+        en: 'Monday to Thursday, 8am to 5pm; Friday, until 4pm.',
+        es: 'Lunes a jueves, de 8h a 17h; Viernes, hasta las 16h.',
+      },
+      cnpj: '01.317.277/0001-05',
+      inscricaoEstadual: '255.517.815',
+    },
+    formulario: {
+      titulo: {
+        pt: 'Fale conosco',
+        en: 'Contact us',
+        es: 'Contáctenos',
+      },
+      descricao: {
+        pt: 'Para outras informações, preencha o formulário abaixo. Teremos prazer em atendê-lo.',
+        en: 'For other information, fill out the form below. We will be happy to assist you.',
+        es: 'Para otra información, complete el formulario a continuación. Tendremos el placer de atenderle.',
+      },
+    },
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "contact"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Contato atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Contato criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Contato:', error)
+    throw error
+  }
+}
+
+// CARREIRAS
+async function populateCarreiras() {
+  const data = {
+    _type: 'carreiras',
+    title: {
+      pt: 'Carreiras',
+      en: 'Careers',
+      es: 'Carreras',
+    },
+    description: {
+      pt: 'O Porto Itapoá é movido por pessoas talentosas e comprometidas com a excelência. Acreditamos que nosso capital humano é o maior diferencial competitivo.',
+      en: 'Porto Itapoá is driven by talented people committed to excellence. We believe that our human capital is the greatest competitive advantage.',
+      es: 'El Puerto Itapoá está impulsado por personas talentosas y comprometidas con la excelencia. Creemos que nuestro capital humano es la mayor ventaja competitiva.',
+    },
+    intro: {
+      pt: createBlockContent('O Porto Itapoá é movido por pessoas talentosas e comprometidas com a excelência. Acreditamos que nosso capital humano é o maior diferencial competitivo. Se você busca uma carreira desafiadora em um dos terminais portuários mais modernos da América Latina, venha fazer parte da nossa equipe.'),
+      en: createBlockContent('Porto Itapoá is driven by talented people committed to excellence. We believe that our human capital is the greatest competitive advantage. If you are looking for a challenging career at one of the most modern port terminals in Latin America, come join our team.'),
+      es: createBlockContent('El Puerto Itapoá está impulsado por personas talentosas y comprometidas con la excelencia. Creemos que nuestro capital humano es la mayor ventaja competitiva. Si buscas una carrera desafiante en uno de los terminales portuarios más modernos de América Latina, ven a formar parte de nuestro equipo.'),
+    },
+    protecaoDados: {
+      titulo: {
+        pt: 'Compromisso com a proteção de dados',
+        en: 'Commitment to data protection',
+        es: 'Compromiso con la protección de datos',
+      },
+      descricao: {
+        pt: createBlockContent('Bem-vindo(a) ao processo de candidatura do Porto Itapoá. Em conformidade com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018), garantimos que suas informações pessoais são tratadas com a máxima segurança e privacidade.'),
+        en: createBlockContent('Welcome to the Porto Itapoá application process. In compliance with the General Data Protection Law (LGPD - Law No. 13.709/2018), we guarantee that your personal information is treated with maximum security and privacy.'),
+        es: createBlockContent('Bienvenido(a) al proceso de candidatura del Puerto Itapoá. En conformidad con la Ley General de Protección de Datos (LGPD - Ley nº 13.709/2018), garantizamos que su información personal es tratada con máxima seguridad y privacidad.'),
+      },
+      usoDados: {
+        titulo: {
+          pt: 'Uso dos dados',
+          en: 'Data usage',
+          es: 'Uso de los datos',
+        },
+        descricao: {
+          pt: 'Os dados fornecidos em nosso portal de vagas serão utilizados exclusivamente para os processos seletivos do Porto Itapoá. Durante o processo, seus dados poderão ser compartilhados com profissionais terceirizados (como consultorias de RH), cujo envolvimento seja estritamente necessário para a avaliação e seleção.',
+          en: 'The data provided on our job portal will be used exclusively for Porto Itapoá selection processes. During the process, your data may be shared with outsourced professionals (such as HR consultancies), whose involvement is strictly necessary for evaluation and selection.',
+          es: 'Los datos proporcionados en nuestro portal de vacantes se utilizarán exclusivamente para los procesos de selección del Puerto Itapoá. Durante el proceso, sus datos podrán ser compartidos con profesionales tercerizados (como consultorías de RRHH), cuya participación sea estrictamente necesaria para la evaluación y selección.',
+        },
+      },
+      retencaoDados: {
+        titulo: {
+          pt: 'Retenção dos dados',
+          en: 'Data retention',
+          es: 'Retención de datos',
+        },
+        descricao: {
+          pt: 'Seus dados serão mantidos em nosso sistema pelo prazo de 12 meses. Após este período, e cumpridos todos os prazos legais, serão inutilizados de forma segura e automática. Você poderá acessar e modificar seus dados pessoais em nosso portal de vagas a qualquer momento.',
+          en: 'Your data will be kept in our system for 12 months. After this period, and all legal deadlines have been met, they will be safely and automatically destroyed. You can access and modify your personal data on our job portal at any time.',
+          es: 'Sus datos se mantendrán en nuestro sistema por un período de 12 meses. Después de este período, y cumplidos todos los plazos legales, serán destruidos de forma segura y automática. Podrá acceder y modificar sus datos personales en nuestro portal de vacantes en cualquier momento.',
+        },
+      },
+    },
+    termoConsentimento: {
+      titulo: {
+        pt: 'Termo de consentimento e declaração',
+        en: 'Consent term and declaration',
+        es: 'Término de consentimiento y declaración',
+      },
+      descricao: {
+        pt: 'Em atendimento ao que determina a Lei, é importante que os candidatos confirmem o registro de aceite para o tratamento dos dados, respeitando as finalidades descritas acima.',
+        en: 'In compliance with the Law, it is important that candidates confirm the registration of acceptance for data processing, respecting the purposes described above.',
+        es: 'En cumplimiento de lo que determina la Ley, es importante que los candidatos confirmen el registro de aceptación para el tratamiento de los datos, respetando las finalidades descritas anteriormente.',
+      },
+      declaracaoPEP: {
+        pt: 'Declaro estar ciente da obrigatoriedade de informar caso eu ocupe cargo público relevante no Brasil ou no exterior — como chefe de Estado, ministro, parlamentar, magistrado, alto executivo de estatal, entre outros — ou caso tenha familiares diretos ou representantes que exerçam tais funções, sendo, portanto, enquadrados como Pessoas Politicamente Expostas (PEPs).',
+        en: 'I declare that I am aware of the obligation to inform if I hold a relevant public office in Brazil or abroad — such as head of state, minister, parliamentarian, magistrate, senior executive of a state-owned company, among others — or if I have direct relatives or representatives who exercise such functions, therefore being classified as Politically Exposed Persons (PEPs).',
+        es: 'Declaro estar consciente de la obligatoriedad de informar si ocupo un cargo público relevante en Brasil o en el exterior — como jefe de Estado, ministro, parlamentario, magistrado, alto ejecutivo de empresa estatal, entre otros — o si tengo familiares directos o representantes que ejerzan tales funciones, siendo, por lo tanto, clasificados como Personas Políticamente Expuestas (PEPs).',
+      },
+      textoConsentimento: {
+        pt: 'Li e concordo com os termos de tratamento de dados e com a declaração acima.',
+        en: 'I have read and agree to the data processing terms and the declaration above.',
+        es: 'He leído y estoy de acuerdo con los términos de tratamiento de datos y con la declaración anterior.',
+      },
+    },
+    linkPortalVagas: 'https://portoitapoa.gupy.io/',
+    beneficios: [
+      {
+        _key: 'ben1',
+        titulo: {
+          pt: 'Ambiente de Trabalho Moderno',
+          en: 'Modern Work Environment',
+          es: 'Ambiente de Trabajo Moderno',
+        },
+        descricao: {
+          pt: 'Trabalhe em um dos terminais portuários mais modernos da América Latina',
+          en: 'Work at one of the most modern port terminals in Latin America',
+          es: 'Trabaje en uno de los terminales portuarios más modernos de América Latina',
+        },
+      },
+      {
+        _key: 'ben2',
+        titulo: {
+          pt: 'Desenvolvimento Profissional',
+          en: 'Professional Development',
+          es: 'Desarrollo Profesional',
+        },
+        descricao: {
+          pt: 'Oportunidades de crescimento e capacitação contínua',
+          en: 'Opportunities for growth and continuous training',
+          es: 'Oportunidades de crecimiento y capacitación continua',
+        },
+      },
+    ],
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "carreiras"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Carreiras atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Carreiras criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Carreiras:', error)
+    throw error
+  }
+}
+
+// TOUR 360º
+async function populateTour360() {
+  const data = {
+    _type: 'tour360',
+    title: {
+      pt: 'Tour 360º',
+      en: '360º Tour',
+      es: 'Tour 360º',
+    },
+    description: {
+      pt: 'Explore o Porto Itapoá em uma experiência imersiva 360º',
+      en: 'Explore Porto Itapoá in an immersive 360º experience',
+      es: 'Explore el Puerto Itapoá en una experiencia inmersiva 360º',
+    },
+    intro: {
+      pt: createBlockContent('Explore o Porto Itapoá em uma experiência imersiva 360º. Conheça nossas instalações, equipamentos e operações sem sair de casa.'),
+      en: createBlockContent('Explore Porto Itapoá in an immersive 360º experience. Get to know our facilities, equipment and operations without leaving home.'),
+      es: createBlockContent('Explore el Puerto Itapoá en una experiencia inmersiva 360º. Conozca nuestras instalaciones, equipos y operaciones sin salir de casa.'),
+    },
+    tourUrl: 'https://www.portoitapoa.com/tour360/index.htm',
+  }
+
+  try {
+    const existing = await client.fetch('*[_type == "tour360"][0]')
+    if (existing) {
+      const result = await client.patch(existing._id).set(data).commit()
+      console.log('✅ Tour 360º atualizado:', result._id)
+      return result
+    } else {
+      const result = await client.create(data)
+      console.log('✅ Tour 360º criado:', result._id)
+      return result
+    }
+  } catch (error) {
+    console.error('❌ Erro ao popular Tour 360º:', error)
+    throw error
+  }
+}
+
 // Função principal
 async function populateAll() {
   console.log('🚀 Iniciando população COMPLETA do Sanity com conteúdo do HTML...\n')
@@ -2048,6 +2711,20 @@ async function populateAll() {
     console.log('\n📄 Página 9: Procedimentos Operacionais')
     await populateProcedimentosOperacionais()
 
+    console.log('\n📄 Serviços:')
+    await populateCadastroCliente()
+    await populateCadastroMotorista()
+    await populateLinhasNavegacao()
+    await populateSimuladoresPrecos()
+    await populateConsultas()
+    await populateIntegracaoMotoristas()
+    await populateIntegracaoServicos()
+    await populateTour360()
+
+    console.log('\n📄 Páginas Simples:')
+    await populateContato()
+    await populateCarreiras()
+
     console.log('\n✅ População COMPLETA concluída com sucesso!')
     console.log('\n📝 TODAS as páginas foram populadas:')
     console.log('   ✅ Porto Itapoá (História, Linha do Tempo, Localização)')
@@ -2059,6 +2736,9 @@ async function populateAll() {
     console.log('   ✅ Acionistas')
     console.log('   ✅ Canal de Denúncias')
     console.log('   ✅ Procedimentos Operacionais')
+    console.log('   ✅ Serviços (Cadastros, Linhas de Navegação, Simuladores, etc.)')
+    console.log('   ✅ Contato e Ouvidoria')
+    console.log('   ✅ Carreiras')
     console.log('\n🎉 Todo o conteúdo do HTML foi importado para o Sanity!')
   } catch (error) {
     console.error('\n❌ Erro durante a população:', error)

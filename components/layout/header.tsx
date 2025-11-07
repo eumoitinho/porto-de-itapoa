@@ -12,9 +12,9 @@ import { LanguageSelector } from "@/components/language-selector"
 import { useI18n } from "@/lib/i18n/context"
 
 const navigation = [
-  {
-    name: "Home",
-    href: "/",
+  { 
+    name: "Home", 
+    href: "/", 
     nameKey: "home",
   },
   {
@@ -26,29 +26,29 @@ const navigation = [
         name: "Sobre o Porto",
         nameKey: "aboutPort",
         items: [
-          {
-            name: "Porto Itapoá",
+          { 
+            name: "Porto Itapoá", 
             nameKey: "portItapoa",
             href: "/institucional/porto-itapoa",
             description: "História, Linha do Tempo e Localização",
             descriptionKey: "portItapoaDescription"
           },
-          {
-            name: "Acionistas",
+          { 
+            name: "Acionistas", 
             nameKey: "shareholders",
             href: "/institucional/acionistas",
             description: "Estrutura acionária e governança",
             descriptionKey: "shareholdersDescription"
           },
-          {
-            name: "Certificações",
+          { 
+            name: "Certificações", 
             nameKey: "certifications",
             href: "/institucional/certificacoes",
             description: "Certificações e credenciamentos",
             descriptionKey: "certificationsDescription"
           },
-          {
-            name: "Premiações",
+          { 
+            name: "Premiações", 
             nameKey: "awards",
             href: "/institucional/premiacoes",
             description: "Reconhecimentos e prêmios",
@@ -60,22 +60,22 @@ const navigation = [
         name: "Estrutura e Recursos",
         nameKey: "structureAndResources",
         items: [
-          {
-            name: "Infraestrutura",
+          { 
+            name: "Infraestrutura", 
             nameKey: "infrastructure",
             href: "/institucional/infraestrutura",
             description: "Infraestrutura portuária e Tour 360°",
             descriptionKey: "infrastructureDescription"
           },
-          {
-            name: "Downloads",
+          { 
+            name: "Downloads", 
             nameKey: "downloads",
             href: "/institucional/downloads",
             description: "Demonstrações Financeiras, Pacto Global e Política de Gestão",
             descriptionKey: "downloadsDescription"
           },
-          {
-            name: "Portfólio de Serviços",
+          { 
+            name: "Portfólio de Serviços", 
             nameKey: "servicePortfolio",
             href: "/institucional/portfolio",
             description: "Serviços e procedimentos operacionais",
@@ -87,15 +87,15 @@ const navigation = [
         name: "Mídia e Compliance",
         nameKey: "mediaAndCompliance",
         items: [
-          {
-            name: "Galerias",
+          { 
+            name: "Galerias", 
             nameKey: "galleries",
             href: "/institucional/galerias",
             description: "Fotos e vídeos institucionais",
             descriptionKey: "galleriesDescription"
           },
-          {
-            name: "LGPD",
+          { 
+            name: "LGPD", 
             nameKey: "lgpd",
             href: "/institucional/lgpd",
             description: "Proteção de dados e privacidade",
@@ -114,18 +114,18 @@ const navigation = [
         name: "Cadastros e Acessos",
         nameKey: "registrationsAndAccess",
         items: [
-          {
-            name: "Portal de Compras",
+          { 
+            name: "Portal de Compras", 
             nameKey: "purchasePortal",
             href: "/servicos/portal-compras",
           },
-          {
-            name: "Cadastro de Cliente",
+          { 
+            name: "Cadastro de Cliente", 
             nameKey: "clientRegistration",
             href: "/servicos/cadastro-cliente",
           },
-          {
-            name: "Cadastro de Motorista",
+          { 
+            name: "Cadastro de Motorista", 
             nameKey: "driverRegistration",
             href: "/servicos/cadastro-motorista",
           },
@@ -135,20 +135,20 @@ const navigation = [
         name: "Operações",
         nameKey: "operations",
         items: [
-          {
-            name: "Programação de Navios",
+          { 
+            name: "Programação de Navios", 
             nameKey: "shipScheduling",
             href: "/servicos/programacao-navios",
             description: "Programação e Câmera 360°",
             descriptionKey: "shipSchedulingDescription"
           },
-          {
-            name: "Integração de Motoristas",
+          { 
+            name: "Integração de Motoristas", 
             nameKey: "driverIntegration",
             href: "/servicos/integracao-motoristas",
           },
-          {
-            name: "Integração de Serviços",
+          { 
+            name: "Integração de Serviços", 
             nameKey: "serviceIntegration",
             href: "/servicos/integracao-servicos",
           },
@@ -158,15 +158,15 @@ const navigation = [
         name: "Consultas e Simulações",
         nameKey: "queriesAndSimulations",
         items: [
-          {
-            name: "Simuladores de Preços",
+          { 
+            name: "Simuladores de Preços", 
             nameKey: "priceSimulators",
             href: "/servicos/simuladores",
             description: "Simulação e Tabela de Preços",
             descriptionKey: "priceSimulatorsDescription"
           },
-          {
-            name: "Consultas",
+          { 
+            name: "Consultas", 
             nameKey: "queries",
             href: "/servicos/consultas",
           },
@@ -174,30 +174,30 @@ const navigation = [
       },
     ],
   },
-  {
-    name: "Contato",
-    href: "/contato",
-    nameKey: "contact"
+  { 
+    name: "Contato", 
+    href: "/contato", 
+    nameKey: "contact" 
   },
-  {
-    name: "Carreiras",
-    href: "/carreiras",
-    nameKey: "careers"
+  { 
+    name: "Carreiras", 
+    href: "/carreiras", 
+    nameKey: "careers" 
   },
-  {
-    name: "Sustentabilidade",
-    href: "/sustentabilidade",
-    nameKey: "sustainability"
+  { 
+    name: "Sustentabilidade", 
+    href: "/sustentabilidade", 
+    nameKey: "sustainability" 
   },
-  {
-    name: "Notícias",
-    href: "/noticias",
-    nameKey: "news"
+  { 
+    name: "Notícias", 
+    href: "/noticias", 
+    nameKey: "news" 
   },
-  {
-    name: "Blog",
-    href: "/blog",
-    nameKey: "blog"
+  { 
+    name: "Blog", 
+    href: "/blog", 
+    nameKey: "blog" 
   },
 ]
 
@@ -295,31 +295,31 @@ export function Header() {
                               <div key={section.name} className="space-y-4">
                                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                                   {t(section.nameKey as any) || section.name}
-                                </h3>
+                                  </h3>
                                 <div className="space-y-3">
-                                  {section.items.map((subItem) => (
-                                    <Link
+                                    {section.items.map((subItem) => (
+                                        <Link
                                       key={subItem.name}
-                                      href={subItem.href}
+                                          href={subItem.href}
                                       className={`block text-sm transition-colors duration-200 ${
-                                        pathname === subItem.href
+                                            pathname === subItem.href
                                           ? "text-accent font-medium"
                                           : "text-gray-700 hover:text-accent"
-                                      }`}
-                                    >
+                                          }`}
+                                        >
                                       <div>
                                         <div>{t(subItem.nameKey as any) || subItem.name}</div>
-                                        {(subItem as any).description && (
+                                          {(subItem as any).description && (
                                           <p className="text-xs text-gray-500 mt-1">
                                             {t((subItem as any).descriptionKey as any) || (subItem as any).description}
-                                          </p>
-                                        )}
+                                            </p>
+                                          )}
                                       </div>
-                                    </Link>
-                                  ))}
-                                </div>
+                                        </Link>
+                                    ))}
+                                  </div>
                               </div>
-                            ))}
+                              ))}
                           </div>
                         </motion.div>
                       )}
@@ -359,14 +359,14 @@ export function Header() {
                       </Button>
                     </motion.div>
                   ) : (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={toggleSearch}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={toggleSearch}
                       className="hover:bg-gray-100"
-                    >
-                      <Search className="h-5 w-5" />
-                    </Button>
+                      >
+                        <Search className="h-5 w-5" />
+                      </Button>
                   )}
                 </AnimatePresence>
               </div>
@@ -376,9 +376,9 @@ export function Header() {
 
               {/* CTA Button */}
               <Link href="/portal-cliente">
-                <Button variant="default" size="sm" className="shadow-sm">
-                  {t("clientPortal")}
-                </Button>
+                <Button variant="default" size="sm" className="shadow-sm bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0">
+                    {t("clientPortal")}
+                  </Button>
               </Link>
             </div>
 
@@ -389,7 +389,7 @@ export function Header() {
               className="lg:hidden"
               onClick={() => setIsOpen(!isOpen)}
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
         </div>
@@ -459,7 +459,7 @@ export function Header() {
                 {/* Mobile CTA */}
                 <div className="pt-4 border-t border-gray-100">
                   <Link href="/portal-cliente" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full" size="lg">
+                    <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0" size="lg">
                       {t("clientPortal")}
                     </Button>
                   </Link>

@@ -88,12 +88,171 @@ export const useSustainabilityData = () => {
 }
 
 // Hook para buscar dados de contato
-export const useContactData = () => {
+export const useContatoData = () => {
+  const { language } = useI18n()
+  
   return useQuery({
-    queryKey: ['contact'],
+    queryKey: ['contato', language],
     queryFn: async () => {
-      const data = await client.fetch('*[_type == "contact"][0]')
-      return data
+      const data = await client.fetch(`
+        *[_type == "contact"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          atendimentoCliente {
+            titulo,
+            descricao,
+            telefone,
+            email,
+            chatOnline,
+            centralAjuda,
+            horarios
+          },
+          ouvidoriaSocial {
+            titulo,
+            descricao,
+            telefone,
+            disponibilidade
+          },
+          sedeAdministrativa {
+            titulo,
+            descricao,
+            endereco,
+            horario,
+            cnpj,
+            inscricaoEstadual
+          },
+          formulario {
+            titulo,
+            descricao
+          }
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para contato no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Contato e Ouvidoria'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        atendimentoCliente: data.atendimentoCliente ? {
+          ...data.atendimentoCliente,
+          titulo: getTranslatedField(data.atendimentoCliente.titulo, lang),
+          descricao: getTranslatedField(data.atendimentoCliente.descricao, lang),
+          chatOnline: getTranslatedField(data.atendimentoCliente.chatOnline, lang),
+          horarios: getTranslatedField(data.atendimentoCliente.horarios, lang),
+        } : null,
+        ouvidoriaSocial: data.ouvidoriaSocial ? {
+          ...data.ouvidoriaSocial,
+          titulo: getTranslatedField(data.ouvidoriaSocial.titulo, lang),
+          descricao: getTranslatedField(data.ouvidoriaSocial.descricao, lang),
+          disponibilidade: getTranslatedField(data.ouvidoriaSocial.disponibilidade, lang),
+        } : null,
+        sedeAdministrativa: data.sedeAdministrativa ? {
+          ...data.sedeAdministrativa,
+          titulo: getTranslatedField(data.sedeAdministrativa.titulo, lang),
+          descricao: getTranslatedField(data.sedeAdministrativa.descricao, lang),
+          endereco: getTranslatedField(data.sedeAdministrativa.endereco, lang),
+          horario: getTranslatedField(data.sedeAdministrativa.horario, lang),
+        } : null,
+        formulario: data.formulario ? {
+          ...data.formulario,
+          titulo: getTranslatedField(data.formulario.titulo, lang),
+          descricao: getTranslatedField(data.formulario.descricao, lang),
+        } : null,
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Mantém compatibilidade com código existente
+export const useContactData = useContatoData
+
+// Hook para buscar dados de carreiras
+export const useCarreirasData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['carreiras', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "carreiras"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          protecaoDados {
+            titulo,
+            descricao,
+            usoDados {
+              titulo,
+              descricao
+            },
+            retencaoDados {
+              titulo,
+              descricao
+            }
+          },
+          termoConsentimento {
+            titulo,
+            descricao,
+            declaracaoPEP,
+            textoConsentimento
+          },
+          linkPortalVagas,
+          beneficios[] {
+            titulo,
+            descricao
+          }
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para carreiras no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Carreiras'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        protecaoDados: data.protecaoDados ? {
+          ...data.protecaoDados,
+          titulo: getTranslatedField(data.protecaoDados.titulo, lang),
+          descricao: getTranslatedField(data.protecaoDados.descricao, lang),
+          usoDados: data.protecaoDados.usoDados ? {
+            titulo: getTranslatedField(data.protecaoDados.usoDados.titulo, lang),
+            descricao: getTranslatedField(data.protecaoDados.usoDados.descricao, lang),
+          } : null,
+          retencaoDados: data.protecaoDados.retencaoDados ? {
+            titulo: getTranslatedField(data.protecaoDados.retencaoDados.titulo, lang),
+            descricao: getTranslatedField(data.protecaoDados.retencaoDados.descricao, lang),
+          } : null,
+        } : null,
+        termoConsentimento: data.termoConsentimento ? {
+          ...data.termoConsentimento,
+          titulo: getTranslatedField(data.termoConsentimento.titulo, lang),
+          descricao: getTranslatedField(data.termoConsentimento.descricao, lang),
+          declaracaoPEP: getTranslatedField(data.termoConsentimento.declaracaoPEP, lang),
+          textoConsentimento: getTranslatedField(data.termoConsentimento.textoConsentimento, lang),
+        } : null,
+        beneficios: data.beneficios?.map((beneficio: any) => ({
+          ...beneficio,
+          titulo: getTranslatedField(beneficio.titulo, lang),
+          descricao: getTranslatedField(beneficio.descricao, lang),
+        })) || [],
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -376,6 +535,7 @@ export const useProgramacaoNaviosData = () => {
             icone
           },
           linkSistema,
+          cameraUrl,
           instrucoes
         }
       `)
@@ -398,6 +558,7 @@ export const useProgramacaoNaviosData = () => {
           descricao: getTranslatedField(func.descricao, lang),
         })) || [],
         instrucoes: getTranslatedField(data.instrucoes, lang, data.instrucoes),
+        cameraUrl: data.cameraUrl,
       }
     },
     staleTime: 5 * 60 * 1000,
@@ -501,6 +662,345 @@ export const useTabelaPrecosData = () => {
           ...data.contato,
           horario: getTranslatedField(data.contato.horario, lang, data.contato.horario),
         } : null,
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados do Cadastro de Cliente
+export const useCadastroClienteData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['cadastroCliente', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "cadastroCliente"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          beneficios[] {
+            titulo,
+            descricao
+          },
+          linkSistema
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para cadastroCliente no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Cadastro de Cliente'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        beneficios: data.beneficios?.map((beneficio: any) => ({
+          ...beneficio,
+          titulo: getTranslatedField(beneficio.titulo, lang),
+          descricao: getTranslatedField(beneficio.descricao, lang),
+        })) || [],
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados do Cadastro de Motorista
+export const useCadastroMotoristaData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['cadastroMotorista', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "cadastroMotorista"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          beneficios[] {
+            titulo,
+            descricao
+          },
+          linkSistema
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para cadastroMotorista no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Cadastro de Motorista'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        beneficios: data.beneficios?.map((beneficio: any) => ({
+          ...beneficio,
+          titulo: getTranslatedField(beneficio.titulo, lang),
+          descricao: getTranslatedField(beneficio.descricao, lang),
+        })) || [],
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados de Linhas de Navegação
+export const useLinhasNavegacaoData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['linhasNavegacao', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "linhasNavegacao"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          armadores[] {
+            nome,
+            logo {
+              asset-> {
+                _id,
+                url
+              }
+            }
+          },
+          informacoesAdicionais
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para linhasNavegacao no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Linhas de Navegação'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        armadores: data.armadores?.map((armador: any) => ({
+          ...armador,
+          logo: armador.logo?.asset?.url || null,
+        })) || [],
+        informacoesAdicionais: getTranslatedField(data.informacoesAdicionais, lang, data.informacoesAdicionais),
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados de Simuladores de Preços
+export const useSimuladoresPrecosData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['simuladoresPrecos', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "simuladoresPrecos"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          tabelaPdfUrl
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para simuladoresPrecos no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Simuladores de Preços'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados de Consultas
+export const useConsultasData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['consultas', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "consultas"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          linkSistema,
+          funcionalidades[] {
+            titulo,
+            descricao
+          }
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para consultas no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Consultas'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        funcionalidades: data.funcionalidades?.map((func: any) => ({
+          ...func,
+          titulo: getTranslatedField(func.titulo, lang),
+          descricao: getTranslatedField(func.descricao, lang),
+        })) || [],
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados de Integração de Motoristas
+export const useIntegracaoMotoristasData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['integracaoMotoristas', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "integracaoMotoristas"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          linkSistema,
+          beneficios[] {
+            titulo,
+            descricao
+          }
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para integracaoMotoristas no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Integração de Motoristas'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        beneficios: data.beneficios?.map((beneficio: any) => ({
+          ...beneficio,
+          titulo: getTranslatedField(beneficio.titulo, lang),
+          descricao: getTranslatedField(beneficio.descricao, lang),
+        })) || [],
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados de Integração de Serviços
+export const useIntegracaoServicosData = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['integracaoServicos', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "integracaoServicos"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          linkSistema,
+          beneficios[] {
+            titulo,
+            descricao
+          }
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para integracaoServicos no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Integração de Serviços'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        beneficios: data.beneficios?.map((beneficio: any) => ({
+          ...beneficio,
+          titulo: getTranslatedField(beneficio.titulo, lang),
+          descricao: getTranslatedField(beneficio.descricao, lang),
+        })) || [],
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar dados do Tour 360º
+export const useTour360Data = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['tour360', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "tour360"][0]{
+          _id,
+          title,
+          description,
+          intro,
+          tourUrl
+        }
+      `)
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para tour360 no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Tour 360º'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
       }
     },
     staleTime: 5 * 60 * 1000,
