@@ -423,6 +423,12 @@ export const portoItapoa = defineType({
   name: 'portoItapoa',
   title: 'Porto Itapoá',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
     createLocalizedStringField('title', 'Título Principal'),
     createLocalizedTextField('description', 'Descrição'),
@@ -519,6 +525,12 @@ export const acionistas = defineType({
   name: 'acionistas',
   title: 'Acionistas',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
     createLocalizedStringField('title', 'Título Principal'),
     createLocalizedTextField('description', 'Descrição'),
@@ -613,6 +625,12 @@ export const certificacoes = defineType({
   name: 'certificacoes',
   title: 'Certificações',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
     createLocalizedStringField('title', 'Título Principal'),
     createLocalizedTextField('description', 'Descrição'),
@@ -681,6 +699,12 @@ export const premiacoes = defineType({
   name: 'premiacoes',
   title: 'Premiações',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
     createLocalizedStringField('title', 'Título Principal'),
     createLocalizedTextField('description', 'Descrição'),
@@ -753,6 +777,12 @@ export const programacaoNavios = defineType({
   name: 'programacaoNavios',
   title: 'Programação de Navios',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
     createLocalizedStringField('title', 'Título Principal'),
     createLocalizedTextField('description', 'Descrição'),
@@ -790,6 +820,12 @@ export const portalCompras = defineType({
   name: 'portalCompras',
   title: 'Portal de Compras',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
     createLocalizedStringField('title', 'Título Principal'),
     createLocalizedTextField('description', 'Descrição'),
@@ -857,6 +893,12 @@ export const tabelaPrecos = defineType({
   name: 'tabelaPrecos',
   title: 'Tabela de Preços',
   type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
   fields: [
     createLocalizedStringField('title', 'Título Principal'),
     createLocalizedTextField('description', 'Descrição'),

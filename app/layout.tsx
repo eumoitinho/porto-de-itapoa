@@ -5,6 +5,7 @@ import "./globals.css"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Providers } from "./providers"
+import { ConditionalLayout } from "./conditional-layout"
 
 const poppins = Poppins({ 
   subsets: ["latin"],
@@ -36,9 +37,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${poppins.variable} font-poppins`}>
         <Providers>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </Providers>
       </body>
     </html>
