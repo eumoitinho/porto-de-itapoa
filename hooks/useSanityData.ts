@@ -106,36 +106,75 @@ export const usePortoItapoaData = () => {
   return useQuery({
     queryKey: ['portoItapoa', language],
     queryFn: async () => {
+      // Buscar todos os dados primeiro
       const data = await client.fetch(`
         *[_type == "portoItapoa"][0]{
-          ...,
-          "title": title.${language} ?? title.pt ?? title,
-          "description": description.${language} ?? description.pt ?? description,
+          _id,
+          _type,
+          _createdAt,
+          _updatedAt,
+          title,
+          description,
           historia {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-            "conteudo": conteudo.${language} ?? conteudo.pt ?? conteudo,
+            titulo,
+            conteudo,
             imagem
           },
           linhaTempo {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
+            titulo,
             eventos[] {
               ano,
-              "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-              "descricao": descricao.${language} ?? descricao.pt ?? descricao,
+              titulo,
+              descricao,
               imagem
             }
           },
           localizacao {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-            "endereco": endereco.${language} ?? endereco.pt ?? endereco,
-            "descricao": descricao.${language} ?? descricao.pt ?? descricao,
+            titulo,
+            endereco,
+            descricao,
             coordenadas,
             mapa
           }
         }
       `)
       
-      return data
+      // Se não houver dados, retornar null
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para portoItapoa no Sanity')
+        return null
+      }
+      
+      console.log('✅ Dados do Porto Itapoá carregados do Sanity:', data._id)
+      
+      // Processar traduções no cliente usando getTranslatedField
+      const lang = language || 'pt'
+      
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Porto Itapoá'),
+        description: getTranslatedField(data.description, lang, 'História, Linha do Tempo e Localização'),
+        historia: data.historia ? {
+          ...data.historia,
+          titulo: getTranslatedField(data.historia.titulo, lang, 'Nossa trajetória'),
+          conteudo: getTranslatedField(data.historia.conteudo, lang, data.historia.conteudo),
+        } : null,
+        linhaTempo: data.linhaTempo ? {
+          ...data.linhaTempo,
+          titulo: getTranslatedField(data.linhaTempo.titulo, lang, 'Uma linha do tempo de conquistas'),
+          eventos: data.linhaTempo.eventos?.map((evento: any) => ({
+            ...evento,
+            titulo: getTranslatedField(evento.titulo, lang, evento.titulo),
+            descricao: getTranslatedField(evento.descricao, lang, evento.descricao),
+          })) || [],
+        } : null,
+        localizacao: data.localizacao ? {
+          ...data.localizacao,
+          titulo: getTranslatedField(data.localizacao.titulo, lang, 'Localização'),
+          endereco: getTranslatedField(data.localizacao.endereco, lang, data.localizacao.endereco),
+          descricao: getTranslatedField(data.localizacao.descricao, lang, data.localizacao.descricao),
+        } : null,
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -150,24 +189,24 @@ export const useAcionistasData = () => {
     queryFn: async () => {
       const data = await client.fetch(`
         *[_type == "acionistas"][0]{
-          ...,
-          "title": title.${language} ?? title.pt ?? title,
-          "description": description.${language} ?? description.pt ?? description,
+          _id,
+          title,
+          description,
           estruturaAcionaria {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
+            titulo,
             acionistas[] {
-              "nome": nome.${language} ?? nome.pt ?? nome,
+              nome,
               participacao,
-              "descricao": descricao.${language} ?? descricao.pt ?? descricao,
+              descricao,
               logo,
               tipo
             }
           },
           governanca {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-            "conteudo": conteudo.${language} ?? conteudo.pt ?? conteudo,
+            titulo,
+            conteudo,
             documentos[] {
-              "nome": nome.${language} ?? nome.pt ?? nome,
+              nome,
               tipo,
               arquivo,
               link
@@ -175,7 +214,37 @@ export const useAcionistasData = () => {
           }
         }
       `)
-      return data
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para acionistas no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Acionistas'),
+        description: getTranslatedField(data.description, lang),
+        estruturaAcionaria: data.estruturaAcionaria ? {
+          ...data.estruturaAcionaria,
+          titulo: getTranslatedField(data.estruturaAcionaria.titulo, lang),
+          acionistas: data.estruturaAcionaria.acionistas?.map((acionista: any) => ({
+            ...acionista,
+            nome: getTranslatedField(acionista.nome, lang),
+            descricao: getTranslatedField(acionista.descricao, lang),
+          })) || [],
+        } : null,
+        governanca: data.governanca ? {
+          ...data.governanca,
+          titulo: getTranslatedField(data.governanca.titulo, lang),
+          conteudo: getTranslatedField(data.governanca.conteudo, lang, data.governanca.conteudo),
+          documentos: data.governanca.documentos?.map((documento: any) => ({
+            ...documento,
+            nome: getTranslatedField(documento.nome, lang),
+          })) || [],
+        } : null,
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -190,23 +259,41 @@ export const useCertificacoesData = () => {
     queryFn: async () => {
       const data = await client.fetch(`
         *[_type == "certificacoes"][0]{
-          ...,
-          "title": title.${language} ?? title.pt ?? title,
-          "description": description.${language} ?? description.pt ?? description,
+          _id,
+          title,
+          description,
           certificacoes[] {
-            "nome": nome.${language} ?? nome.pt ?? nome,
+            nome,
             codigo,
-            "orgao": orgao.${language} ?? orgao.pt ?? orgao,
+            orgao,
             dataEmissao,
             dataValidade,
-            "descricao": descricao.${language} ?? descricao.pt ?? descricao,
+            descricao,
             certificado,
             logo,
             categoria
           }
         }
       `)
-      return data
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para certificacoes no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Certificações'),
+        description: getTranslatedField(data.description, lang),
+        certificacoes: data.certificacoes?.map((certificacao: any) => ({
+          ...certificacao,
+          nome: getTranslatedField(certificacao.nome, lang),
+          orgao: getTranslatedField(certificacao.orgao, lang),
+          descricao: getTranslatedField(certificacao.descricao, lang),
+        })) || [],
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -221,26 +308,50 @@ export const usePremiacoesData = () => {
     queryFn: async () => {
       const data = await client.fetch(`
         *[_type == "premiacoes"][0]{
-          ...,
-          "title": title.${language} ?? title.pt ?? title,
-          "description": description.${language} ?? description.pt ?? description,
+          _id,
+          title,
+          description,
           reconhecimentos[] {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
+            titulo,
             valor,
-            "descricao": descricao.${language} ?? descricao.pt ?? descricao
+            descricao
           },
           premios[] {
             ano,
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-            "categoria": categoria.${language} ?? categoria.pt ?? categoria,
-            "orgao": orgao.${language} ?? orgao.pt ?? orgao,
-            "descricao": descricao.${language} ?? descricao.pt ?? descricao,
+            titulo,
+            categoria,
+            orgao,
+            descricao,
             nivel,
             imagem
           }
         }
       `)
-      return data
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para premiacoes no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Premiações'),
+        description: getTranslatedField(data.description, lang),
+        reconhecimentos: data.reconhecimentos?.map((item: any) => ({
+          ...item,
+          titulo: getTranslatedField(item.titulo, lang),
+          descricao: getTranslatedField(item.descricao, lang),
+        })) || [],
+        premios: data.premios?.map((premio: any) => ({
+          ...premio,
+          titulo: getTranslatedField(premio.titulo, lang),
+          categoria: getTranslatedField(premio.categoria, lang),
+          orgao: getTranslatedField(premio.orgao, lang),
+          descricao: getTranslatedField(premio.descricao, lang),
+        })) || [],
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -255,20 +366,39 @@ export const useProgramacaoNaviosData = () => {
     queryFn: async () => {
       const data = await client.fetch(`
         *[_type == "programacaoNavios"][0]{
-          ...,
-          "title": title.${language} ?? title.pt ?? title,
-          "description": description.${language} ?? description.pt ?? description,
-          "intro": intro.${language} ?? intro.pt ?? intro,
+          _id,
+          title,
+          description,
+          intro,
           funcionalidades[] {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-            "descricao": descricao.${language} ?? descricao.pt ?? descricao,
+            titulo,
+            descricao,
             icone
           },
           linkSistema,
-          "instrucoes": instrucoes.${language} ?? instrucoes.pt ?? instrucoes
+          instrucoes
         }
       `)
-      return data
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para programacaoNavios no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Programação de Navios'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        funcionalidades: data.funcionalidades?.map((func: any) => ({
+          ...func,
+          titulo: getTranslatedField(func.titulo, lang),
+          descricao: getTranslatedField(func.descricao, lang),
+        })) || [],
+        instrucoes: getTranslatedField(data.instrucoes, lang, data.instrucoes),
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -283,24 +413,47 @@ export const usePortalComprasData = () => {
     queryFn: async () => {
       const data = await client.fetch(`
         *[_type == "portalCompras"][0]{
-          ...,
-          "title": title.${language} ?? title.pt ?? title,
-          "description": description.${language} ?? description.pt ?? description,
-          "intro": intro.${language} ?? intro.pt ?? intro,
+          _id,
+          title,
+          description,
+          intro,
           beneficios[] {
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-            "descricao": descricao.${language} ?? descricao.pt ?? descricao
+            titulo,
+            descricao
           },
           comoParticipar[] {
             passo,
-            "titulo": titulo.${language} ?? titulo.pt ?? titulo,
-            "descricao": descricao.${language} ?? descricao.pt ?? descricao
+            titulo,
+            descricao
           },
           linkSistema,
           contato
         }
       `)
-      return data
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para portalCompras no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Portal de Compras'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        beneficios: data.beneficios?.map((beneficio: any) => ({
+          ...beneficio,
+          titulo: getTranslatedField(beneficio.titulo, lang),
+          descricao: getTranslatedField(beneficio.descricao, lang),
+        })) || [],
+        comoParticipar: data.comoParticipar?.map((item: any) => ({
+          ...item,
+          titulo: getTranslatedField(item.titulo, lang),
+          descricao: getTranslatedField(item.descricao, lang),
+        })) || [],
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -315,22 +468,40 @@ export const useTabelaPrecosData = () => {
     queryFn: async () => {
       const data = await client.fetch(`
         *[_type == "tabelaPrecos"][0]{
-          ...,
-          "title": title.${language} ?? title.pt ?? title,
-          "description": description.${language} ?? description.pt ?? description,
-          "intro": intro.${language} ?? intro.pt ?? intro,
+          _id,
+          title,
+          description,
+          intro,
           anoVigencia,
-          "informacoesImportantes": informacoesImportantes.${language} ?? informacoesImportantes.pt ?? informacoesImportantes,
+          informacoesImportantes,
           contato {
             email,
             telefone,
-            "horario": horario.${language} ?? horario.pt ?? horario
+            horario
           },
           linkDownload,
           arquivoTabela
         }
       `)
-      return data
+
+      if (!data) {
+        console.warn('⚠️ Nenhum dado encontrado para tabelaPrecos no Sanity')
+        return null
+      }
+
+      const lang = language || 'pt'
+
+      return {
+        ...data,
+        title: getTranslatedField(data.title, lang, 'Tabela de Preços'),
+        description: getTranslatedField(data.description, lang),
+        intro: getTranslatedField(data.intro, lang, data.intro),
+        informacoesImportantes: getTranslatedField(data.informacoesImportantes, lang, data.informacoesImportantes),
+        contato: data.contato ? {
+          ...data.contato,
+          horario: getTranslatedField(data.contato.horario, lang, data.contato.horario),
+        } : null,
+      }
     },
     staleTime: 5 * 60 * 1000,
   })

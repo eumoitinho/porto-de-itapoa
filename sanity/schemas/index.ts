@@ -940,6 +940,373 @@ export const tabelaPrecos = defineType({
   ],
 })
 
+// Schema para Infraestrutura
+export const infraestrutura = defineType({
+  name: 'infraestrutura',
+  title: 'Infraestrutura',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'especificacoes',
+      title: 'Especificações Técnicas',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('categoria', 'Categoria'),
+            {
+              name: 'itens',
+              title: 'Itens',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    createLocalizedStringField('caracteristica', 'Característica'),
+                    createLocalizedStringField('especificacao', 'Especificação'),
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    createLocalizedBlockContentField('planosExpansao', 'Planos de Expansão'),
+    createLocalizedBlockContentField('cargaRefrigerada', 'Cuidado com Carga Refrigerada'),
+    createLocalizedBlockContentField('acessoTerrestre', 'Agilidade e Segurança no Acesso Terrestre'),
+  ],
+})
+
+// Schema para Diferenciais
+export const diferenciais = defineType({
+  name: 'diferenciais',
+  title: 'Diferenciais',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    {
+      name: 'diferenciais',
+      title: 'Lista de Diferenciais',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para Downloads
+export const downloads = defineType({
+  name: 'downloads',
+  title: 'Central de Downloads',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    {
+      name: 'categorias',
+      title: 'Categorias de Downloads',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('nome', 'Nome da Categoria'),
+            {
+              name: 'arquivos',
+              title: 'Arquivos',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    createLocalizedStringField('nome', 'Nome do Arquivo'),
+                    {
+                      name: 'url',
+                      title: 'URL do Arquivo',
+                      type: 'url',
+                    },
+                    {
+                      name: 'arquivo',
+                      title: 'Arquivo (Upload)',
+                      type: 'file',
+                    },
+                    {
+                      name: 'tipo',
+                      title: 'Tipo',
+                      type: 'string',
+                      options: {
+                        list: ['PDF', 'XLSX', 'XLS', 'DOCX', 'DOC'],
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para LGPD
+export const lgpd = defineType({
+  name: 'lgpd',
+  title: 'LGPD',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'dpo',
+      title: 'Encarregado de Dados (DPO)',
+      type: 'object',
+      fields: [
+        createLocalizedBlockContentField('descricao', 'Descrição do DPO'),
+      ],
+    },
+    {
+      name: 'documentacao',
+      title: 'Documentação para Consulta',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título do Documento'),
+            {
+              name: 'url',
+              title: 'URL do Documento',
+              type: 'url',
+            },
+            {
+              name: 'arquivo',
+              title: 'Arquivo (Upload)',
+              type: 'file',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para Canal de Denúncias
+export const canalDenuncias = defineType({
+  name: 'canalDenuncias',
+  title: 'Canal de Denúncias',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'garantias',
+      title: 'Garantias de Confidencialidade',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'links',
+      title: 'Links e Contatos',
+      type: 'object',
+      fields: [
+        {
+          name: 'codigoEtica',
+          title: 'Link para Código de Ética',
+          type: 'url',
+        },
+        {
+          name: 'registrarDenuncia',
+          title: 'Link para Registrar Denúncia',
+          type: 'url',
+        },
+        {
+          name: 'registrarDuvida',
+          title: 'Link para Registrar Dúvida',
+          type: 'url',
+        },
+        {
+          name: 'consultarOcorrencias',
+          title: 'Link para Consultar Ocorrências',
+          type: 'url',
+        },
+        {
+          name: 'telefone',
+          title: 'Telefone',
+          type: 'string',
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para Procedimentos Operacionais
+export const procedimentosOperacionais = defineType({
+  name: 'procedimentosOperacionais',
+  title: 'Procedimentos Operacionais',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'description.pt',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    {
+      name: 'procedimentos',
+      title: 'Procedimentos',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título do Procedimento'),
+            createLocalizedBlockContentField('descricao', 'Descrição'),
+            {
+              name: 'condicoes',
+              title: 'Condições Gerais',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    createLocalizedStringField('titulo', 'Título da Condição'),
+                    createLocalizedTextField('descricao', 'Descrição'),
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'documentos',
+              title: 'Documentos para Download',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    createLocalizedStringField('nome', 'Nome do Documento'),
+                    {
+                      name: 'url',
+                      title: 'URL do Documento',
+                      type: 'url',
+                    },
+                    {
+                      name: 'arquivo',
+                      title: 'Arquivo (Upload)',
+                      type: 'file',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'empresasHabilitadas',
+              title: 'Empresas Habilitadas',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  fields: [
+                    createLocalizedStringField('nome', 'Nome da Empresa'),
+                    {
+                      name: 'cnpj',
+                      title: 'CNPJ',
+                      type: 'string',
+                    },
+                    {
+                      name: 'contato',
+                      title: 'Contato',
+                      type: 'string',
+                    },
+                    {
+                      name: 'telefone',
+                      title: 'Telefone',
+                      type: 'string',
+                    },
+                    createLocalizedTextField('servicos', 'Serviços'),
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'contato',
+              title: 'Contato',
+              type: 'object',
+              fields: [
+                {
+                  name: 'email',
+                  title: 'E-mail',
+                  type: 'string',
+                },
+                {
+                  name: 'telefone',
+                  title: 'Telefone',
+                  type: 'string',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
 export const schemaTypes = [
   homepage,
   stats,
@@ -956,4 +1323,10 @@ export const schemaTypes = [
   programacaoNavios,
   portalCompras,
   tabelaPrecos,
+  infraestrutura,
+  diferenciais,
+  downloads,
+  lgpd,
+  canalDenuncias,
+  procedimentosOperacionais,
 ]

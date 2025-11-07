@@ -49,7 +49,7 @@ export default function PremiacaoPage() {
               Principais Reconhecimentos
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {reconhecimentos.map((reconhecimento: any, index: number) => (
                 <motion.div
                   key={index}
@@ -57,23 +57,22 @@ export default function PremiacaoPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 * index }}
                   whileHover={{ scale: 1.05 }}
-                  className="h-full"
                 >
-                  <Card className="h-full backdrop-blur-md bg-white/80 border border-white/20 shadow-xl rounded-2xl hover:shadow-2xl transition-all duration-300 flex flex-col">
-                    <CardContent className="p-6 text-center flex flex-col items-center gap-4 h-full">
-                      <div className="p-3 bg-gradient-to-br from-green-100 via-green-200 to-green-100 rounded-full w-12 h-12 flex items-center justify-center shadow-inner">
-                        <Trophy className="h-6 w-6 text-green-600" strokeWidth={1.5} />
+                  <Card className="backdrop-blur-md bg-white/80 border border-white/20 shadow-xl rounded-2xl hover:shadow-2xl transition-all duration-300">
+                    <CardContent className="p-6 text-center">
+                      <div className="p-3 bg-green-100 rounded-full w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+                        <Trophy className="h-6 w-6 text-green-600" />
                       </div>
                       {reconhecimento.valor && (
-                        <div className="text-3xl font-bold text-green-800">
+                        <div className="text-3xl font-bold text-green-800 mb-2">
                           {reconhecimento.valor}
                         </div>
                       )}
-                      <h3 className="font-semibold text-gray-800">
+                      <h3 className="font-semibold text-gray-800 mb-2">
                         {getTranslatedField(reconhecimento.titulo, language, reconhecimento.titulo)}
                       </h3>
                       {reconhecimento.descricao && (
-                        <p className="text-sm text-gray-600 leading-relaxed flex-1">
+                        <p className="text-sm text-gray-600">
                           {getTranslatedField(reconhecimento.descricao, language, reconhecimento.descricao)}
                         </p>
                       )}
