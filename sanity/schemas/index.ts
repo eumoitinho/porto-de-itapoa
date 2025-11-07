@@ -1,4 +1,5 @@
 import { defineType } from 'sanity'
+import { createLocalizedStringField, createLocalizedTextField, createLocalizedBlockContentField } from '../lib/i18n-fields'
 
 export const homepage = defineType({
   name: 'homepage',
@@ -417,6 +418,486 @@ export const contact = defineType({
   ],
 })
 
+// Schema para Porto Itapoá (História, Linha do Tempo e Localização)
+export const portoItapoa = defineType({
+  name: 'portoItapoa',
+  title: 'Porto Itapoá',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    {
+      name: 'historia',
+      title: 'História',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título da Seção'),
+        createLocalizedBlockContentField('conteudo', 'Conteúdo'),
+        {
+          name: 'imagem',
+          title: 'Imagem',
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
+    },
+    {
+      name: 'linhaTempo',
+      title: 'Linha do Tempo',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título da Seção'),
+        {
+          name: 'eventos',
+          title: 'Eventos',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {
+                  name: 'ano',
+                  title: 'Ano',
+                  type: 'string',
+                  validation: (Rule: any) => Rule.required(),
+                },
+                createLocalizedStringField('titulo', 'Título do Evento'),
+                createLocalizedTextField('descricao', 'Descrição'),
+                {
+                  name: 'imagem',
+                  title: 'Imagem',
+                  type: 'image',
+                  options: {
+                    hotspot: true,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'localizacao',
+      title: 'Localização',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título da Seção'),
+        createLocalizedStringField('endereco', 'Endereço'),
+        {
+          name: 'coordenadas',
+          title: 'Coordenadas',
+          type: 'object',
+          fields: [
+            {
+              name: 'latitude',
+              title: 'Latitude',
+              type: 'string',
+            },
+            {
+              name: 'longitude',
+              title: 'Longitude',
+              type: 'string',
+            },
+          ],
+        },
+        {
+          name: 'mapa',
+          title: 'Mapa (embed)',
+          type: 'url',
+        },
+        createLocalizedTextField('descricao', 'Descrição'),
+      ],
+    },
+  ],
+})
+
+// Schema para Acionistas (Estrutura acionária e governança)
+export const acionistas = defineType({
+  name: 'acionistas',
+  title: 'Acionistas',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    {
+      name: 'estruturaAcionaria',
+      title: 'Estrutura Acionária',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título da Seção'),
+        {
+          name: 'acionistas',
+          title: 'Acionistas',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                createLocalizedStringField('nome', 'Nome'),
+                {
+                  name: 'participacao',
+                  title: 'Participação (%)',
+                  type: 'string',
+                },
+                createLocalizedTextField('descricao', 'Descrição'),
+                {
+                  name: 'logo',
+                  title: 'Logo',
+                  type: 'image',
+                  options: {
+                    hotspot: true,
+                  },
+                },
+                {
+                  name: 'tipo',
+                  title: 'Tipo',
+                  type: 'string',
+                  options: {
+                    list: [
+                      { title: 'Controlador', value: 'controlador' },
+                      { title: 'Minoritário', value: 'minoritario' },
+                    ],
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'governanca',
+      title: 'Governança',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('titulo', 'Título da Seção'),
+        createLocalizedBlockContentField('conteudo', 'Conteúdo'),
+        {
+          name: 'documentos',
+          title: 'Documentos',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                createLocalizedStringField('nome', 'Nome do Documento'),
+                {
+                  name: 'tipo',
+                  title: 'Tipo',
+                  type: 'string',
+                },
+                {
+                  name: 'arquivo',
+                  title: 'Arquivo',
+                  type: 'file',
+                },
+                {
+                  name: 'link',
+                  title: 'Link Externo',
+                  type: 'url',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para Certificações (Certificações e credenciamentos)
+export const certificacoes = defineType({
+  name: 'certificacoes',
+  title: 'Certificações',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    {
+      name: 'certificacoes',
+      title: 'Certificações',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('nome', 'Nome da Certificação'),
+            {
+              name: 'codigo',
+              title: 'Código',
+              type: 'string',
+            },
+            createLocalizedStringField('orgao', 'Órgão Emissor'),
+            {
+              name: 'dataEmissao',
+              title: 'Data de Emissão',
+              type: 'date',
+            },
+            {
+              name: 'dataValidade',
+              title: 'Data de Validade',
+              type: 'date',
+            },
+            createLocalizedTextField('descricao', 'Descrição'),
+            {
+              name: 'certificado',
+              title: 'Certificado (PDF/Imagem)',
+              type: 'file',
+            },
+            {
+              name: 'logo',
+              title: 'Logo',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
+            },
+            {
+              name: 'categoria',
+              title: 'Categoria',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Qualidade', value: 'qualidade' },
+                  { title: 'Meio Ambiente', value: 'meio-ambiente' },
+                  { title: 'Segurança', value: 'seguranca' },
+                  { title: 'Operacional', value: 'operacional' },
+                  { title: 'Outros', value: 'outros' },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para Premiações (Reconhecimentos e prêmios)
+export const premiacoes = defineType({
+  name: 'premiacoes',
+  title: 'Premiações',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    {
+      name: 'reconhecimentos',
+      title: 'Reconhecimentos Principais',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            {
+              name: 'valor',
+              title: 'Valor/Posição',
+              type: 'string',
+            },
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'premios',
+      title: 'Prêmios',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'ano',
+              title: 'Ano',
+              type: 'string',
+              validation: (Rule: any) => Rule.required(),
+            },
+            createLocalizedStringField('titulo', 'Título do Prêmio'),
+            createLocalizedStringField('categoria', 'Categoria'),
+            createLocalizedStringField('orgao', 'Órgão Concedente'),
+            createLocalizedTextField('descricao', 'Descrição'),
+            {
+              name: 'nivel',
+              title: 'Nível',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Nacional', value: 'nacional' },
+                  { title: 'Internacional', value: 'internacional' },
+                  { title: 'Regional', value: 'regional' },
+                ],
+              },
+            },
+            {
+              name: 'imagem',
+              title: 'Imagem',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para Programação de Navios
+export const programacaoNavios = defineType({
+  name: 'programacaoNavios',
+  title: 'Programação de Navios',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'funcionalidades',
+      title: 'Funcionalidades',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+            {
+              name: 'icone',
+              title: 'Ícone',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'linkSistema',
+      title: 'Link para Sistema Externo',
+      type: 'url',
+    },
+    createLocalizedBlockContentField('instrucoes', 'Instruções de Uso'),
+  ],
+})
+
+// Schema para Portal de Compras
+export const portalCompras = defineType({
+  name: 'portalCompras',
+  title: 'Portal de Compras',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'beneficios',
+      title: 'Benefícios',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'comoParticipar',
+      title: 'Como Participar',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'passo',
+              title: 'Número do Passo',
+              type: 'number',
+            },
+            createLocalizedStringField('titulo', 'Título'),
+            createLocalizedTextField('descricao', 'Descrição'),
+          ],
+        },
+      ],
+    },
+    {
+      name: 'linkSistema',
+      title: 'Link para Sistema Externo',
+      type: 'url',
+    },
+    {
+      name: 'contato',
+      title: 'Contato',
+      type: 'object',
+      fields: [
+        {
+          name: 'email',
+          title: 'E-mail',
+          type: 'string',
+        },
+        {
+          name: 'telefone',
+          title: 'Telefone',
+          type: 'string',
+        },
+      ],
+    },
+  ],
+})
+
+// Schema para Tabela de Preços
+export const tabelaPrecos = defineType({
+  name: 'tabelaPrecos',
+  title: 'Tabela de Preços',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título Principal'),
+    createLocalizedTextField('description', 'Descrição'),
+    createLocalizedBlockContentField('intro', 'Texto de Introdução'),
+    {
+      name: 'anoVigencia',
+      title: 'Ano de Vigência',
+      type: 'string',
+    },
+    createLocalizedBlockContentField('informacoesImportantes', 'Informações Importantes'),
+    {
+      name: 'contato',
+      title: 'Contato Comercial',
+      type: 'object',
+      fields: [
+        {
+          name: 'email',
+          title: 'E-mail',
+          type: 'string',
+        },
+        {
+          name: 'telefone',
+          title: 'Telefone',
+          type: 'string',
+        },
+        createLocalizedStringField('horario', 'Horário de Atendimento'),
+      ],
+    },
+    {
+      name: 'linkDownload',
+      title: 'Link para Download da Tabela (PDF)',
+      type: 'url',
+    },
+    {
+      name: 'arquivoTabela',
+      title: 'Arquivo da Tabela (PDF)',
+      type: 'file',
+    },
+  ],
+})
+
 export const schemaTypes = [
   homepage,
   stats,
@@ -426,4 +907,11 @@ export const schemaTypes = [
   whyChoose,
   sustainability,
   contact,
+  portoItapoa,
+  acionistas,
+  certificacoes,
+  premiacoes,
+  programacaoNavios,
+  portalCompras,
+  tabelaPrecos,
 ]

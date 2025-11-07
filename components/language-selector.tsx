@@ -36,9 +36,10 @@ const languages = [
 interface LanguageSelectorProps {
   variant?: 'header' | 'footer'
   className?: string
+  isTransparent?: boolean
 }
 
-export function LanguageSelector({ variant = 'header', className = '' }: LanguageSelectorProps) {
+export function LanguageSelector({ variant = 'header', className = '', isTransparent = false }: LanguageSelectorProps) {
   const { language, setLanguage } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -84,23 +85,27 @@ export function LanguageSelector({ variant = 'header', className = '' }: Languag
         variant="ghost"
         size="sm"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 text-white hover:bg-white/10 rounded-full px-3 py-2 transition-all duration-300"
+        className={`flex items-center space-x-2 rounded-full px-3 py-2 transition-all duration-300 ${
+          isTransparent
+            ? "text-white hover:bg-white/10"
+            : "text-gray-700 hover:bg-green-50 hover:text-green-600"
+        }`}
       >
         <motion.div
           whileHover={{ rotate: 360 }}
           transition={{ duration: 0.6 }}
         >
-          <Languages className="h-4 w-4" />
+          <Languages className={`h-4 w-4 ${isTransparent ? "text-white" : "text-gray-700"}`} />
         </motion.div>
         <div className="flex items-center space-x-1">
           <span className="text-lg">{currentLanguage.flag}</span>
-          <span className="text-sm font-medium">{currentLanguage.shortName}</span>
+          <span className={`text-sm font-medium ${isTransparent ? "text-white" : "text-gray-700"}`}>{currentLanguage.shortName}</span>
         </div>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
         >
-          <ChevronDown className="h-3 w-3" />
+          <ChevronDown className={`h-3 w-3 ${isTransparent ? "text-white" : "text-gray-700"}`} />
         </motion.div>
       </Button>
 

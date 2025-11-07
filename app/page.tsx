@@ -18,6 +18,7 @@ import {
   useSustainabilityData, 
   useContactData 
 } from "@/hooks/useSanityData"
+import { InteractiveGlobe } from "@/components/interactive-globe"
 
 const stats = [
   { icon: Ship, label: "Navios operados mensalmente", value: "180", description: "Movimentação mensal média" },
@@ -538,75 +539,39 @@ export default function HomePage() {
 
       {/* Services Overview */}
       <section className="bg-zinc-200 border-gray-200 border-t relative">
-        <div className="md:px-10 lg:py-28 max-w-7xl mr-auto ml-auto pt-20 pr-6 pb-20 pl-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              {maritimeServicesData?.title || "Serviços Marítimos Regulares"}
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {maritimeServicesData?.description || "Conecte-se a todos os continentes com rotas de longo curso e cabotagem."}
-            </p>
-          </div>
+        <div className="relative w-full h-[600px] lg:h-[800px] xl:h-[900px]">
+          {/* Globo Interativo - ocupa toda a seção incluindo título */}
+          <InteractiveGlobe 
+            className="w-full h-full"
+            title={maritimeServicesData?.title || "Serviços Marítimos Regulares"}
+            description={maritimeServicesData?.description || "Conecte-se a todos os continentes com rotas de longo curso e cabotagem."}
+          />
+        </div>
 
-          <div className="grid gap-8 md:gap-12 lg:gap-16">
-            {/* Featured Service */}
-            <div className="overflow-hidden relative bg-gray-50 rounded-2xl shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
-              <div className="grid lg:grid-cols-2 items-center">
-                <div className="lg:h-[500px] overflow-hidden h-96 relative top-0 right-0 bottom-0 left-0">
+        {/* Services Grid */}
+        <div className="md:px-10 lg:py-28 max-w-7xl mr-auto ml-auto pt-20 pr-6 pb-20 pl-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {currentFeaturedServices.slice(0, 3).map((service: any, index: number) => (
+              <div key={service.title} className="group overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
+                <div className="overflow-hidden h-64 relative">
                   <Image
                     src="/placeholder.jpg"
-                    alt="Serviços marítimos"
+                    alt={service.title}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="lg:to-gray-50/50 absolute top-0 right-0 bottom-0 left-0"></div>
+                  <div className="bg-gradient-to-t from-white/80 via-transparent to-transparent absolute top-0 right-0 bottom-0 left-0"></div>
                 </div>
-                <div className="p-8 lg:p-12">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                    <span className="text-sm font-medium text-green-600">Serviços Internacionais</span>
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="h-1 w-1 rounded-full bg-green-500"></div>
+                    <span className="text-xs font-medium text-green-600">{service.title}</span>
                   </div>
-                  <h3 className="text-2xl lg:text-3xl font-semibold tracking-tight mb-4 text-gray-900">Conectividade Global</h3>
-                  <p className="text-gray-700 mb-6">Conectamos o Brasil aos principais portos mundiais através de uma rede robusta de serviços regulares com os maiores armadores do mundo.</p>
-                  <div className="flex flex-wrap gap-3 mb-6">
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">Ásia</span>
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">Europa</span>
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">América do Norte</span>
-                  </div>
-                  <Link href="/portfolio">
-                    <span className="inline-flex items-center gap-2 text-sm font-medium text-green-600 hover:text-green-500 transition">
-                      Ver portfólio completo
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </Link>
+                  <h4 className="font-semibold text-gray-900 mb-1">{service.routes}</h4>
+                  <p className="text-sm text-gray-700">{service.description}</p>
                 </div>
               </div>
-            </div>
-
-            {/* Services Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {currentFeaturedServices.slice(0, 3).map((service: any, index: number) => (
-                <div key={service.title} className="group overflow-hidden bg-gray-50 rounded-xl relative shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] backdrop-blur">
-                  <div className="overflow-hidden h-64 relative">
-                    <Image
-                      src="/placeholder.jpg"
-                      alt={service.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="bg-gradient-to-t from-white/80 via-transparent to-transparent absolute top-0 right-0 bottom-0 left-0"></div>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="h-1 w-1 rounded-full bg-green-500"></div>
-                      <span className="text-xs font-medium text-green-600">{service.title}</span>
-                    </div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{service.routes}</h4>
-                    <p className="text-sm text-gray-700">{service.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </section>

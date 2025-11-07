@@ -224,7 +224,7 @@ export function Header() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 overflow-visible ${
           isHomePage
             ? scrolled
               ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-xl"
@@ -248,31 +248,30 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="bg-green-800 text-white py-2 px-8 hidden lg:block"
+              className="bg-green-800 text-white py-1.5 px-4 lg:px-8 hidden lg:block"
             >
-              <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-6">
-                  <div className="flex items-center space-x-2">
-                    <MapPin className="h-4 w-4" />
-                    <span>Av. Beira Mar 5, 2900 • Itapoá/SC</span>
+              <div className="max-w-7xl mx-auto flex items-center justify-between text-xs">
+                <div className="flex items-center space-x-4 flex-wrap gap-y-1">
+                  <div className="flex items-center space-x-1.5">
+                    <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">Av. Beira Mar 5, 2900 • Itapoá/SC</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Phone className="h-4 w-4" />
-                    <span>+55 (47) 3441-8000</span>
+                  <div className="flex items-center space-x-1.5">
+                    <Phone className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">+55 (47) 3441-8000</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Mail className="h-4 w-4" />
-                    <span>atendimento@portoitapoa.com</span>
+                  <div className="flex items-center space-x-1.5">
+                    <Mail className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">atendimento@portoitapoa.com</span>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <LanguageSelector />
-                  <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 flex-shrink-0">
+                  <div className="flex items-center space-x-2">
                     {quickLinks.map((link) => (
                       <Link
                         key={link.name}
                         href={link.href}
-                        className="flex items-center space-x-1 hover:text-green-200 transition-colors"
+                        className="flex items-center space-x-1 hover:text-green-200 transition-colors whitespace-nowrap"
                       >
                         <link.icon className="h-3 w-3" />
                         <span className="text-xs">{link.name}</span>
@@ -285,12 +284,12 @@ export function Header() {
           )}
         </AnimatePresence>
 
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex items-center justify-between h-20">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 overflow-visible">
+          <div className="flex items-center justify-between h-16 lg:h-20 gap-2">
             {/* Logo */}
-            <Link href="/" className="flex items-center group">
+            <Link href="/" className="flex items-center group flex-shrink-0">
               <motion.div
-                className="relative w-24 h-24 transition-transform group-hover:scale-105"
+                className="relative w-16 h-16 lg:w-20 lg:h-20 transition-transform group-hover:scale-105"
                 whileHover={{ rotate: 5 }}
                 transition={{ duration: 0.3 }}
               >
@@ -306,7 +305,7 @@ export function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-6">
+            <nav className="hidden lg:flex items-center space-x-1 flex-1 justify-center">
               {navigation.map((item) => (
                 <div
                   key={item.name}
@@ -316,45 +315,37 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`flex items-center text-sm font-semibold transition-all duration-300 px-4 py-3 rounded-xl relative overflow-hidden ${
+                    className={`flex items-center text-xs font-medium transition-all duration-200 px-2.5 py-2 rounded-lg relative ${
                       pathname === item.href ||
                       (
                         item.submenu &&
                           item.submenu.some((section) => section.items.some((subItem) => pathname.startsWith(subItem.href)))
                       )
                         ? isHomePage && !scrolled
-                          ? "text-green-300 bg-white/10 backdrop-blur-sm"
+                          ? "text-green-200 bg-white/10"
                           : "text-green-600 bg-green-50"
                         : isHomePage && !scrolled
-                          ? "text-white hover:text-green-200 hover:bg-white/10"
-                          : "text-gray-700 hover:text-green-600 hover:bg-green-50"
+                          ? "text-white"
+                          : "text-gray-700"
+                    } ${
+                      isHomePage && !scrolled
+                        ? "hover:text-green-200"
+                        : "hover:text-green-600"
                     }`}
                   >
-                    <span className="relative z-10">{t(item.nameKey as any) || item.name}</span>
+                    <span className="relative z-10 whitespace-nowrap">{t(item.nameKey as any) || item.name}</span>
                     {item.submenu && (
                       <motion.div
                         animate={{ rotate: activeSubmenu === item.name ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: 0.2 }}
                       >
                         <ChevronDown
-                          className={`ml-2 h-4 w-4 transition-all duration-300 ${
+                          className={`ml-1 h-3 w-3 transition-all duration-200 ${
                             activeSubmenu === item.name ? "text-green-600" : ""
                           }`}
                         />
                       </motion.div>
                     )}
-
-                    {/* Hover Effect */}
-                    <motion.div
-                      className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl ${
-                        isHomePage && !scrolled
-                          ? "bg-white/10 backdrop-blur-sm"
-                          : "bg-gradient-to-r from-green-50 to-emerald-50"
-                      }`}
-                      initial={{ scale: 0.8 }}
-                      whileHover={{ scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
                   </Link>
 
                   {/* Mega Menu */}
@@ -367,7 +358,7 @@ export function Header() {
                           exit={{ opacity: 0, y: 10, scale: 0.95 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
                           className={`absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 py-6 z-50 ${
-                            item.name === "Serviços" ? "min-w-[700px]" : "min-w-[650px]"
+                            item.name === "Serviços" ? "min-w-[700px]" : "min-w-[600px]"
                           }`}
                           style={{
                             background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
@@ -430,17 +421,17 @@ export function Header() {
             </nav>
 
             {/* Search & Actions */}
-            <div className="hidden lg:flex items-center space-x-4">
-              {/* Language Selector */}
-              {isHomePage && !scrolled && <LanguageSelector />}
+            <div className="hidden lg:flex items-center space-x-2 flex-shrink-0">
+              {/* Language Selector - sempre visível */}
+              <LanguageSelector isTransparent={isHomePage && !scrolled} />
 
               {/* Search */}
-              <div className="relative">
+              <div className="relative flex-shrink-0">
                 <AnimatePresence>
                   {searchOpen ? (
                     <motion.div
                       initial={{ width: 0, opacity: 0 }}
-                      animate={{ width: 300, opacity: 1 }}
+                      animate={{ width: 250, opacity: 1 }}
                       exit={{ width: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
                       className="flex items-center"
@@ -449,16 +440,16 @@ export function Header() {
                         placeholder="Buscar..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="rounded-full border-gray-300 focus:border-green-500 pr-10"
+                        className="rounded-full border-gray-300 focus:border-green-500 pr-10 text-sm h-8"
                         autoFocus
                       />
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={toggleSearch}
-                        className="absolute right-2 p-1 hover:bg-gray-100 rounded-full"
+                        className="absolute right-2 p-1 hover:bg-gray-100 rounded-full h-6 w-6"
                       >
-                        <X className="h-4 w-4" />
+                        <X className="h-3 w-3" />
                       </Button>
                     </motion.div>
                   ) : (
@@ -467,11 +458,11 @@ export function Header() {
                         variant="ghost"
                         size="sm"
                         onClick={toggleSearch}
-                        className={`p-2 rounded-full transition-colors duration-300 ${
+                        className={`p-1.5 rounded-full transition-colors duration-200 flex-shrink-0 ${
                           isHomePage && !scrolled ? "hover:bg-white/10 text-white" : "hover:bg-green-50 text-gray-600"
                         }`}
                       >
-                        <Search className="h-5 w-5" />
+                        <Search className="h-4 w-4" />
                       </Button>
                     </motion.div>
                   )}
@@ -479,10 +470,10 @@ export function Header() {
               </div>
 
               {/* Portal do Cliente Button */}
-              <Link href="/portal-cliente">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link href="/portal-cliente" className="flex-shrink-0 overflow-visible">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="overflow-visible">
                   <Button
-                    className={`rounded-full px-6 py-2 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ${
+                    className={`rounded-full px-5 py-2 text-xs font-semibold shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap overflow-visible ${
                       isHomePage && !scrolled
                         ? "bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30"
                         : "bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white"

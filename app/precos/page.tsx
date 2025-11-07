@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Filter, Plus, X, Calculator, FileText, Package, Truck, Ship, Anchor, DollarSign, Clock, MapPin, Users, TrendingUp, BarChart3 } from "lucide-react"
+import { Search, Filter, Plus, X, Calculator, FileText, Package, Truck, Ship, Anchor, DollarSign, Clock, MapPin, Users, TrendingUp, BarChart3, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,6 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { servicosPrecos } from "@/lib/data/pricing"
+import { useTabelaPrecosData } from "@/hooks/useSanityData"
+import { PortableText } from "@/components/portable-text"
+import Link from "next/link"
+import { getTranslatedField } from "@/lib/sanity-i18n"
+import { useI18n } from "@/lib/i18n/context"
 
 const categoriaLabels = {
   armazenagem: "Armazenagem",
@@ -63,7 +68,11 @@ const faixaPrecoFiltros = [
 ]
 
 export default function PrecosPage() {
+  const { data: pageData } = useTabelaPrecosData()
+  const { language } = useI18n()
   const [searchTerm, setSearchTerm] = useState("")
+  
+  const description = getTranslatedField(pageData?.description, language, "Consulte nossa tabela completa de preços e serviços portuários. Valores atualizados e transparentes para todos os serviços oferecidos pelo Porto Itapoá.")
   const [selectedCategoria, setSelectedCategoria] = useState<string>("all")
   const [selectedTipoCobranca, setSelectedTipoCobranca] = useState<string>("all")
   const [selectedFiltros, setSelectedFiltros] = useState<Set<string>>(new Set())
@@ -158,14 +167,41 @@ export default function PrecosPage() {
                 </div>
                 <div className="text-left">
                   <h1 className="text-5xl font-light text-blue-800 mb-2">TABELA DE PREÇOS E SERVIÇOS</h1>
-                  <div className="text-2xl font-bold text-blue-700">2025</div>
+                  <div className="text-2xl font-bold text-blue-700">{pageData?.anoVigencia || new Date().getFullYear()}</div>
                 </div>
               </div>
               
               <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
-                Consulte nossa tabela completa de preços e serviços portuários. Valores atualizados e transparentes 
-                para todos os serviços oferecidos pelo Porto Itapoá.
+                {description}
               </p>
+              
+              {pageData?.intro && (
+                <div className="mb-6">
+                  <PortableText 
+                    content={pageData.intro}
+                    className="text-gray-700 max-w-3xl mx-auto"
+                  />
+                </div>
+              )}
+              
+              {pageData?.anoVigencia && (
+                <Badge className="bg-green-600 text-white text-lg px-4 py-2 mb-4">
+                  Ano de Vigência: {pageData.anoVigencia}
+                </Badge>
+              )}
+              
+              {(pageData?.linkDownload || pageData?.arquivoTabela) && (
+                <div className="mt-6">
+                  <Link 
+                    href={pageData.linkDownload || '#'}
+                    target="_blank"
+                    className="inline-flex items-center gap-2 bg-white text-green-600 hover:bg-green-50 px-6 py-3 rounded-full font-medium transition-colors"
+                  >
+                    <Download className="h-5 w-5" />
+                    Baixar Tabela Completa (PDF)
+                  </Link>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
                 <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
@@ -388,8 +424,11 @@ export default function PrecosPage() {
                   Entre em contato com nossa equipe comercial para esclarecimentos ou cotações especiais.
                 </p>
                 <div className="space-y-1 text-xs text-blue-600">
-                  <p>📧 comercial@portoitapoa.com</p>
-                  <p>📞 +55 47 3443.8700</p>
+                  <p>📧 {pageData?.contato?.email || 'comercial@portoitapoa.com'}</p>
+                  <p>📞 {pageData?.contato?.telefone || '+55 47 3443.8700'}</p>
+                  {pageData?.contato?.horario && (
+                    <p>🕐 {getTranslatedField(pageData.contato.horario, language, pageData.contato.horario)}</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -637,59 +676,41 @@ export default function PrecosPage() {
             )}
 
             {/* Informações Importantes */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="mt-16"
-            >
-              <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-blue-800 mb-6">INFORMAÇÕES IMPORTANTES</h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                      <h4 className="text-lg font-semibold text-blue-700 mb-4">Da Tabela de Preços</h4>
-                      <ul className="space-y-2 text-sm text-gray-600">
-                        <li>• Todos os preços estão expressos em reais</li>
-                        <li>• Tabela válida por prazo indeterminado</li>
-                        <li>• Pode sofrer alterações sem aviso prévio</li>
-                        <li>• Mantida atualizada em nosso site</li>
-                        <li>• Inclui impostos sobre serviços vigentes</li>
-                      </ul>
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-lg font-semibold text-blue-700 mb-4">Do Pagamento</h4>
-                      <ul className="space-y-2 text-sm text-gray-600">
-                        <li>• Importação: pagamento prévio obrigatório</li>
-                        <li>• Exportação: liquidação em até 7 dias</li>
-                        <li>• LCL: pagamento à vista na retirada</li>
-                        <li>• Pagamento via boleto bancário</li>
-                        <li>• Encargos por atraso conforme boleto</li>
-                      </ul>
-                    </div>
-                  </div>
+            {pageData?.informacoesImportantes && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="mt-16"
+              >
+                <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl">
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold text-blue-800 mb-6">INFORMAÇÕES IMPORTANTES</h3>
+                    <PortableText 
+                      content={pageData.informacoesImportantes}
+                      className="text-gray-600"
+                    />
 
-                  <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
-                    <h4 className="text-lg font-semibold text-blue-800 mb-3">Contatos Comerciais</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="font-medium text-blue-700">Geral:</p>
-                        <p className="text-blue-600">comercial@portoitapoa.com</p>
-                        <p className="text-blue-600">+55 47 3443.8700</p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-blue-700">Atendimento:</p>
-                        <p className="text-blue-600">atendimento@portoitapoa.com</p>
-                        <p className="text-blue-600">Segunda a sexta: 08h às 18h</p>
+                    <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+                      <h4 className="text-lg font-semibold text-blue-800 mb-3">Contatos Comerciais</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <p className="font-medium text-blue-700">Geral:</p>
+                          <p className="text-blue-600">{pageData.contato?.email || 'comercial@portoitapoa.com'}</p>
+                          <p className="text-blue-600">{pageData.contato?.telefone || '+55 47 3443.8700'}</p>
+                        </div>
+                        <div>
+                          <p className="font-medium text-blue-700">Atendimento:</p>
+                          <p className="text-blue-600">{pageData.contato?.email || 'atendimento@portoitapoa.com'}</p>
+                          <p className="text-blue-600">{getTranslatedField(pageData.contato?.horario, language, 'Segunda a sexta: 08h às 18h')}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
           </div>
         </div>
       </div>
