@@ -388,26 +388,27 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
 
       <Globe
         ref={globeRef}
-        // Background do globo - esfera sólida
+        // Background do globo - esfera transparente
         showGlobe={true}
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
-        showAtmosphere={false}
-        // Wireframe dos países usando GeoJSON - mais opaco
-        polygonsData={countriesData}
-        polygonAltitude={0.01}
-        polygonCapColor={() => 'rgba(34, 197, 94, 0.3)'}
-        polygonSideColor={() => 'rgba(34, 197, 94, 0.4)'}
-        polygonStrokeColor={() => GREEN_COLOR}
-        polygonLabel=""
-        polygonStrokeWidth={1}
-        // Carregar dados GeoJSON dos países
-        onPolygonHover={(polygon: any) => {}}
-        // Pontos (marcadores) - pins tech melhorados
+        globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+        // Atmosfera com glow verde intenso estilo Gradient Network
+        showAtmosphere={true}
+        atmosphereColor={GREEN_GLOW}
+        atmosphereAltitude={0.25}
+        // Hexágonos dos países - estilo cyberpunk/tech
+        hexPolygonsData={countriesData}
+        hexPolygonResolution={3}
+        hexPolygonMargin={0.7}
+        hexPolygonUseDots={false}
+        hexPolygonColor={() => 'rgba(22, 163, 74, 0.35)'}
+        hexPolygonAltitude={0.015}
+        hexPolygonCurvatureResolution={3}
+        // Pontos (marcadores) - nodes com glow intenso
         pointsData={points}
-        pointAltitude={0.03}
+        pointAltitude={0.04}
         pointColor={(d: any) => hoveredPoint === d ? GREEN_GLOW : GREEN_COLOR}
-        pointRadius={(d: any) => hoveredPoint === d ? 1.2 : (d.size === 50 ? 1.0 : 0.8)}
-        pointResolution={24}
+        pointRadius={(d: any) => hoveredPoint === d ? 1.8 : (d.size === 50 ? 1.5 : 1.0)}
+        pointResolution={32}
         pointLabel={(d: any) => d.name}
         onPointClick={(point: any, event: any) => handlePointClick(point, event)}
         onPointHover={(point: any) => setHoveredPoint(point || null)}
@@ -420,20 +421,12 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
         // Desabilitar zoom com scroll
         enablePointerInteraction={true}
         controls={false}
-        pointLabelSize={3}
-        pointLabelColor={() => GREEN_COLOR}
-        pointLabelPixelOffset={(d: any) => [0, -15]}
-        // Efeitos visuais nos pontos - brilho intenso
-        pointMaterial={{
-          emissive: GREEN_COLOR,
-          emissiveIntensity: 1.0,
-          transparent: true,
-          opacity: 1,
-        }}
-        // Arcos (linhas tracejadas) - itinerários - apenas do destino selecionado
+        // Efeitos visuais nos pontos - glow máximo estilo Gradient
+        pointsMerge={false}
+        // Arcos (linhas) - conexões animadas estilo Gradient Network
         arcsData={selectedPoint && selectedPoint.name !== PORTO_ITAPOA.name
-          ? arcs.filter((arc: any) => 
-              Math.abs(arc.endLat - selectedPoint.lat) < 0.1 && 
+          ? arcs.filter((arc: any) =>
+              Math.abs(arc.endLat - selectedPoint.lat) < 0.1 &&
               Math.abs(arc.endLng - selectedPoint.lng) < 0.1
             )
           : []}
@@ -441,12 +434,13 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
         arcStartLng="startLng"
         arcEndLat="endLat"
         arcEndLng="endLng"
-        arcColor="color"
-        arcDashLength={0.5}
-        arcDashGap={0.3}
-        arcDashAnimateTime={3000}
-        arcStroke={3}
-        arcAltitude={0.01}
+        arcColor={(arc: any) => [GREEN_COLOR, GREEN_GLOW]}
+        arcDashLength={0.4}
+        arcDashGap={0.2}
+        arcDashAnimateTime={2000}
+        arcStroke={1.5}
+        arcAltitude={0.3}
+        arcDashInitialGap={(e: any) => Math.random()}
         // Configurações gerais
         enablePointerInteraction={true}
         // Desabilitar controles de zoom com scroll
@@ -474,19 +468,6 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
         // Estilo - fundo transparente para mostrar o background tech
         backgroundColor="rgba(0,0,0,0)"
       />
-      
-      {/* Esfera wireframe decorativa */}
-      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        <div 
-          className="rounded-full border-2 border-green-500/20"
-          style={{
-            width: '60%',
-            height: '60%',
-            marginTop: '10%',
-          }}
-        />
-      </div>
-      
       {/* Tooltip no hover */}
       {hoveredPoint && !selectedPoint && (
         <motion.div
