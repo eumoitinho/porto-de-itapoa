@@ -6,7 +6,7 @@ import { MapPin, Phone, Mail, Clock, Send, MessageCircle, HeadphonesIcon, Buildi
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -59,14 +59,18 @@ export default function ContatoPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16"
         >
-          <h1 className="text-5xl font-light text-green-800 mb-6">
-            {title}
-          </h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-            {description}
-          </p>
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+            <CardHeader className="text-center">
+              <CardTitle className="text-4xl md:text-5xl font-light text-green-800 mb-4">
+                {title}
+              </CardTitle>
+              <CardDescription className="text-lg text-gray-700 max-w-4xl mx-auto">
+                {description}
+              </CardDescription>
+            </CardHeader>
+          </Card>
         </motion.div>
 
         {/* Intro */}
@@ -77,8 +81,8 @@ export default function ContatoPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-12"
           >
-            <Card className="backdrop-blur-md bg-white/80 border border-gray-200 shadow-xl rounded-2xl">
-              <CardContent className="p-8">
+            <Card className="bg-white border-gray-200">
+              <CardContent>
                 <PortableText 
                   content={pageData.intro}
                   className="text-gray-600 leading-relaxed text-lg"
@@ -95,17 +99,19 @@ export default function ContatoPage() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-12"
         >
-          <Card className="backdrop-blur-md bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 shadow-xl rounded-2xl">
-            <CardContent className="p-8">
-              <div className="flex items-center gap-3 mb-6">
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+            <CardHeader>
+              <div className="flex items-center gap-3">
                 <HeadphonesIcon className="h-8 w-8 text-green-600" />
-                <h2 className="text-3xl font-semibold text-green-800">
+                <CardTitle className="text-3xl font-semibold text-green-800">
                   {getTranslatedField(pageData?.atendimentoCliente?.titulo, language, t('customerService') || 'Atendimento ao Cliente')}
-                </h2>
+                </CardTitle>
               </div>
-              <p className="text-gray-700 mb-6">
+              <CardDescription className="text-gray-700 mt-2">
                 {getTranslatedField(pageData?.atendimentoCliente?.descricao, language, t('customerServiceDescription') || 'Canais dedicados para clientes, despachantes e parceiros comerciais.')}
-              </p>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
@@ -185,17 +191,19 @@ export default function ContatoPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mb-12"
         >
-          <Card className="backdrop-blur-md bg-blue-50 border border-blue-200 shadow-xl rounded-2xl">
-            <CardContent className="p-8">
-              <div className="flex items-center gap-3 mb-6">
+          <Card className="bg-blue-50 border-blue-200">
+            <CardHeader>
+              <div className="flex items-center gap-3">
                 <MessageCircle className="h-8 w-8 text-blue-600" />
-                <h2 className="text-3xl font-semibold text-blue-800">
+                <CardTitle className="text-3xl font-semibold text-blue-800">
                   {getTranslatedField(pageData?.ouvidoriaSocial?.titulo, language, t('socialOmbudsman') || 'Ouvidoria Social')}
-                </h2>
+                </CardTitle>
               </div>
-              <p className="text-gray-700 mb-6">
+              <CardDescription className="text-gray-700 mt-2">
                 {getTranslatedField(pageData?.ouvidoriaSocial?.descricao, language, t('socialOmbudsmanDescription') || 'Um canal direto para a comunidade, motoristas, terceiros e público externo. Utilize este contato para registrar reclamações, sugestões ou tirar dúvidas gerais sobre as atividades do terminal.')}
-              </p>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -222,17 +230,19 @@ export default function ContatoPage() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mb-12"
         >
-          <Card className="backdrop-blur-md bg-gray-50 border border-gray-200 shadow-xl rounded-2xl">
-            <CardContent className="p-8">
-              <div className="flex items-center gap-3 mb-6">
+          <Card className="bg-gray-50 border-gray-200">
+            <CardHeader>
+              <div className="flex items-center gap-3">
                 <Building2 className="h-8 w-8 text-gray-600" />
-                <h2 className="text-3xl font-semibold text-gray-800">
+                <CardTitle className="text-3xl font-semibold text-gray-800">
                   {getTranslatedField(pageData?.sedeAdministrativa?.titulo, language, t('administrativeHeadquarters') || 'Sede Administrativa')}
-                </h2>
+                </CardTitle>
               </div>
-              <p className="text-gray-700 mb-6">
+              <CardDescription className="text-gray-700 mt-2">
                 {getTranslatedField(pageData?.sedeAdministrativa?.descricao, language, t('administrativeHeadquartersDescription') || 'Para assuntos administrativos, fornecedores e correspondências.')}
-              </p>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
@@ -294,14 +304,16 @@ export default function ContatoPage() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mb-12"
         >
-          <Card className="backdrop-blur-md bg-white/80 border border-gray-200 shadow-xl rounded-2xl">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-semibold text-green-800 mb-6">
+          <Card className="bg-white border-gray-200">
+            <CardHeader>
+              <CardTitle className="text-2xl font-semibold text-green-800">
                 {getTranslatedField(pageData?.formulario?.titulo, language, t('contactUs') || 'Fale conosco')}
-              </h2>
-              <p className="text-gray-600 mb-6">
+              </CardTitle>
+              <CardDescription className="text-gray-600">
                 {getTranslatedField(pageData?.formulario?.descricao, language, t('contactFormDescription') || 'Para outras informações, preencha o formulário abaixo. Teremos prazer em atendê-lo.')}
-              </p>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

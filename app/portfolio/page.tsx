@@ -2,13 +2,12 @@
 
 import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, Filter, Plus, X, Ship, Clock, MapPin, Users, Globe2, Anchor, Route } from "lucide-react"
+import { Search, Filter, Plus, X, Ship, Clock, MapPin, Users, Globe2, Anchor, Route, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { servicosMaritimos, outrosServicos } from "@/lib/data/services"
 import { portoData } from "@/lib/data/porto-data"
 
 const categoriaLabels = {
@@ -70,9 +69,46 @@ export default function PortfolioPage() {
 
   // Função para calcular o transit time máximo de um serviço
   const getMaxTransitTime = (servico: any) => {
-    if (!servico.transit_times || servico.transit_times.length === 0) return 0
-    return Math.max(...servico.transit_times.map((t: any) => Math.max(t.importacao || 0, t.exportacao || 0)))
+    if (!servico.portos || servico.portos.length === 0) return 0
+    return Math.max(...servico.portos.map((p: any) => Math.max(p.importacao_dias || 0, p.exportacao_dias || 0)))
   }
+  
+  // Converter dados do portoData para o formato esperado
+  const servicosMaritimos = portoData.servicos_maritimos.map(servico => ({
+    id: servico.id,
+    nome: servico.nome,
+    codigo: servico.nome,
+    cobertura: servico.cobertura,
+    armadores: servico.armadores,
+    escala: servico.escala,
+    navios: servico.navios.capacidade 
+      ? `${servico.navios.quantidade || ''} x ${servico.navios.capacidade} ${servico.navios.unidade}`
+      : servico.navios.capacidade_min && servico.navios.capacidade_max
+      ? `${servico.navios.quantidade || ''} x ${servico.navios.capacidade_min} | ${servico.navios.capacidade_max} ${servico.navios.unidade}`
+      : `${servico.navios.quantidade || ''} navios`,
+    transit_times: servico.portos?.map((p: any) => ({
+      porto: p.nome,
+      importacao: p.importacao_dias,
+      exportacao: p.exportacao_dias
+    })) || [],
+    rota: servico.rota || servico.rotas?.[0] || '',
+    categoria: servico.regiao === "Europa" ? "Europa" :
+                servico.regiao === "América do Norte" ? "America_Norte" :
+                servico.regiao === "Golfo do México" ? "Golfo_Mexico" :
+                servico.regiao === "Mediterrâneo" ? "Mediterraneo" :
+                servico.regiao === "Ásia" ? "Asia" :
+                servico.regiao === "Cabotagem" ? "Cabotagem" : "Outros",
+    logos: []
+  }))
+  
+  const outrosServicos = [
+    {
+      nome: portoData.cargas_projeto.servico,
+      cobertura: "Cargas especiais e projetos complexos",
+      armadores: [],
+      escala: "Sob consulta"
+    }
+  ]
 
   // Calcular contadores dos filtros de transit time dinamicamente
   const transitTimeFiltros = useMemo(() => {
@@ -321,7 +357,8 @@ export default function PortfolioPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="backdrop-blur-md bg-white/60 border border-white/20 rounded-2xl p-6 shadow-xl sticky top-8">
+            <Card className="bg-white border-gray-200 sticky top-8">
+              <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-green-800">Filtros</h3>
                 <Button
@@ -492,17 +529,20 @@ export default function PortfolioPage() {
               )}
 
               {/* Informações de Contato */}
-              <div className="mt-8 p-4 bg-green-50 rounded-xl border border-green-200">
-                <h4 className="font-semibold text-green-800 mb-2">Precisa de Ajuda?</h4>
-                <p className="text-sm text-green-700 mb-3">
-                  Entre em contato com nossa equipe comercial para informações detalhadas sobre rotas e serviços.
-                </p>
-                <div className="space-y-1 text-xs text-green-600">
-                  <p>📧 comercial@portoitapoa.com</p>
-                  <p>📞 +55 47 3443.8700</p>
-                </div>
-              </div>
-            </div>
+              <Card className="mt-8 bg-green-50 border-green-200">
+                <CardContent className="p-4">
+                  <h4 className="font-semibold text-green-800 mb-2">Precisa de Ajuda?</h4>
+                  <p className="text-sm text-green-700 mb-3">
+                    Entre em contato com nossa equipe comercial para informações detalhadas sobre rotas e serviços.
+                  </p>
+                  <div className="space-y-1 text-xs text-green-600">
+                    <p>📧 comercial@portoitapoa.com</p>
+                    <p>📞 +55 47 3443.8700</p>
+                  </div>
+                </CardContent>
+              </Card>
+              </CardContent>
+            </Card>
           </motion.div>
 
           {/* Lista de Serviços */}
@@ -522,7 +562,7 @@ export default function PortfolioPage() {
               <AnimatePresence>
                 {filteredServicos.map((servico, index) => {
                   const isExpanded = expandedCards.has(servico.id)
-                  const CategoryIcon = categoriaIcons[servico.categoria] || Ship
+                  const CategoryIcon = categoriaIcons[servico.categoria as keyof typeof categoriaIcons] || Ship
 
                   return (
                     <motion.div
@@ -614,77 +654,131 @@ export default function PortfolioPage() {
                               >
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                                   {/* Transit Times Table */}
-                                  {servico.transit_times.length > 0 && (
+                                  {servico.transit_times && servico.transit_times.length > 0 && (
                                     <div>
                                       <h4 className="text-2xl font-bold text-green-800 mb-6">Tempos de Trânsito (dias)</h4>
-                                      <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                                        <div className="overflow-x-auto">
-                                          <table className="w-full">
-                                            <thead>
-                                              <tr className="border-b-2 border-green-200">
-                                                <th className="text-left py-4 text-green-800 font-bold text-lg">Porto</th>
-                                                <th className="text-center py-4 text-green-800 font-bold text-lg">Import</th>
-                                                <th className="text-center py-4 text-green-800 font-bold text-lg">Export</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody>
-                                              {servico.transit_times.map((transit, idx) => (
-                                                <tr
-                                                  key={idx}
-                                                  className="border-b border-gray-200 hover:bg-white transition-colors"
-                                                >
-                                                  <td className="py-4 text-gray-800 font-semibold">
-                                                    {transit.porto}
-                                                    {transit.codigo && (
-                                                      <span className="ml-2 text-sm text-gray-500">({transit.codigo})</span>
-                                                    )}
-                                                  </td>
-                                                  <td className="py-4 text-center text-gray-700 font-medium">
-                                                    {transit.importacao || "-"}
-                                                  </td>
-                                                  <td className="py-4 text-center text-gray-700 font-medium">
-                                                    {transit.exportacao || "-"}
-                                                  </td>
+                                      <Card className="bg-gray-50 border-gray-200">
+                                        <CardContent className="p-6">
+                                          <div className="overflow-x-auto">
+                                            <table className="w-full">
+                                              <thead>
+                                                <tr className="border-b-2 border-green-200">
+                                                  <th className="text-left py-4 text-green-800 font-bold text-lg">Porto</th>
+                                                  <th className="text-center py-4 text-green-800 font-bold text-lg">Import</th>
+                                                  <th className="text-center py-4 text-green-800 font-bold text-lg">Export</th>
                                                 </tr>
-                                              ))}
-                                            </tbody>
-                                          </table>
-                                        </div>
-                                      </div>
+                                              </thead>
+                                              <tbody>
+                                                {servico.transit_times.map((transit: any, idx: number) => (
+                                                  <tr
+                                                    key={idx}
+                                                    className="border-b border-gray-200 hover:bg-white transition-colors"
+                                                  >
+                                                    <td className="py-4 text-gray-800 font-semibold">
+                                                      {transit.porto}
+                                                    </td>
+                                                    <td className="py-4 text-center text-gray-700 font-medium">
+                                                      {transit.importacao !== null && transit.importacao !== undefined ? transit.importacao : "-"}
+                                                    </td>
+                                                    <td className="py-4 text-center text-gray-700 font-medium">
+                                                      {transit.exportacao !== null && transit.exportacao !== undefined ? transit.exportacao : "-"}
+                                                    </td>
+                                                  </tr>
+                                                ))}
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </CardContent>
+                                      </Card>
                                     </div>
                                   )}
 
                                   {/* Route Information */}
                                   <div>
                                     <h4 className="text-2xl font-bold text-green-800 mb-6">Rota do Serviço</h4>
-                                    <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                                      <div className="flex items-start mb-4">
-                                        <MapPin className="h-5 w-5 text-green-600 mr-3 mt-1 flex-shrink-0" />
-                                        <div>
-                                          <h5 className="font-semibold text-gray-800 mb-2">Sequência de Portos:</h5>
-                                          <p className="text-gray-700 leading-relaxed">{servico.rota}</p>
+                                    <Card className="bg-white border-gray-200">
+                                      <CardContent className="p-6">
+                                        <div className="mb-6">
+                                          <h5 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                            <MapPin className="h-5 w-5 text-green-600" />
+                                            Sequência de Portos
+                                          </h5>
+                                          
+                                          {/* Visual Route Map */}
+                                          <div className="relative">
+                                            {servico.rota ? (
+                                              <>
+                                                <div className="flex flex-wrap items-center gap-2 mb-4">
+                                                  {servico.rota.split(/[»>–-]/).filter(p => p.trim()).map((porto, index, array) => {
+                                                    const portoClean = porto.trim()
+                                                    if (!portoClean) return null
+                                                    
+                                                    const isItapoa = portoClean.toLowerCase().includes('itapoá') || portoClean.toLowerCase().includes('itapoa')
+                                                    
+                                                    return (
+                                                      <div key={index} className="flex items-center gap-2">
+                                                        <Badge 
+                                                          variant="outline" 
+                                                          className={`font-mono text-xs px-3 py-1.5 ${
+                                                            isItapoa 
+                                                              ? 'bg-green-600 text-white border-green-600 font-semibold' 
+                                                              : 'bg-gray-50 text-gray-700 border-gray-300'
+                                                          }`}
+                                                        >
+                                                          {portoClean}
+                                                        </Badge>
+                                                        {index < array.length - 1 && (
+                                                          <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                                                        )}
+                                                      </div>
+                                                    )
+                                                  })}
+                                                </div>
+                                                
+                                                {/* Route Path Visualization */}
+                                                <div className="mt-6 pt-6 border-t border-gray-200">
+                                                  <div className="relative overflow-x-auto pb-4">
+                                                    <div className="flex items-center gap-3 min-w-max">
+                                                      {servico.rota.split(/[»>–-]/).filter(p => p.trim()).map((porto, index, array) => {
+                                                        const portoClean = porto.trim()
+                                                        const isItapoa = portoClean.toLowerCase().includes('itapoá') || portoClean.toLowerCase().includes('itapoa')
+                                                        
+                                                        return (
+                                                          <div key={index} className="flex items-center gap-2">
+                                                            <div className="flex flex-col items-center">
+                                                              <div className={`w-3 h-3 rounded-full ${
+                                                                isItapoa ? 'bg-green-600 ring-2 ring-green-300' : 'bg-gray-400'
+                                                              }`}></div>
+                                                              <span className={`text-xs mt-1 font-medium max-w-[80px] text-center ${
+                                                                isItapoa ? 'text-green-700 font-semibold' : 'text-gray-600'
+                                                              }`}>
+                                                                {portoClean.length > 12 ? portoClean.substring(0, 10) + '...' : portoClean}
+                                                              </span>
+                                                            </div>
+                                                            {index < array.length - 1 && (
+                                                              <div className="flex-1 h-0.5 bg-gradient-to-r from-gray-300 to-gray-200 min-w-[40px]"></div>
+                                                            )}
+                                                          </div>
+                                                        )
+                                                      })}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </>
+                                            ) : (
+                                              <p className="text-gray-500 text-sm">Rota não disponível</p>
+                                            )}
+                                          </div>
                                         </div>
-                                      </div>
 
-                                      <div className="mt-6 pt-6 border-t border-green-200">
-                                        <h5 className="font-semibold text-gray-800 mb-3">Categoria de Serviço:</h5>
-                                        <Badge className="bg-green-600 text-white text-sm px-4 py-2">
-                                          {categoriaLabels[servico.categoria]}
-                                        </Badge>
-                                      </div>
-                                    </div>
-
-                                    {/* Contact Info */}
-                                    <div className="mt-8 bg-gray-50 rounded-xl p-6 border border-gray-200">
-                                      <h5 className="font-semibold text-gray-800 mb-3">Informações de Contato:</h5>
-                                      <div className="space-y-2 text-sm text-gray-600">
-                                        <p>Av. Beira Mar 5, 2900 Figueira do Pontal</p>
-                                        <p>Itapoá/SC - Brasil</p>
-                                        <p>+55 47 3443.8700</p>
-                                        <p>atendimento@portoitapoa.com</p>
-                                        <p className="text-green-600 font-medium">www.portoitapoa.com</p>
-                                      </div>
-                                    </div>
+                                        <div className="mt-6 pt-6 border-t border-gray-200">
+                                          <h5 className="font-semibold text-gray-800 mb-3">Categoria de Serviço:</h5>
+                                          <Badge className="bg-green-600 text-white text-sm px-4 py-2">
+                                            {categoriaLabels[servico.categoria as keyof typeof categoriaLabels]}
+                                          </Badge>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
                                   </div>
                                 </div>
                               </motion.div>
@@ -727,21 +821,23 @@ export default function PortfolioPage() {
                     ))}
 
                     {/* Project Cargo */}
-                    <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                      <h4 className="text-xl font-bold text-green-800 mb-3">CARGAS PROJETO</h4>
-                      <p className="text-gray-600 mb-4">Especialistas em cargas especiais e projetos complexos</p>
-                      <div className="space-y-2">
-                        <p className="text-sm">
-                          <span className="font-semibold">Parceiro:</span> BBC Chartering
-                        </p>
-                        <p className="text-sm">
-                          <span className="font-semibold">Contato:</span> renata.souza@portoitapoa.com
-                        </p>
-                        <p className="text-sm">
-                          <span className="font-semibold">Telefone:</span> (47) 9 9937-0182
-                        </p>
-                      </div>
-                    </div>
+                    <Card className="bg-green-50 border-green-200">
+                      <CardContent className="p-6">
+                        <h4 className="text-xl font-bold text-green-800 mb-3">CARGAS PROJETO</h4>
+                        <p className="text-gray-600 mb-4">Especialistas em cargas especiais e projetos complexos</p>
+                        <div className="space-y-2">
+                          <p className="text-sm">
+                            <span className="font-semibold">Parceiro:</span> {portoData.cargas_projeto.servico}
+                          </p>
+                          <p className="text-sm">
+                            <span className="font-semibold">Contato:</span> {portoData.cargas_projeto.contato.email}
+                          </p>
+                          <p className="text-sm">
+                            <span className="font-semibold">Telefone:</span> {portoData.cargas_projeto.contato.telefone}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 </CardContent>
               </Card>
