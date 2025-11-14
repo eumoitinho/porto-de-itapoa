@@ -74,32 +74,45 @@ export default function PortfolioPage() {
   }
   
   // Converter dados do portoData para o formato esperado
-  const servicosMaritimos = portoData.servicos_maritimos.map(servico => ({
-    id: servico.id,
-    nome: servico.nome,
-    codigo: servico.nome,
-    cobertura: servico.cobertura,
-    armadores: servico.armadores,
-    escala: servico.escala,
-    navios: servico.navios.capacidade 
-      ? `${servico.navios.quantidade || ''} x ${servico.navios.capacidade} ${servico.navios.unidade}`
-      : servico.navios.capacidade_min && servico.navios.capacidade_max
-      ? `${servico.navios.quantidade || ''} x ${servico.navios.capacidade_min} | ${servico.navios.capacidade_max} ${servico.navios.unidade}`
-      : `${servico.navios.quantidade || ''} navios`,
-    transit_times: servico.portos?.map((p: any) => ({
-      porto: p.nome,
-      importacao: p.importacao_dias,
-      exportacao: p.exportacao_dias
-    })) || [],
-    rota: servico.rota || servico.rotas?.[0] || '',
-    categoria: servico.regiao === "Europa" ? "Europa" :
-                servico.regiao === "América do Norte" ? "America_Norte" :
-                servico.regiao === "Golfo do México" ? "Golfo_Mexico" :
-                servico.regiao === "Mediterrâneo" ? "Mediterraneo" :
-                servico.regiao === "Ásia" ? "Asia" :
-                servico.regiao === "Cabotagem" ? "Cabotagem" : "Outros",
-    logos: []
-  }))
+  const servicosMaritimos = portoData.servicos_maritimos.map(servico => {
+    let naviosStr = ''
+    if (servico.navios) {
+      if (servico.navios.capacidade) {
+        naviosStr = `${servico.navios.quantidade || ''} x ${servico.navios.capacidade} ${servico.navios.unidade}`
+      } else if (servico.navios.capacidade_min && servico.navios.capacidade_max) {
+        naviosStr = `${servico.navios.quantidade || ''} x ${servico.navios.capacidade_min} | ${servico.navios.capacidade_max} ${servico.navios.unidade}`
+      } else if (servico.navios.quantidade) {
+        naviosStr = `${servico.navios.quantidade} navios`
+      } else {
+        naviosStr = 'Sob consulta'
+      }
+    } else {
+      naviosStr = 'Sob consulta'
+    }
+    
+    return {
+      id: servico.id,
+      nome: servico.nome,
+      codigo: servico.nome,
+      cobertura: servico.cobertura,
+      armadores: servico.armadores || [],
+      escala: servico.escala || 'Sob consulta',
+      navios: naviosStr,
+      transit_times: servico.portos?.map((p: any) => ({
+        porto: p.nome,
+        importacao: p.importacao_dias,
+        exportacao: p.exportacao_dias
+      })) || [],
+      rota: servico.rota || servico.rotas?.[0] || '',
+      categoria: servico.regiao === "Europa" ? "Europa" :
+                  servico.regiao === "América do Norte" ? "America_Norte" :
+                  servico.regiao === "Golfo do México" ? "Golfo_Mexico" :
+                  servico.regiao === "Mediterrâneo" ? "Mediterraneo" :
+                  servico.regiao === "Ásia" ? "Asia" :
+                  servico.regiao === "Cabotagem" ? "Cabotagem" : "Outros",
+      logos: []
+    }
+  })
   
   const outrosServicos = [
     {
