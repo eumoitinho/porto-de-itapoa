@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Search, Filter, Plus, X, Ship, Clock, MapPin, Users, Globe2, Anchor, Route } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { servicosMaritimos, outrosServicos } from "@/lib/data/services"
+import { portoData } from "@/lib/data/porto-data"
 
 const categoriaLabels = {
   Europa: "Europa",
@@ -222,78 +223,94 @@ export default function PortfolioPage() {
   return (
     <div className="min-h-screen py-20 px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
-        {/* Header Melhorado */}
+        {/* Header com Design System */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16"
         >
-          <div className="relative bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl p-12 shadow-xl border border-gray-200 mb-12 overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-10 left-10 w-20 h-20 border-2 border-green-600 rounded-full"></div>
-              <div className="absolute top-20 right-20 w-16 h-16 border-2 border-blue-600 rounded-full"></div>
-              <div className="absolute bottom-10 left-20 w-12 h-12 border-2 border-green-600 rounded-full"></div>
-              <div className="absolute bottom-20 right-10 w-24 h-24 border-2 border-blue-600 rounded-full"></div>
-            </div>
-            
-            <div className="relative z-10">
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+            <CardHeader className="text-center pb-4">
               <div className="flex items-center justify-center mb-6">
                 <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mr-4">
                   <Ship className="h-8 w-8 text-white" />
                 </div>
                 <div className="text-left">
-                  <h1 className="text-5xl font-light text-green-800 mb-2">PORTFÓLIO DE SERVIÇOS MARÍTIMOS</h1>
+                  <CardTitle className="text-4xl md:text-5xl font-light text-green-800 mb-2">
+                    PORTFÓLIO DE SERVIÇOS MARÍTIMOS
+                  </CardTitle>
                   <div className="text-2xl font-bold text-green-700">2025</div>
                 </div>
               </div>
-              
-              <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
+              <CardDescription className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
                 Conectamos o Brasil aos principais mercados mundiais através de serviços marítimos regulares com os
                 maiores armadores globais. Nossa rede de conexões oferece frequência semanal e tempos de trânsito
                 competitivos.
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
-                  <div className="flex items-center justify-center mb-2">
-                    <Ship className="h-6 w-6 text-green-600 mr-2" />
-                    <span className="font-semibold text-green-800">Serviços</span>
-                  </div>
-                  <div className="text-2xl font-bold text-green-900">14</div>
-                  <div className="text-sm text-gray-600">Serviços Regulares</div>
-                </div>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <Card className="bg-white border-gray-200">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <Ship className="h-6 w-6 text-green-600 mr-2" />
+                      <span className="font-semibold text-gray-900">Serviços</span>
+                    </div>
+                    <div className="text-3xl font-bold text-green-900 mt-2">
+                      {portoData.servicos_maritimos.length}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Serviços Regulares</div>
+                  </CardContent>
+                </Card>
                 
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
-                  <div className="flex items-center justify-center mb-2">
-                    <Users className="h-6 w-6 text-blue-600 mr-2" />
-                    <span className="font-semibold text-blue-800">Armadores</span>
-                  </div>
-                  <div className="text-2xl font-bold text-blue-900">15+</div>
-                  <div className="text-sm text-gray-600">Parceiros Globais</div>
-                </div>
+                <Card className="bg-white border-gray-200">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <Users className="h-6 w-6 text-blue-600 mr-2" />
+                      <span className="font-semibold text-gray-900">Armadores</span>
+                    </div>
+                    <div className="text-3xl font-bold text-blue-900 mt-2">
+                      {new Set(portoData.servicos_maritimos.flatMap(s => s.armadores)).size}+
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Parceiros Globais</div>
+                  </CardContent>
+                </Card>
                 
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
-                  <div className="flex items-center justify-center mb-2">
-                    <Clock className="h-6 w-6 text-purple-600 mr-2" />
-                    <span className="font-semibold text-purple-800">Frequência</span>
-                  </div>
-                  <div className="text-2xl font-bold text-purple-900">Semanal</div>
-                  <div className="text-sm text-gray-600">Serviços Regulares</div>
-                </div>
+                <Card className="bg-white border-gray-200">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <Clock className="h-6 w-6 text-purple-600 mr-2" />
+                      <span className="font-semibold text-gray-900">Frequência</span>
+                    </div>
+                    <div className="text-3xl font-bold text-purple-900 mt-2">
+                      {portoData.servicos_maritimos.filter(s => s.escala === "Semanal").length > 0 ? "Semanal" : "Variável"}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Serviços Regulares</div>
+                  </CardContent>
+                </Card>
                 
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50">
-                  <div className="flex items-center justify-center mb-2">
-                    <MapPin className="h-6 w-6 text-orange-600 mr-2" />
-                    <span className="font-semibold text-orange-800">Portos</span>
-                  </div>
-                  <div className="text-2xl font-bold text-orange-900">100+</div>
-                  <div className="text-sm text-gray-600">Destinos Mundiais</div>
-                </div>
+                <Card className="bg-white border-gray-200">
+                  <CardContent className="p-6 text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <MapPin className="h-6 w-6 text-orange-600 mr-2" />
+                      <span className="font-semibold text-gray-900">Portos</span>
+                    </div>
+                    <div className="text-3xl font-bold text-orange-900 mt-2">
+                      {new Set(
+                        portoData.servicos_maritimos.flatMap(s => 
+                          s.portos?.map(p => p.nome) || 
+                          s.portos_brasileiros || 
+                          []
+                        )
+                      ).size}+
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">Destinos Mundiais</div>
+                  </CardContent>
+                </Card>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
