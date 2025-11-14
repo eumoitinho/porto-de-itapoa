@@ -1686,6 +1686,198 @@ export const tour360 = defineType({
   ],
 })
 
+// Schema para Blog Posts
+export const blogPost = defineType({
+  name: 'blogPost',
+  title: 'Post do Blog',
+  type: 'document',
+  preview: {
+    select: {
+      title: 'title.pt',
+      subtitle: 'category',
+      media: 'featuredImage',
+    },
+  },
+  fields: [
+    createLocalizedStringField('title', 'Título do Post', {
+      pt: { validation: (Rule: any) => Rule.required() },
+    }),
+    {
+      name: 'slug',
+      title: 'Slug (URL)',
+      type: 'slug',
+      options: {
+        source: 'title.pt',
+        maxLength: 96,
+        slugify: (input: string) =>
+          input
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .slice(0, 96),
+      },
+      validation: (Rule: any) => Rule.required(),
+    },
+    createLocalizedTextField('excerpt', 'Resumo/Descrição Curta', {
+      pt: { validation: (Rule: any) => Rule.required().max(200) },
+    }),
+    createLocalizedBlockContentField('content', 'Conteúdo do Post', {
+      pt: { validation: (Rule: any) => Rule.required() },
+    }),
+    {
+      name: 'featuredImage',
+      title: 'Imagem de Destaque',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'category',
+      title: 'Categoria',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Operações', value: 'operacoes' },
+          { title: 'Expansão', value: 'expansao' },
+          { title: 'Sustentabilidade', value: 'sustentabilidade' },
+          { title: 'Infraestrutura', value: 'infraestrutura' },
+          { title: 'Qualidade', value: 'qualidade' },
+          { title: 'Educação', value: 'educacao' },
+          { title: 'Tecnologia', value: 'tecnologia' },
+          { title: 'Notícias', value: 'noticias' },
+        ],
+      },
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
+    },
+    {
+      name: 'author',
+      title: 'Autor',
+      type: 'object',
+      fields: [
+        {
+          name: 'name',
+          title: 'Nome do Autor',
+          type: 'string',
+          validation: (Rule: any) => Rule.required(),
+        },
+        {
+          name: 'image',
+          title: 'Foto do Autor',
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        },
+        {
+          name: 'bio',
+          title: 'Biografia',
+          type: 'text',
+        },
+      ],
+    },
+    {
+      name: 'publishedAt',
+      title: 'Data de Publicação',
+      type: 'datetime',
+      validation: (Rule: any) => Rule.required(),
+      initialValue: () => new Date().toISOString(),
+    },
+    {
+      name: 'isPublished',
+      title: 'Publicado',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Marque para publicar o post',
+    },
+    {
+      name: 'readingTime',
+      title: 'Tempo de Leitura (minutos)',
+      type: 'number',
+      description: 'Tempo estimado de leitura em minutos',
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
+      type: 'object',
+      fields: [
+        createLocalizedStringField('metaTitle', 'Meta Título'),
+        createLocalizedTextField('metaDescription', 'Meta Descrição'),
+        {
+          name: 'metaImage',
+          title: 'Meta Imagem (Open Graph)',
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        },
+      ],
+    },
+  ],
+  orderings: [
+    {
+      title: 'Data de Publicação, Mais Recente',
+      name: 'publishedAtDesc',
+      by: [{ field: 'publishedAt', direction: 'desc' }],
+    },
+    {
+      title: 'Data de Publicação, Mais Antiga',
+      name: 'publishedAtAsc',
+      by: [{ field: 'publishedAt', direction: 'asc' }],
+    },
+  ],
+})
+
+// Schema para Configuração do Blog
+export const blogConfig = defineType({
+  name: 'blogConfig',
+  title: 'Configuração do Blog',
+  type: 'document',
+  fields: [
+    createLocalizedStringField('title', 'Título da Página do Blog'),
+    createLocalizedTextField('description', 'Descrição do Blog'),
+    {
+      name: 'postsPerPage',
+      title: 'Posts por Página',
+      type: 'number',
+      initialValue: 12,
+      validation: (Rule: any) => Rule.min(1).max(50),
+    },
+    {
+      name: 'featuredCategories',
+      title: 'Categorias em Destaque',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            createLocalizedStringField('name', 'Nome da Categoria'),
+            {
+              name: 'slug',
+              title: 'Slug',
+              type: 'string',
+            },
+            {
+              name: 'icon',
+              title: 'Ícone',
+              type: 'string',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+})
+
 export const schemaTypes = [
   homepage,
   stats,
@@ -1717,4 +1909,6 @@ export const schemaTypes = [
   integracaoServicos,
   tour360,
   carreiras,
+  blogPost,
+  blogConfig,
 ]

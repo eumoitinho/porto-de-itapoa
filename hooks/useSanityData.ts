@@ -1006,3 +1006,267 @@ export const useTour360Data = () => {
     staleTime: 5 * 60 * 1000,
   })
 }
+
+// Hook para buscar todos os posts do blog publicados
+export const useBlogPosts = (options?: { 
+  limit?: number
+  category?: string
+  tag?: string
+}) => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['blogPosts', language, options],
+    queryFn: async () => {
+      const lang = language || 'pt'
+      const limit = options?.limit || 12
+      
+      let query = `
+        *[_type == "blogPost" && isPublished == true
+        ${options?.category ? '&& category == $category' : ''}
+        ${options?.tag ? '&& $tag in tags' : ''}]
+        | order(publishedAt desc)
+        [0...$limit]{
+          _id,
+          _createdAt,
+          _updatedAt,
+          title,
+          slug,
+          excerpt,
+          featuredImage,
+          category,
+          tags,
+          author {
+            name,
+            image,
+            bio
+          },
+          publishedAt,
+          readingTime,
+          "featuredImageUrl": featuredImage.asset->url
+        }
+      `
+
+      const params: any = { limit }
+      if (options?.category) params.category = options.category
+      if (options?.tag) params.tag = options.tag
+
+      const data = await client.fetch(query, params)
+
+      if (!data || data.length === 0) {
+        return []
+      }
+
+      return data.map((post: any) => {
+        const title = getTranslatedField(post.title, lang)
+        const excerpt = getTranslatedField(post.excerpt, lang)
+        return {
+          ...post,
+          title: typeof title === 'string' ? title : (title || ''),
+          excerpt: typeof excerpt === 'string' ? excerpt : (excerpt || ''),
+        }
+      })
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar um post específico por slug
+export const useBlogPost = (slug: string) => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['blogPost', slug, language],
+    queryFn: async () => {
+      const lang = language || 'pt'
+      
+      const data = await client.fetch(`
+        *[_type == "blogPost" && slug.current == $slug && isPublished == true][0]{
+          _id,
+          _createdAt,
+          _updatedAt,
+          title,
+          slug,
+          excerpt,
+          content,
+          featuredImage,
+          category,
+          tags,
+          author {
+            name,
+            image,
+            bio,
+            "authorImageUrl": image.asset->url
+          },
+          publishedAt,
+          readingTime,
+          seo {
+            metaTitle,
+            metaDescription,
+            metaImage
+          },
+          "featuredImageUrl": featuredImage.asset->url
+        }
+      `, { slug })
+
+      if (!data) {
+        return null
+      }
+
+      const title = getTranslatedField(data.title, lang)
+      const excerpt = getTranslatedField(data.excerpt, lang)
+      const content = getTranslatedField(data.content, lang)
+      
+      return {
+        ...data,
+        title: typeof title === 'string' ? title : (title || ''),
+        excerpt: typeof excerpt === 'string' ? excerpt : (excerpt || ''),
+        content: content,
+        seo: data.seo ? {
+          metaTitle: typeof getTranslatedField(data.seo.metaTitle, lang) === 'string' 
+            ? getTranslatedField(data.seo.metaTitle, lang) 
+            : '',
+          metaDescription: typeof getTranslatedField(data.seo.metaDescription, lang) === 'string'
+            ? getTranslatedField(data.seo.metaDescription, lang)
+            : '',
+          metaImage: data.seo.metaImage,
+        } : null,
+      }
+    },
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar posts relacionados
+export const useRelatedBlogPosts = (currentPostId: string, category?: string, limit: number = 3) => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['relatedBlogPosts', currentPostId, category, language],
+    queryFn: async () => {
+      const lang = language || 'pt'
+      
+      let query = `
+        *[_type == "blogPost" && _id != $currentPostId && isPublished == true
+        ${category ? '&& category == $category' : ''}]
+        | order(publishedAt desc)
+        [0...$limit]{
+          _id,
+          title,
+          slug,
+          excerpt,
+          featuredImage,
+          category,
+          publishedAt,
+          "featuredImageUrl": featuredImage.asset->url
+        }
+      `
+
+      const params: any = { currentPostId, limit }
+      if (category) params.category = category
+
+      const data = await client.fetch(query, params)
+
+      if (!data || data.length === 0) {
+        return []
+      }
+
+      return data.map((post: any) => {
+        const title = getTranslatedField(post.title, lang)
+        const excerpt = getTranslatedField(post.excerpt, lang)
+        return {
+          ...post,
+          title: typeof title === 'string' ? title : (title || ''),
+          excerpt: typeof excerpt === 'string' ? excerpt : (excerpt || ''),
+        }
+      })
+    },
+    enabled: !!currentPostId,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar configuração do blog
+export const useBlogConfig = () => {
+  const { language } = useI18n()
+  
+  return useQuery({
+    queryKey: ['blogConfig', language],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "blogConfig"][0]{
+          _id,
+          title,
+          description,
+          postsPerPage,
+          featuredCategories[] {
+            name,
+            slug,
+            icon
+          }
+        }
+      `)
+
+      if (!data) {
+        return {
+          title: { pt: 'Blog', en: 'Blog', es: 'Blog', zh: '博客' },
+          description: { pt: 'Acompanhe as últimas notícias e atualizações', en: 'Follow the latest news and updates', es: 'Sigue las últimas noticias y actualizaciones', zh: '关注最新新闻和更新' },
+          postsPerPage: 12,
+          featuredCategories: [],
+        }
+      }
+
+      const lang = language || 'pt'
+
+      const title = getTranslatedField(data.title, lang, 'Blog')
+      const description = getTranslatedField(data.description, lang, 'Acompanhe as últimas notícias e atualizações')
+      
+      return {
+        ...data,
+        title: typeof title === 'string' ? title : (title || 'Blog'),
+        description: typeof description === 'string' ? description : (description || 'Acompanhe as últimas notícias e atualizações'),
+        featuredCategories: data.featuredCategories?.map((cat: any) => {
+          const name = getTranslatedField(cat.name, lang)
+          return {
+            ...cat,
+            name: typeof name === 'string' ? name : (name || ''),
+          }
+        }) || [],
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Hook para buscar categorias do blog
+export const useBlogCategories = () => {
+  return useQuery({
+    queryKey: ['blogCategories'],
+    queryFn: async () => {
+      const data = await client.fetch(`
+        *[_type == "blogPost" && isPublished == true]{
+          category
+        }
+      `)
+
+      if (!data || data.length === 0) {
+        return []
+      }
+
+      // Contar ocorrências de cada categoria
+      const categoryCounts: { [key: string]: number } = {}
+      data.forEach((post: any) => {
+        if (post.category) {
+          categoryCounts[post.category] = (categoryCounts[post.category] || 0) + 1
+        }
+      })
+
+      // Converter para array e ordenar por contagem
+      return Object.entries(categoryCounts)
+        .map(([category, count]) => ({ category, count }))
+        .sort((a, b) => b.count - a.count)
+    },
+    staleTime: 10 * 60 * 1000,
+  })
+}

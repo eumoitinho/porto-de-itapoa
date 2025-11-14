@@ -14,9 +14,21 @@ export default function IntegracaoMotoristasPage() {
   const { t, language } = useI18n()
   const { data: pageData } = useIntegracaoMotoristasData()
 
-  const title = getTranslatedField(pageData?.title, language, t("driverIntegration") || "Integração de Motoristas")
-  const description = getTranslatedField(pageData?.description, language, t("driverIntegrationDescription") || "Integre-se como motorista para acessar nossos serviços")
-  const linkSistema = pageData?.linkSistema || "https://forms.office.com/Pages/ResponsePage.aspx?id=QwqdHgbzNk2eLbcz8M_rfnsK8kh9lAs1EGfbjDLbFUMTJEMFJBSUlWWFRSRDhJRDVUU0hNT0EzWS4u"
+  // Garantir que title e description sejam strings
+  const title = typeof getTranslatedField(pageData?.title, language, t("driverIntegration") || "Integração de Motoristas") === 'string' 
+    ? getTranslatedField(pageData?.title, language, t("driverIntegration") || "Integração de Motoristas") 
+    : (t("driverIntegration") || "Integração de Motoristas")
+  
+  const description = typeof getTranslatedField(pageData?.description, language, t("driverIntegrationDescription") || "Integre-se como motorista para acessar nossos serviços") === 'string'
+    ? getTranslatedField(pageData?.description, language, t("driverIntegrationDescription") || "Integre-se como motorista para acessar nossos serviços")
+    : (t("driverIntegrationDescription") || "Integre-se como motorista para acessar nossos serviços")
+  
+  const linkSistema = pageData?.linkSistema || "https://forms.office.com/Pages/ResponsePage.aspx?id=QwqdHgbzNk2eLbcz8M_rfpsnsK8kh9lAs1EGfbjDLbFUMTJEMFJBSUlWWFRSRDhJRDVUU0hNT0EzWS4u"
+  
+  // URL do embed do formulário
+  const formEmbedUrl = linkSistema.includes('?') 
+    ? `${linkSistema}&embed=true` 
+    : `${linkSistema}?embed=true`
 
   return (
     <div className="min-h-screen mt-44 py-16 px-8 bg-white text-gray-900">
@@ -55,28 +67,56 @@ export default function IntegracaoMotoristasPage() {
           </motion.div>
         )}
 
-        {/* Link para Sistema */}
+        {/* Formulário Embed */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mb-12"
+          className="mb-12"
         >
-          <Card className="backdrop-blur-md bg-gradient-to-r from-green-600 to-emerald-700 border-0 shadow-xl rounded-2xl">
-            <CardContent className="p-8 text-white">
-              <Truck className="h-16 w-16 mx-auto mb-6" />
-              <h2 className="text-3xl font-semibold mb-4">
-                {t("accessIntegration") || "Acesse a Integração"}
-              </h2>
-              <p className="text-green-100 mb-6 max-w-3xl mx-auto">
-                {t("driverIntegrationDescription") || "Integre-se como motorista para acessar nossos serviços e agendar suas operações"}
-              </p>
-              <Link href={linkSistema} target="_blank">
-                <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100 rounded-full px-8">
-                  {t("accessIntegration") || "Acessar Integração"}
-                  <ExternalLink className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+          <Card className="backdrop-blur-md bg-white/80 border border-gray-200 shadow-xl rounded-2xl overflow-hidden">
+            <CardContent className="p-0">
+              <div className="bg-gradient-to-r from-green-600 to-emerald-700 p-6 text-white">
+                <div className="flex items-center justify-center gap-4 mb-2">
+                  <Truck className="h-8 w-8" />
+                  <h2 className="text-2xl md:text-3xl font-semibold">
+                    {t("accessIntegration") || "Acesse a Integração"}
+                  </h2>
+                </div>
+                <p className="text-green-100 text-center max-w-3xl mx-auto">
+                  {t("driverIntegrationDescription") || "Preencha o formulário abaixo para integrar-se como motorista"}
+                </p>
+              </div>
+              <div className="w-full" style={{ minHeight: '800px' }}>
+                <iframe
+                  src={formEmbedUrl}
+                  width="100%"
+                  height="800"
+                  frameBorder="0"
+                  marginHeight={0}
+                  marginWidth={0}
+                  style={{ 
+                    border: 'none',
+                    display: 'block',
+                    width: '100%',
+                    minHeight: '800px'
+                  }}
+                  title={t("driverIntegration") || "Integração de Motoristas"}
+                >
+                  Carregando…
+                </iframe>
+              </div>
+              <div className="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <p className="text-sm text-gray-600 mb-2">
+                  {t("formNotLoading") || "O formulário não está carregando?"}
+                </p>
+                <Link href={linkSistema} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="border-green-600 text-green-600 hover:bg-green-50">
+                    {t("openInNewTab") || "Abrir em nova aba"}
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
@@ -103,11 +143,15 @@ export default function IntegracaoMotoristasPage() {
                   <Card className="backdrop-blur-md bg-white/80 border border-gray-200 shadow-xl rounded-2xl h-full">
                     <CardContent className="p-6">
                       <h3 className="text-lg font-semibold text-green-800 mb-2">
-                        {getTranslatedField(beneficio.titulo, language, beneficio.titulo)}
+                        {typeof getTranslatedField(beneficio.titulo, language) === 'string' 
+                          ? getTranslatedField(beneficio.titulo, language) 
+                          : String(beneficio.titulo || '')}
                       </h3>
                       {beneficio.descricao && (
                         <p className="text-gray-600 text-sm leading-relaxed">
-                          {getTranslatedField(beneficio.descricao, language, beneficio.descricao)}
+                          {typeof getTranslatedField(beneficio.descricao, language) === 'string'
+                            ? getTranslatedField(beneficio.descricao, language)
+                            : String(beneficio.descricao || '')}
                         </p>
                       )}
                     </CardContent>
