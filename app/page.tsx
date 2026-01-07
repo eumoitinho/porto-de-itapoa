@@ -1,7 +1,8 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowRight, Ship, Globe, Users, TrendingUp, MapPin, Play, Calendar, ShoppingCart, DollarSign, Calculator, Package, Menu, Twitter, Instagram, Linkedin, Mail, Star, ChevronRight } from "lucide-react"
+import { ArrowRight, Ship, Globe, Users, TrendingUp, MapPin, Play, Calendar, ShoppingCart, DollarSign, Calculator, Package, Menu, Twitter, Instagram, Linkedin, Mail, Star, ChevronRight, Target, Leaf, Compass, Award } from "lucide-react"
+import { InteractiveGlobe } from "@/components/interactive-globe"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
@@ -18,7 +19,7 @@ import {
   useSustainabilityData, 
   useContactData 
 } from "@/hooks/useSanityData"
-import RotatingEarth from "@/components/rotating-earth"
+
 import { getNoticiasRecentes } from "@/data/noticias"
 
 // Video Background Component com efeito parallax
@@ -81,7 +82,7 @@ export default function HomePage() {
   const { t } = useI18n()
   
   const translate = (key: string, fallback: string) => {
-    const value = t(key)
+    const value = t(key as any)
     return value === key ? fallback : value
   }
 
@@ -109,55 +110,9 @@ export default function HomePage() {
     { icon: TrendingUp, label: translate("teusMoved", "TEUs movimentados"), value: "10 milhões", description: translate("totalVolumeMoved", "Volume total movimentado") },
   ]
 
-  const defaultFeaturedServices = [
-    {
-      title: translate("asiaHome", "Ásia"),
-      routes: translate("asiaRoutes", "Rotas principais"),
-      description: translate("asiaDescription", "Serviços com cobertura completa para os principais portos asiáticos."),
-      carriers: ["Maersk", "HMM", "PIL", "Cosco", "ONE"],
-    },
-    {
-      title: translate("europeHome", "Europa"),
-      routes: translate("europeRoutes", "Rotas principais"), 
-      description: translate("europeDescription", "Integração direta com os principais hubs europeus."),
-      carriers: ["Hapag-Lloyd", "Cosco", "MSC", "ONE", "OOCL"],
-    },
-    {
-      title: translate("northAmericaHome", "América do Norte"),
-      routes: translate("northAmericaRoutes", "Rotas principais"),
-      description: translate("northAmericaDescription", "Serviços semanais para os principais portos norte-americanos."),
-      carriers: ["Maersk", "Hapag-Lloyd"],
-    },
-    {
-      title: translate("cabotageHome", "Cabotagem"),
-      routes: translate("cabotageRoutes", "Rotas nacionais"),
-      description: translate("cabotageDescription", "Conexões rápidas com os principais portos brasileiros."),
-      carriers: ["Aliança", "Maersk", "CMA CGM"],
-    },
-    {
-      title: translate("mediterraneanHome", "Mediterrâneo"),
-      routes: translate("mediterraneanRoutes", "Rotas principais"),
-      description: translate("mediterraneanDescription", "Cobertura completa no mediterrâneo com escala contínua."),
-      carriers: ["Hapag Lloyd", "MSC", "CMA CGM", "Maersk"],
-    },
-    {
-      title: translate("gulfOfMexicoHome", "Golfo do México"),
-      routes: translate("gulfOfMexicoRoutes", "Rotas principais"),
-      description: translate("gulfOfMexicoDescription", "Integrações com os terminais estratégicos do Golfo."),
-      carriers: ["Maersk", "MSC", "ZIM"],
-    },
-  ]
 
-  const maritimeCardImages = [
-    "/48.jpg",
-    "/210302-porto-de-los-angeles-1.jpg",
-    "/2025102199458f0bf5e147a6b6ccf979943e6230_20251021bc9a169f1791497a858fe90eecad0894.jpeg",
-    "/aerea-porto-scaled.jpg",
-    "/048-navio-20log-in-20logistica-20intermodal.webp",
-    "/downloads.jpg",
-    "/laem-chabang-1024x767.jpg",
-    "/turquia-istambul-canal-do-bosforo-ponte-do-bosforo-um-navio-de-carga-no-canal-da-mancha_857279-14188.avif"
-  ]
+
+
 
   // Função para mapear ícones
   const getIcon = (iconName: string) => {
@@ -172,7 +127,7 @@ export default function HomePage() {
   }
 
   const currentStats = statsData?.stats || defaultStats
-  const currentFeaturedServices = maritimeServicesData?.services || defaultFeaturedServices
+
 
   // (Valores) exibição simultânea - sem abas
 
@@ -548,98 +503,91 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          {/* Três colunas abertas com divisórias finas */}
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 md:divide-x divide-gray-200 bg-white/80 backdrop-blur rounded-2xl border border-gray-100">
-              {[{
-                title: translate('mission', 'Missão'),
-                heading: translate('missionHeading', 'Conectar com eficiência'),
-                content: terminalData?.mission || translate('missionContent', 'Oferecer soluções logísticas completas aliando tecnologia, eficiência e sustentabilidade.')
-              }, {
-                title: translate('vision', 'Visão'),
-                heading: translate('visionHeading', 'Ser referência global'),
-                content: terminalData?.vision || translate('visionContent', 'Ampliar nossa liderança na América Latina com excelência operacional e ambiental.')
-              }, {
-                title: translate('values', 'Valores'),
-                heading: translate('valuesHeading', 'Compromisso com o futuro'),
-                content: terminalData?.values || translate('valuesContent', 'Colocamos pessoas, inovação e sustentabilidade no centro de todas as decisões.')
-              }].map((sec, i) => (
-                <motion.div
-                  key={sec.title}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.1 * i }}
-                  className="px-8 py-10"
-                >
-                  <div className="text-emerald-700 text-base md:text-lg font-semibold tracking-wide mb-3">{sec.title}</div>
-                  <h3 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-3">{sec.heading}</h3>
-                  <p className="text-lg text-gray-600 leading-relaxed">{sec.content}</p>
-                </motion.div>
-              ))}
+          {/* Três colunas - Missão, Visão, Valores */}
+          <div className="max-w-7xl mx-auto px-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-gray-200 bg-gray-50 rounded-2xl overflow-hidden shadow-sm">
+            {/* Missão */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="group relative border-r border-gray-200 last:border-r-0 bg-white hover:bg-gray-50 transition-colors duration-500 p-10"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+              <div className="mb-6">
+                <Target className="h-10 w-10 text-emerald-600 mb-5" />
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{translate('mission', 'Missão')}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  {terminalData?.mission || translate('missionContent', 'Oferecer soluções logísticas completas aliando tecnologia, eficiência e sustentabilidade.')}
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Visão */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="group relative border-r border-gray-200 last:border-r-0 bg-white hover:bg-gray-50 transition-colors duration-500 p-10"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+              <div className="mb-6">
+                <Compass className="h-10 w-10 text-emerald-600 mb-5" />
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{translate('vision', 'Visão')}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  {terminalData?.vision || translate('visionContent', 'Ampliar nossa liderança na América Latina com excelência operacional e ambiental.')}
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Valores */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="group relative bg-white hover:bg-gray-50 transition-colors duration-500 p-10"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+              <div className="mb-6">
+                <Award className="h-10 w-10 text-emerald-600 mb-5" />
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{translate('values', 'Valores')}</h3>
+                <ul className="text-gray-600 space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                    <span>{translate('commitment', 'Comprometimento')}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                    <span>{translate('safety', 'Segurança')}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                    <span>{translate('innovation', 'Inovação')}</span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services Overview */}
-      <section className="bg-zinc-200 border-gray-200 border-t relative">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600 mb-2">
-              {maritimeServicesData?.title || translate("regularMaritimeServices", "Serviços marítimos regulares")}
-            </h2>
-            <p className="text-neutral-600 max-w-2xl mx-auto">
-              {maritimeServicesData?.description || translate("servicesDescription", "Conectamos o Brasil aos principais mercados mundiais através de parcerias com os maiores armadores globais.")}
-            </p>
-          </div>
-        </div>
-        <div className="relative w-full min-h-[120vh] flex items-center justify-center py-12">
-          <RotatingEarth className="w-full h-full" />
-        </div>
-
-        {/* Services Grid */}
-        <div className="md:px-10 lg:py-28 max-w-7xl mr-auto ml-auto pt-20 pr-6 pb-20 pl-6">
-            <div className="flex mb-8 items-end justify-between">
-              <div>
-                <h2 className="text-3xl md:text-4xl tracking-tight font-semibold text-green-600">
-                  {translate("regularMaritimeServices", "Serviços marítimos regulares")}
-                </h2>
-                <p className="mt-2 text-neutral-600">
-                  {translate("servicesDescription", "Conectamos o Brasil aos principais mercados mundiais através de parcerias com os maiores armadores globais.")}
-                </p>
-                  </div>
-              <Link href="/portfolio" className="hidden sm:inline-flex items-center gap-2 text-sm hover:text-neutral-600 transition">
-                {translate("seeCompletePortfolio", "Ver portfólio completo")}
-                <ChevronRight className="w-4 h-4" />
-                  </Link>
-                </div>
-            <div className="flex gap-1.5 bg-[#ffffff] w-full max-w-none rounded-3xl pt-6 pr-6 pb-6 pl-6 shadow-2xl space-x-4 animate-on-scroll scale-in overflow-x-auto">
-              {currentFeaturedServices.slice(0, 5).map((service: any, index: number) => (
-                <div 
-                  key={service.title} 
-                  className="card-panel flex-1 min-w-[200px] overflow-hidden cursor-pointer transition-all duration-500 flex hover:flex-[4] group bg-gray-800 h-[464px] rounded-3xl relative top-0 right-0 bottom-0 left-0 items-center justify-center animate-on-scroll blur-in"
-                  style={{ transitionDelay: `${index * 0.1}s` }}
-                >
-                    <Image
-                      src={maritimeCardImages[index % maritimeCardImages.length]}
-                      alt={service.title}
-                      fill
-                    className="card-image w-full h-full object-cover rounded-sm"
-                  />
-                  <div className="card-overlay group-hover:opacity-100 transition-opacity duration-300 flex flex-col bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 rounded-3xl pt-6 pr-6 pb-6 pl-6 absolute top-0 right-0 bottom-0 left-0 justify-end">
-                    <h3 className="text-white text-xl font-medium mb-1 tracking-tight">{service.title}</h3>
-                    <p className="text-gray-200 text-sm">{service.routes}</p>
-                    <p className="text-gray-400 text-xs mt-2">{service.description}</p>
-                  </div>
-                </div>
-              ))}
-          </div>
+      {/* Services Overview - Globe Section */}
+      <section className="bg-white border-t border-gray-100 relative overflow-hidden">
+        <div className="w-full h-[85vh] min-h-[700px]">
+          <InteractiveGlobe 
+            className="w-full h-full"
+            title={maritimeServicesData?.title || translate("regularMaritimeServices", "Serviços Marítimos Regulares")}
+            description={maritimeServicesData?.description || translate("servicesDescription", "Conecte-se a todos os continentes com rotas de longo curso e cabotagem.")}
+          />
         </div>
       </section>
 
       {/* Other Services Section */}
-      <section className="py-20 px-8 bg-white">
+      <section className="py-20 px-8 bg-gray-50 border-t border-gray-100">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1066,6 +1014,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
     </div>
   )
 }

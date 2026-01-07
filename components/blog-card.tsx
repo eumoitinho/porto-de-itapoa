@@ -117,10 +117,11 @@ export function BlogCard({ post, index = 0, variant = "default" }: BlogCardProps
       transition={{ duration: 0.6, delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ scale: 1.02 }}
+      className="h-full"
     >
-      <Link href={`/blog/${post.slug.current}`}>
-        <Card className="h-full overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 bg-white border border-gray-200 rounded-lg">
-          <div className="relative h-48">
+      <Link href={`/blog/${post.slug.current}`} className="h-full block">
+        <Card className="h-full overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 bg-white border border-gray-200 rounded-lg flex flex-col">
+          <div className="relative h-48 flex-shrink-0">
             <Image
               src={imageUrl}
               alt={post.title}
@@ -135,16 +136,16 @@ export function BlogCard({ post, index = 0, variant = "default" }: BlogCardProps
             </div>
           </div>
 
-          <CardContent className="p-6">
+          <CardContent className="p-6 flex flex-col flex-grow">
             <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-green-600 transition-colors">
               {title}
             </h3>
 
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+            <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
               {excerpt}
             </p>
 
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+            <div className="flex items-center justify-between text-xs text-gray-500 mb-4 mt-auto">
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
                 <span>{formattedDate}</span>

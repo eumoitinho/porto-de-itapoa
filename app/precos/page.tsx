@@ -4,6 +4,7 @@ import { useState, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Search, Filter, Plus, X, Calculator, FileText, Package, Truck, Ship, Anchor, DollarSign, Clock, MapPin, Users, TrendingUp, BarChart3, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -66,6 +67,8 @@ const faixaPrecoFiltros = [
   { id: "acima-5000", label: "Acima de R$ 5.000", icon: DollarSign },
   { id: "consulta", label: "Sob Consulta", icon: Calculator }
 ]
+
+
 
 export default function PrecosPage() {
   const { data: pageData } = useTabelaPrecosData()
@@ -191,14 +194,15 @@ export default function PrecosPage() {
               )}
               
               {(pageData?.linkDownload || pageData?.arquivoTabela) && (
-                <div className="mt-6">
+                <div className="mt-8">
                   <Link 
                     href={pageData.linkDownload || '#'}
                     target="_blank"
-                    className="inline-flex items-center gap-2 bg-white text-green-600 hover:bg-green-50 px-6 py-3 rounded-full font-medium transition-colors"
                   >
-                    <Download className="h-5 w-5" />
-                    Baixar Tabela Completa (PDF)
+                    <Button size="lg" className="bg-white text-green-600 hover:bg-green-50 hover:scale-105 transition-all duration-300 shadow-xl font-bold py-6 px-8 rounded-full">
+                      <Download className="mr-2 h-6 w-6" />
+                      Baixar Tabela Completa (PDF)
+                    </Button>
                   </Link>
                 </div>
               )}
@@ -249,470 +253,496 @@ export default function PrecosPage() {
                 <Separator orientation="vertical" className="h-4" />
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
-                  <span>+55 47 3443.8700</span>
+                  <span>+55 47 3443-8700</span>
                 </div>
               </div>
             </div>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar com Filtros Expandida */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-1"
-          >
-            <div className="backdrop-blur-md bg-white/60 border border-white/20 rounded-2xl p-6 shadow-xl sticky top-8">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-blue-800">Filtros</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearAllFilters}
-                  className="text-gray-500 hover:text-blue-600"
-                >
-                  Limpar
-                </Button>
-              </div>
+        <Tabs defaultValue="tabela" className="w-full space-y-8">
+          <div className="flex justify-center mb-8">
+            <TabsList className="grid w-full max-w-md grid-cols-2 p-1 bg-gray-100 rounded-xl">
+              <TabsTrigger value="tabela" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm py-3 font-medium">Tabela de Preços</TabsTrigger>
+              <TabsTrigger value="simulador" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-sm py-3 font-medium">Simulador de Custos</TabsTrigger>
+            </TabsList>
+          </div>
 
-              {/* Busca */}
-              <div className="mb-6">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input
-                    placeholder="Buscar serviços..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 rounded-full border-gray-200 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-
-              {/* Categoria */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Categoria</label>
-                <Select value={selectedCategoria} onValueChange={setSelectedCategoria}>
-                  <SelectTrigger className="rounded-full">
-                    <SelectValue placeholder="Todas as categorias" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas as Categorias</SelectItem>
-                    {Object.entries(categoriaLabels).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Tipo de Cobrança */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Tipo de Cobrança</label>
-                <Select value={selectedTipoCobranca} onValueChange={setSelectedTipoCobranca}>
-                  <SelectTrigger className="rounded-full">
-                    <SelectValue placeholder="Todos os tipos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os Tipos</SelectItem>
-                    {Object.entries(tipoCobrancaLabels).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Faixa de Preço */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-gray-700 mb-3 block">Faixa de Preço</label>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {faixaPrecoFiltros.map((faixa) => (
+          <TabsContent value="tabela">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              {/* Sidebar com Filtros Expandida */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="lg:col-span-1"
+              >
+                <div className="backdrop-blur-md bg-white border border-gray-100 rounded-2xl p-6 shadow-xl sticky top-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-blue-800">Filtros</h3>
                     <Button
-                      key={faixa.id}
-                      variant={selectedFaixaPreco.has(faixa.id) ? "default" : "ghost"}
+                      variant="ghost"
                       size="sm"
-                      onClick={() => toggleFaixaPreco(faixa.id)}
-                      className={`w-full justify-start text-left rounded-lg ${
-                        selectedFaixaPreco.has(faixa.id) 
-                          ? "bg-blue-600 text-white hover:bg-blue-700" 
-                          : "hover:bg-blue-50"
-                      }`}
+                      onClick={clearAllFilters}
+                      className="text-gray-500 hover:text-blue-600"
                     >
-                      <faixa.icon className="h-4 w-4 mr-2" />
-                      {faixa.label}
+                      Limpar
                     </Button>
-                  ))}
-                </div>
-              </div>
+                  </div>
 
-              {/* Aplicável a */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-gray-700 mb-3 block">Aplicável a</label>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {filtrosAdicionais.map((filtro) => (
-                    <Button
-                      key={filtro.id}
-                      variant={selectedFiltros.has(filtro.id) ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => toggleFiltro(filtro.id)}
-                      className={`w-full justify-start text-left rounded-lg ${
-                        selectedFiltros.has(filtro.id) 
-                          ? "bg-green-600 text-white hover:bg-green-700" 
-                          : "hover:bg-green-50"
-                      }`}
-                    >
-                      <filtro.icon className="h-4 w-4 mr-2" />
-                      {filtro.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
+                  {/* Busca */}
+                  <div className="mb-6">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                      <Input
+                        placeholder="Buscar serviços..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 rounded-full bg-white border-gray-200 focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
 
-              {/* Filtros Ativos */}
-              {(selectedFiltros.size > 0 || selectedFaixaPreco.size > 0 || selectedCategoria !== "all" || selectedTipoCobranca !== "all") && (
-                <div className="mb-4">
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">Filtros Ativos</label>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedCategoria !== "all" && (
-                      <Badge variant="secondary" className="text-xs">
-                        {categoriaLabels[selectedCategoria as keyof typeof categoriaLabels]}
-                        <X 
-                          className="h-3 w-3 ml-1 cursor-pointer" 
-                          onClick={() => setSelectedCategoria("all")}
-                        />
-                      </Badge>
-                    )}
-                    {selectedTipoCobranca !== "all" && (
-                      <Badge variant="secondary" className="text-xs">
-                        {tipoCobrancaLabels[selectedTipoCobranca as keyof typeof tipoCobrancaLabels]}
-                        <X 
-                          className="h-3 w-3 ml-1 cursor-pointer" 
-                          onClick={() => setSelectedTipoCobranca("all")}
-                        />
-                      </Badge>
-                    )}
-                    {Array.from(selectedFaixaPreco).map((faixa) => (
-                      <Badge key={faixa} variant="secondary" className="text-xs bg-blue-100 text-blue-800">
-                        {faixaPrecoFiltros.find(f => f.id === faixa)?.label}
-                        <X 
-                          className="h-3 w-3 ml-1 cursor-pointer" 
-                          onClick={() => toggleFaixaPreco(faixa)}
-                        />
-                      </Badge>
-                    ))}
-                    {Array.from(selectedFiltros).map((filtro) => (
-                      <Badge key={filtro} variant="secondary" className="text-xs bg-green-100 text-green-800">
-                        {filtrosAdicionais.find(f => f.id === filtro)?.label}
-                        <X 
-                          className="h-3 w-3 ml-1 cursor-pointer" 
-                          onClick={() => toggleFiltro(filtro)}
-                        />
-                      </Badge>
-                    ))}
+                  {/* Categoria */}
+                  <div className="mb-6">
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">Categoria</label>
+                    <Select value={selectedCategoria} onValueChange={setSelectedCategoria}>
+                      <SelectTrigger className="rounded-full bg-white">
+                        <SelectValue placeholder="Todas as categorias" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todas as Categorias</SelectItem>
+                        {Object.entries(categoriaLabels).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Tipo de Cobrança */}
+                  <div className="mb-6">
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">Tipo de Cobrança</label>
+                    <Select value={selectedTipoCobranca} onValueChange={setSelectedTipoCobranca}>
+                      <SelectTrigger className="rounded-full bg-white">
+                        <SelectValue placeholder="Todos os tipos" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos os Tipos</SelectItem>
+                        {Object.entries(tipoCobrancaLabels).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Faixa de Preço */}
+                  <div className="mb-6">
+                    <label className="text-sm font-medium text-gray-700 mb-3 block">Faixa de Preço</label>
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {faixaPrecoFiltros.map((faixa) => (
+                        <Button
+                          key={faixa.id}
+                          variant={selectedFaixaPreco.has(faixa.id) ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => toggleFaixaPreco(faixa.id)}
+                          className={`w-full justify-start text-left rounded-lg ${
+                            selectedFaixaPreco.has(faixa.id) 
+                              ? "bg-blue-600 text-white hover:bg-blue-700" 
+                              : "hover:bg-blue-50"
+                          }`}
+                        >
+                          <faixa.icon className="h-4 w-4 mr-2" />
+                          {faixa.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Aplicável a */}
+                  <div className="mb-6">
+                    <label className="text-sm font-medium text-gray-700 mb-3 block">Aplicável a</label>
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {filtrosAdicionais.map((filtro) => (
+                        <Button
+                          key={filtro.id}
+                          variant={selectedFiltros.has(filtro.id) ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => toggleFiltro(filtro.id)}
+                          className={`w-full justify-start text-left rounded-lg ${
+                            selectedFiltros.has(filtro.id) 
+                              ? "bg-green-600 text-white hover:bg-green-700" 
+                              : "hover:bg-green-50"
+                          }`}
+                        >
+                          <filtro.icon className="h-4 w-4 mr-2" />
+                          {filtro.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Filtros Ativos */}
+                  {(selectedFiltros.size > 0 || selectedFaixaPreco.size > 0 || selectedCategoria !== "all" || selectedTipoCobranca !== "all") && (
+                    <div className="mb-4">
+                      <label className="text-sm font-medium text-gray-700 mb-2 block">Filtros Ativos</label>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedCategoria !== "all" && (
+                          <Badge variant="secondary" className="text-xs">
+                            {categoriaLabels[selectedCategoria as keyof typeof categoriaLabels]}
+                            <X 
+                              className="h-3 w-3 ml-1 cursor-pointer" 
+                              onClick={() => setSelectedCategoria("all")}
+                            />
+                          </Badge>
+                        )}
+                        {selectedTipoCobranca !== "all" && (
+                          <Badge variant="secondary" className="text-xs">
+                            {tipoCobrancaLabels[selectedTipoCobranca as keyof typeof tipoCobrancaLabels]}
+                            <X 
+                              className="h-3 w-3 ml-1 cursor-pointer" 
+                              onClick={() => setSelectedTipoCobranca("all")}
+                            />
+                          </Badge>
+                        )}
+                        {Array.from(selectedFaixaPreco).map((faixa) => (
+                          <Badge key={faixa} variant="secondary" className="text-xs bg-blue-100 text-blue-800">
+                            {faixaPrecoFiltros.find(f => f.id === faixa)?.label}
+                            <X 
+                              className="h-3 w-3 ml-1 cursor-pointer" 
+                              onClick={() => toggleFaixaPreco(faixa)}
+                            />
+                          </Badge>
+                        ))}
+                        {Array.from(selectedFiltros).map((filtro) => (
+                          <Badge key={filtro} variant="secondary" className="text-xs bg-green-100 text-green-800">
+                            {filtrosAdicionais.find(f => f.id === filtro)?.label}
+                            <X 
+                              className="h-3 w-3 ml-1 cursor-pointer" 
+                              onClick={() => toggleFiltro(filtro)}
+                            />
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Informações de Contato */}
+                  <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                    <h4 className="font-semibold text-blue-800 mb-2">Precisa de Ajuda?</h4>
+                    <p className="text-sm text-blue-700 mb-3">
+                      Entre em contato com nossa equipe comercial para esclarecimentos ou cotações especiais.
+                    </p>
+                    <div className="space-y-1 text-xs text-blue-600">
+                      <p>📧 {pageData?.contato?.email || 'comercial@portoitapoa.com'}</p>
+                      <p>📞 {pageData?.contato?.telefone || '+55 47 3443-8700'}</p>
+                      {pageData?.contato?.horario && (
+                        <p>🕐 {getTranslatedField(pageData.contato.horario, language, pageData.contato.horario)}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              )}
+              </motion.div>
 
-              {/* Informações de Contato */}
-              <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                <h4 className="font-semibold text-blue-800 mb-2">Precisa de Ajuda?</h4>
-                <p className="text-sm text-blue-700 mb-3">
-                  Entre em contato com nossa equipe comercial para esclarecimentos ou cotações especiais.
-                </p>
-                <div className="space-y-1 text-xs text-blue-600">
-                  <p>📧 {pageData?.contato?.email || 'comercial@portoitapoa.com'}</p>
-                  <p>📞 {pageData?.contato?.telefone || '+55 47 3443.8700'}</p>
-                  {pageData?.contato?.horario && (
-                    <p>🕐 {getTranslatedField(pageData.contato.horario, language, pageData.contato.horario)}</p>
-                  )}
+              {/* Lista de Serviços */}
+              <div className="lg:col-span-3">
+                {/* Resultados */}
+                <div className="mb-6 flex items-center justify-between">
+                  <p className="text-gray-600">
+                    {filteredServicos.length} serviço{filteredServicos.length !== 1 ? 's' : ''} encontrado{filteredServicos.length !== 1 ? 's' : ''}
+                  </p>
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <Calculator className="h-4 w-4" />
+                    <span>Valores em Reais (R$)</span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </motion.div>
 
-          {/* Lista de Serviços */}
-          <div className="lg:col-span-3">
-            {/* Resultados */}
-            <div className="mb-6 flex items-center justify-between">
-              <p className="text-gray-600">
-                {filteredServicos.length} serviço{filteredServicos.length !== 1 ? 's' : ''} encontrado{filteredServicos.length !== 1 ? 's' : ''}
-              </p>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Calculator className="h-4 w-4" />
-                <span>Valores em Reais (R$)</span>
-              </div>
-            </div>
+                <div className="space-y-6">
+                  <AnimatePresence>
+                    {filteredServicos.map((servico, index) => {
+                      const isExpanded = expandedCards.has(servico.id)
+                      const CategoryIcon = categoriaIcons[servico.categoria] || Package
 
-            <div className="space-y-6">
-              <AnimatePresence>
-                {filteredServicos.map((servico, index) => {
-                  const isExpanded = expandedCards.has(servico.id)
-                  const CategoryIcon = categoriaIcons[servico.categoria] || Package
-
-                  return (
-                    <motion.div
-                      key={servico.id}
-                      layout
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.6, delay: index * 0.05 }}
-                      whileHover={{ scale: isExpanded ? 1 : 1.02 }}
-                    >
-                      <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
-                        <CardContent className="p-6">
-                          {/* Header */}
-                          <div className="flex justify-between items-start mb-4">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                  <CategoryIcon className="h-5 w-5 text-blue-600" />
+                      return (
+                        <motion.div
+                          key={servico.id}
+                          layout
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.6, delay: index * 0.05 }}
+                          whileHover={{ scale: isExpanded ? 1 : 1.02 }}
+                        >
+                          <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+                            <CardContent className="p-6">
+                              {/* Header */}
+                              <div className="flex justify-between items-start mb-4">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-3 mb-3">
+                                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                      <CategoryIcon className="h-5 w-5 text-blue-600" />
+                                    </div>
+                                    <div>
+                                      <h3 className="text-xl font-bold text-blue-800">{servico.nome}</h3>
+                                      <Badge variant="outline" className="text-blue-600 border-blue-600 font-medium mt-1">
+                                        {servico.codigo}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                  <p className="text-gray-600 mb-3">{servico.descricao}</p>
                                 </div>
-                                <div>
-                                  <h3 className="text-xl font-bold text-blue-800">{servico.nome}</h3>
-                                  <Badge variant="outline" className="text-blue-600 border-blue-600 font-medium mt-1">
-                                    {servico.codigo}
-                                  </Badge>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => toggleExpanded(servico.id)}
+                                  className="rounded-full p-2 hover:bg-blue-50 border border-blue-200"
+                                >
+                                  {isExpanded ? (
+                                    <X className="h-5 w-5 text-blue-600" />
+                                  ) : (
+                                    <Plus className="h-5 w-5 text-blue-600" />
+                                  )}
+                                </Button>
+                              </div>
+
+                              {/* Preço Principal */}
+                              <div className="bg-blue-50 rounded-xl p-4 mb-4">
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <DollarSign className="h-5 w-5 text-blue-600" />
+                                      <span className="font-semibold text-blue-800">Valor</span>
+                                    </div>
+                                    <div className="text-2xl font-bold text-blue-900">
+                                      {servico.valor}
+                                    </div>
+                                    {servico.valorMinimo && (
+                                      <div className="text-sm text-blue-700">
+                                        Valor mínimo: {servico.valorMinimo}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="text-right">
+                                    <Badge className="bg-blue-600 text-white">
+                                      {categoriaLabels[servico.categoria]}
+                                    </Badge>
+                                    <div className="text-sm text-gray-600 mt-1">
+                                      {tipoCobrancaLabels[servico.tipoCobranca]}
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                              <p className="text-gray-600 mb-3">{servico.descricao}</p>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => toggleExpanded(servico.id)}
-                              className="rounded-full p-2 hover:bg-blue-50 border border-blue-200"
-                            >
-                              {isExpanded ? (
-                                <X className="h-5 w-5 text-blue-600" />
-                              ) : (
-                                <Plus className="h-5 w-5 text-blue-600" />
-                              )}
-                            </Button>
-                          </div>
 
-                          {/* Preço Principal */}
-                          <div className="bg-blue-50 rounded-xl p-4 mb-4">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="flex items-center gap-2 mb-1">
-                                  <DollarSign className="h-5 w-5 text-blue-600" />
-                                  <span className="font-semibold text-blue-800">Valor</span>
-                                </div>
-                                <div className="text-2xl font-bold text-blue-900">
-                                  {servico.valor}
-                                </div>
-                                {servico.valorMinimo && (
-                                  <div className="text-sm text-blue-700">
-                                    Valor mínimo: {servico.valorMinimo}
+                              {/* Informações Básicas */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                {servico.unidade && (
+                                  <div className="flex items-center text-gray-700">
+                                    <Package className="h-4 w-4 mr-2 text-blue-600" />
+                                    <span className="text-sm">
+                                      <strong>Unidade:</strong> {servico.unidade}
+                                    </span>
+                                  </div>
+                                )}
+                                {servico.periodo && (
+                                  <div className="flex items-center text-gray-700">
+                                    <Clock className="h-4 w-4 mr-2 text-blue-600" />
+                                    <span className="text-sm">
+                                      <strong>Período:</strong> {servico.periodo}
+                                    </span>
                                   </div>
                                 )}
                               </div>
-                              <div className="text-right">
-                                <Badge className="bg-blue-600 text-white">
-                                  {categoriaLabels[servico.categoria]}
-                                </Badge>
-                                <div className="text-sm text-gray-600 mt-1">
-                                  {tipoCobrancaLabels[servico.tipoCobranca]}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
 
-                          {/* Informações Básicas */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            {servico.unidade && (
-                              <div className="flex items-center text-gray-700">
-                                <Package className="h-4 w-4 mr-2 text-blue-600" />
-                                <span className="text-sm">
-                                  <strong>Unidade:</strong> {servico.unidade}
-                                </span>
-                              </div>
-                            )}
-                            {servico.periodo && (
-                              <div className="flex items-center text-gray-700">
-                                <Clock className="h-4 w-4 mr-2 text-blue-600" />
-                                <span className="text-sm">
-                                  <strong>Período:</strong> {servico.periodo}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Aplicável a */}
-                          {servico.aplicavelA && servico.aplicavelA.length > 0 && (
-                            <div className="mb-4">
-                              <span className="text-sm font-medium text-gray-700 mb-2 block">Aplicável a:</span>
-                              <div className="flex flex-wrap gap-2">
-                                {servico.aplicavelA.map((item) => (
-                                  <Badge key={item} variant="secondary" className="text-xs">
-                                    {filtrosAdicionais.find(f => f.id === item)?.label || item}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Expanded Content */}
-                          <AnimatePresence>
-                            {isExpanded && (
-                              <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="border-t border-gray-200 pt-6 mt-6"
-                              >
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                  {/* Detalhes do Serviço */}
-                                  <div>
-                                    <h4 className="text-lg font-bold text-blue-800 mb-4">Detalhes do Serviço</h4>
-                                    
-                                    {servico.observacoes && (
-                                      <div className="bg-blue-50 rounded-xl p-4 mb-4">
-                                        <h5 className="font-semibold text-blue-800 mb-2">Observações:</h5>
-                                        <ul className="text-sm text-blue-700 space-y-1">
-                                          {servico.observacoes.map((obs, idx) => (
-                                            <li key={idx} className="flex items-start">
-                                              <span className="mr-2">•</span>
-                                              <span>{obs}</span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    )}
-
-                                    {servico.adicionais && servico.adicionais.length > 0 && (
-                                      <div className="bg-yellow-50 rounded-xl p-4 mb-4">
-                                        <h5 className="font-semibold text-yellow-800 mb-2">Adicionais:</h5>
-                                        <ul className="text-sm text-yellow-700 space-y-1">
-                                          {servico.adicionais.map((adicional, idx) => (
-                                            <li key={idx} className="flex items-start">
-                                              <span className="mr-2">•</span>
-                                              <span>{adicional}</span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    )}
+                              {/* Aplicável a */}
+                              {servico.aplicavelA && servico.aplicavelA.length > 0 && (
+                                <div className="mb-4">
+                                  <span className="text-sm font-medium text-gray-700 mb-2 block">Aplicável a:</span>
+                                  <div className="flex flex-wrap gap-2">
+                                    {servico.aplicavelA.map((item) => (
+                                      <Badge key={item} variant="secondary" className="text-xs">
+                                        {filtrosAdicionais.find(f => f.id === item)?.label || item}
+                                      </Badge>
+                                    ))}
                                   </div>
+                                </div>
+                              )}
 
-                                  {/* Informações de Cobrança */}
-                                  <div>
-                                    <h4 className="text-lg font-bold text-blue-800 mb-4">Informações de Cobrança</h4>
-                                    
-                                    <div className="bg-gray-50 rounded-xl p-4">
-                                      <div className="space-y-3">
-                                        <div className="flex justify-between">
-                                          <span className="text-sm font-medium text-gray-700">Tipo de Cobrança:</span>
-                                          <span className="text-sm text-gray-900">
-                                            {tipoCobrancaLabels[servico.tipoCobranca]}
-                                          </span>
+                              {/* Expanded Content */}
+                              <AnimatePresence>
+                                {isExpanded && (
+                                  <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="border-t border-gray-200 pt-6 mt-6"
+                                  >
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                      {/* Detalhes do Serviço */}
+                                      <div>
+                                        <h4 className="text-lg font-bold text-blue-800 mb-4">Detalhes do Serviço</h4>
+                                        
+                                        {servico.observacoes && (
+                                          <div className="bg-blue-50 rounded-xl p-4 mb-4">
+                                            <h5 className="font-semibold text-blue-800 mb-2">Observações:</h5>
+                                            <ul className="text-sm text-blue-700 space-y-1">
+                                              {servico.observacoes.map((obs, idx) => (
+                                                <li key={idx} className="flex items-start">
+                                                  <span className="mr-2">•</span>
+                                                  <span>{obs}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        )}
+
+                                        {servico.adicionais && servico.adicionais.length > 0 && (
+                                          <div className="bg-yellow-50 rounded-xl p-4 mb-4">
+                                            <h5 className="font-semibold text-yellow-800 mb-2">Adicionais:</h5>
+                                            <ul className="text-sm text-yellow-700 space-y-1">
+                                              {servico.adicionais.map((adicional, idx) => (
+                                                <li key={idx} className="flex items-start">
+                                                  <span className="mr-2">•</span>
+                                                  <span>{adicional}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Informações de Cobrança */}
+                                      <div>
+                                        <h4 className="text-lg font-bold text-blue-800 mb-4">Informações de Cobrança</h4>
+                                        
+                                        <div className="bg-gray-50 rounded-xl p-4">
+                                          <div className="space-y-3">
+                                            <div className="flex justify-between">
+                                              <span className="text-sm font-medium text-gray-700">Tipo de Cobrança:</span>
+                                              <span className="text-sm text-gray-900">
+                                                {tipoCobrancaLabels[servico.tipoCobranca]}
+                                              </span>
+                                            </div>
+                                            
+                                            {servico.unidade && (
+                                              <div className="flex justify-between">
+                                                <span className="text-sm font-medium text-gray-700">Unidade:</span>
+                                                <span className="text-sm text-gray-900">{servico.unidade}</span>
+                                              </div>
+                                            )}
+                                            
+                                            {servico.periodo && (
+                                              <div className="flex justify-between">
+                                                <span className="text-sm font-medium text-gray-700">Período:</span>
+                                                <span className="text-sm text-gray-900">{servico.periodo}</span>
+                                              </div>
+                                            )}
+
+                                            {servico.valorMinimo && (
+                                              <div className="flex justify-between">
+                                                <span className="text-sm font-medium text-gray-700">Valor Mínimo:</span>
+                                                <span className="text-sm text-gray-900">{servico.valorMinimo}</span>
+                                              </div>
+                                            )}
+                                          </div>
                                         </div>
-                                        
-                                        {servico.unidade && (
-                                          <div className="flex justify-between">
-                                            <span className="text-sm font-medium text-gray-700">Unidade:</span>
-                                            <span className="text-sm text-gray-900">{servico.unidade}</span>
-                                          </div>
-                                        )}
-                                        
-                                        {servico.periodo && (
-                                          <div className="flex justify-between">
-                                            <span className="text-sm font-medium text-gray-700">Período:</span>
-                                            <span className="text-sm text-gray-900">{servico.periodo}</span>
-                                          </div>
-                                        )}
 
-                                        {servico.valorMinimo && (
-                                          <div className="flex justify-between">
-                                            <span className="text-sm font-medium text-gray-700">Valor Mínimo:</span>
-                                            <span className="text-sm text-gray-900">{servico.valorMinimo}</span>
+                                        {/* Contato */}
+                                        <div className="mt-6 bg-blue-50 rounded-xl p-4">
+                                          <h5 className="font-semibold text-blue-800 mb-2">Dúvidas sobre este serviço?</h5>
+                                          <div className="space-y-1 text-sm text-blue-700">
+                                            <p>📧 comercial@portoitapoa.com</p>
+                                            <p>📞 +55 47 3443-8700</p>
+                                            <p className="text-xs text-blue-600 mt-2">
+                                              Atendimento: Segunda a sexta das 08h às 18h
+                                            </p>
                                           </div>
-                                        )}
+                                        </div>
                                       </div>
                                     </div>
-
-                                    {/* Contato */}
-                                    <div className="mt-6 bg-blue-50 rounded-xl p-4">
-                                      <h5 className="font-semibold text-blue-800 mb-2">Dúvidas sobre este serviço?</h5>
-                                      <div className="space-y-1 text-sm text-blue-700">
-                                        <p>📧 comercial@portoitapoa.com</p>
-                                        <p>📞 +55 47 3443.8700</p>
-                                        <p className="text-xs text-blue-600 mt-2">
-                                          Atendimento: Segunda a sexta das 08h às 18h
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  )
-                })}
-              </AnimatePresence>
-            </div>
-
-            {/* No Results */}
-            {filteredServicos.length === 0 && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-                <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-200 max-w-md mx-auto">
-                  <Calculator className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhum serviço encontrado</h3>
-                  <p className="text-gray-500 mb-4">Tente ajustar os filtros de busca</p>
-                  <Button onClick={clearAllFilters} className="bg-blue-600 hover:bg-blue-700">
-                    Limpar Filtros
-                  </Button>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      )
+                    })}
+                  </AnimatePresence>
                 </div>
-              </motion.div>
-            )}
 
-            {/* Informações Importantes */}
-            {pageData?.informacoesImportantes && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="mt-16"
-              >
-                <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl">
-                  <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold text-blue-800 mb-6">INFORMAÇÕES IMPORTANTES</h3>
-                    <PortableText 
-                      content={pageData.informacoesImportantes}
-                      className="text-gray-600"
-                    />
-
-                    <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
-                      <h4 className="text-lg font-semibold text-blue-800 mb-3">Contatos Comerciais</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="font-medium text-blue-700">Geral:</p>
-                          <p className="text-blue-600">{pageData.contato?.email || 'comercial@portoitapoa.com'}</p>
-                          <p className="text-blue-600">{pageData.contato?.telefone || '+55 47 3443.8700'}</p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-blue-700">Atendimento:</p>
-                          <p className="text-blue-600">{pageData.contato?.email || 'atendimento@portoitapoa.com'}</p>
-                          <p className="text-blue-600">{getTranslatedField(pageData.contato?.horario, language, 'Segunda a sexta: 08h às 18h')}</p>
-                        </div>
-                      </div>
+                {/* No Results */}
+                {filteredServicos.length === 0 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
+                    <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-200 max-w-md mx-auto">
+                      <Calculator className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhum serviço encontrado</h3>
+                      <p className="text-gray-500 mb-4">Tente ajustar os filtros de busca</p>
+                      <Button onClick={clearAllFilters} className="bg-blue-600 hover:bg-blue-700">
+                        Limpar Filtros
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )}
-          </div>
-        </div>
+                  </motion.div>
+                )}
+
+                {/* Informações Importantes */}
+                {pageData?.informacoesImportantes && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                    className="mt-16"
+                  >
+                    <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl">
+                      <CardContent className="p-8">
+                        <h3 className="text-2xl font-bold text-blue-800 mb-6">INFORMAÇÕES IMPORTANTES</h3>
+                        <PortableText 
+                          content={pageData.informacoesImportantes}
+                          className="text-gray-600"
+                        />
+
+                        <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+                          <h4 className="text-lg font-semibold text-blue-800 mb-3">Contatos Comerciais</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <p className="font-medium text-blue-700">Geral:</p>
+                              <p className="text-blue-600">{pageData.contato?.email || 'comercial@portoitapoa.com'}</p>
+                              <p className="text-blue-600">{pageData.contato?.telefone || '+55 47 3443-8700'}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-blue-700">Atendimento:</p>
+                              <p className="text-blue-600">{pageData.contato?.email || 'atendimento@portoitapoa.com'}</p>
+                              <p className="text-blue-600">{getTranslatedField(pageData.contato?.horario, language, 'Segunda a sexta: 08h às 18h')}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="simulador">
+            <Card className="bg-white border border-gray-200 shadow-xl rounded-2xl p-8 text-center bg-gray-50">
+               <div className="max-w-xl mx-auto py-12">
+                 <Calculator className="h-16 w-16 text-green-600 mx-auto mb-6" />
+                 <h2 className="text-2xl font-bold text-gray-900 mb-4">Simulador de Custos</h2>
+                 <p className="text-gray-600 mb-8">
+                   Selecione os serviços que você deseja simular e obtenha uma estimativa instantânea.
+                 </p>
+                 <Button disabled className="bg-gray-300 text-gray-500 cursor-not-allowed">
+                   Funcionalidade em desenvolvimento
+                 </Button>
+               </div>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

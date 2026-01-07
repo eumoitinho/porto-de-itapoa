@@ -9,8 +9,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  serverExternalPackages: [],
   experimental: {
-    serverComponentsExternalPackages: [],
   },
   transpilePackages: [
     '@portabletext/plugin-markdown-shortcuts',

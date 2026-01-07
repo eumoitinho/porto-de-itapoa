@@ -49,19 +49,14 @@ export default function AcionistasPage() {
               {getTranslatedField(pageData.estruturaAcionaria?.titulo, language, "Estrutura Acionária")}
             </h2>
           
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {pageData.estruturaAcionaria?.acionistas?.map((acionista: any, index: number) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 * index }}
-                >
-                  <Card className="backdrop-blur-md bg-white/80 border border-white/20 shadow-xl rounded-2xl h-full">
-                    <CardContent className="p-8">
-                      <div className="flex items-center mb-6">
-                        {acionista.logo && (
-                          <div className="relative w-16 h-16 mr-4 flex-shrink-0">
+            <Card className="overflow-hidden border border-gray-200 bg-white">
+              <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                {pageData.estruturaAcionaria?.acionistas?.map((acionista: any, index: number) => (
+                  <div key={index} className="p-8 hover:bg-gray-50 transition-colors duration-300">
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="flex items-center gap-4">
+                        {acionista.logo ? (
+                          <div className="relative w-16 h-16 grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all">
                             <Image
                               src={urlFor(acionista.logo).url()}
                               alt={acionista.nome}
@@ -69,29 +64,34 @@ export default function AcionistasPage() {
                               className="object-contain"
                             />
                           </div>
+                        ) : (
+                          <Building className="w-12 h-12 text-gray-300" />
                         )}
                         <div>
-                          <h3 className="text-xl font-semibold text-green-800">{getTranslatedField(acionista.nome, language, acionista.nome)}</h3>
+                          <h3 className="text-xl font-bold text-gray-900">{getTranslatedField(acionista.nome, language, acionista.nome)}</h3>
                           {acionista.tipo && (
-                            <Badge className="bg-green-100 text-green-800 mt-1">
-                              {acionista.tipo === 'controlador' ? 'Controlador' : 'Minoritário'}
-                            </Badge>
-                          )}
-                          {acionista.participacao && (
-                            <Badge variant="outline" className="ml-2 mt-1">
-                              {acionista.participacao}
-                            </Badge>
+                             <span className="text-xs font-semibold text-green-600 uppercase tracking-wider">{acionista.tipo === 'controlador' ? 'Controlador' : 'Minoritário'}</span>
                           )}
                         </div>
                       </div>
-                      {acionista.descricao && (
-                        <p className="text-gray-600 leading-relaxed">{getTranslatedField(acionista.descricao, language, acionista.descricao)}</p>
+                      {acionista.participacao && (
+                        <div className="text-right">
+                          <span className="block text-3xl font-light text-gray-900">{acionista.participacao}</span>
+                        </div>
                       )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
+                    </div>
+                    {acionista.descricao && (
+                      <p className="text-gray-600 leading-relaxed text-sm">{getTranslatedField(acionista.descricao, language, acionista.descricao)}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {/* Visual Percentage Bar */}
+              <div className="h-2 w-full flex">
+                 <div className="h-full bg-green-600 w-1/2"></div>
+                 <div className="h-full bg-blue-900 w-1/2"></div>
+              </div>
+            </Card>
           </motion.div>
         )}
 

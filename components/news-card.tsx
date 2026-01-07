@@ -71,10 +71,11 @@ export function NewsCard({ noticia, index = 0, variant = "default" }: NewsCardPr
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       whileHover={{ scale: 1.02 }}
+      className="h-full"
     >
-      <Link href={`/noticias/${noticia.slug}`}>
-        <Card className="backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl overflow-hidden h-full cursor-pointer hover:shadow-2xl transition-shadow">
-          <div className="relative h-48">
+      <Link href={`/noticias/${noticia.slug}`} className="h-full block">
+        <Card className="backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-2xl overflow-hidden h-full cursor-pointer hover:shadow-2xl transition-shadow flex flex-col">
+          <div className="relative h-48 flex-shrink-0">
             <Image
               src={noticia.imagem}
               alt={noticia.titulo}
@@ -88,16 +89,16 @@ export function NewsCard({ noticia, index = 0, variant = "default" }: NewsCardPr
             </div>
           </div>
 
-          <CardContent className="p-6">
+          <CardContent className="p-6 flex flex-col flex-grow">
             <h3 className="text-xl font-semibold text-green-800 mb-3 line-clamp-2">
               {noticia.titulo}
             </h3>
 
-            <p className="text-gray-600 mb-4 line-clamp-3">
+            <p className="text-gray-600 mb-4 line-clamp-3 flex-grow">
               {noticia.resumo}
             </p>
 
-            <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+            <div className="flex items-center justify-between text-sm text-gray-500 mb-4 mt-auto">
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-1" />
                 {noticia.data}

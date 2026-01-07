@@ -87,34 +87,31 @@ export default function PortoItapoaPage() {
               {getTranslatedField(pageData.linhaTempo?.titulo, language, "Linha do Tempo")}
             </h2>
 
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-green-200 transform md:-translate-x-1/2"></div>
+              <div className="relative pl-8 md:pl-0">
+                {/* Timeline line - Thin and elegant */}
+                <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gray-200 transform md:-translate-x-1/2"></div>
 
-              <div className="space-y-12">
-                {pageData.linhaTempo.eventos.map((evento: any, index: number) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 * index }}
-                    className={`flex flex-col md:flex-row items-start gap-6 ${
-                      index % 2 === 0 ? 'md:flex-row-reverse' : ''
-                    }`}
-                  >
-                    {/* Timeline dot */}
-                    <div className="relative z-10 flex-shrink-0">
-                      <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                        <Calendar className="h-6 w-6 text-white" />
-                      </div>
-                    </div>
+                <div className="space-y-12">
+                  {pageData.linhaTempo.eventos.map((evento: any, index: number) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 0.1 * index }}
+                      className={`flex flex-col md:flex-row items-center gap-8 ${
+                        index % 2 === 0 ? 'md:flex-row-reverse' : ''
+                      }`}
+                    >
+                      {/* Timeline Marker - Minimalist square */}
+                      <div className="absolute left-[-5px] md:left-1/2 md:-ml-[5px] w-[11px] h-[11px] bg-green-600 rotate-45 z-10"></div>
 
-                    {/* Event content */}
-                    <Card className="flex-1 backdrop-blur-md bg-white/80 border border-white/20 shadow-xl rounded-2xl">
-                      <CardContent className="p-6">
+                      <div className="flex-1 w-full md:w-auto"></div>
+
+                      {/* Event content - Flat, border-based */}
+                      <div className="flex-1 w-full md:w-auto bg-white border border-gray-100 p-6 hover:border-green-500 transition-colors duration-300 group">
                         <div className="flex items-start gap-4">
                           {evento.imagem && (
-                            <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                            <div className="relative w-20 h-20 flex-shrink-0 grayscale group-hover:grayscale-0 transition-all duration-500">
                               <Image
                                 src={urlFor(evento.imagem).url()}
                                 alt={evento.titulo}
@@ -124,27 +121,26 @@ export default function PortoItapoaPage() {
                             </div>
                           )}
                           <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <Badge className="bg-green-600 text-white">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
+                              <span className="text-2xl font-bold text-green-600/20 group-hover:text-green-600 transition-colors">
                                 {evento.ano}
-                              </Badge>
-                              <h3 className="text-xl font-semibold text-green-800">
+                              </span>
+                              <h3 className="text-lg font-bold text-gray-900 group-hover:text-green-700 transition-colors">
                                 {getTranslatedField(evento.titulo, language, evento.titulo)}
                               </h3>
                             </div>
                             {evento.descricao && (
-                              <p className="text-gray-600 leading-relaxed">
+                              <p className="text-gray-500 text-sm leading-relaxed">
                                 {getTranslatedField(evento.descricao, language, evento.descricao)}
                               </p>
                             )}
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
-            </div>
           </motion.div>
         )}
 

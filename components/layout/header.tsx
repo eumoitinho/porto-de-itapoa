@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, ChevronDown, Search } from 'lucide-react'
+import { Menu, X, ChevronDown, Search, MapPin, Phone, Mail, User, FileText } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
@@ -166,6 +166,13 @@ const navigation = [
             descriptionKey: "priceSimulatorsDescription"
           },
           { 
+            name: "Tabela de Preços", 
+            href: "/precos",
+            description: "Consulte nossos valores",
+            icon: "💲",
+            hasDownload: true
+          },
+          { 
             name: "Consultas", 
             nameKey: "queries",
             href: "/servicos/consultas",
@@ -201,13 +208,29 @@ const navigation = [
   },
 ]
 
+const quickLinks = [
+  { name: "Portal do Cliente", href: "/portal-cliente", icon: User },
+  { name: "Documentos", href: "/downloads", icon: FileText },
+]
+
 export function Header() {
   const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+  
+  const isHomePage = pathname === "/"
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const handleMouseEnter = (itemName: string) => {
     setActiveSubmenu(itemName)
@@ -230,10 +253,56 @@ export function Header() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-gray-100"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+           scrolled || !isHomePage ? "bg-white shadow-md border-b border-gray-100" : "bg-transparent border-transparent"
+        }`}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+        {/* Top Bar */}
+        <AnimatePresence>
+          {(scrolled || !isHomePage) && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-green-800 text-white py-1.5 px-4 lg:px-8 hidden lg:block"
+            >
+              <div className="max-w-7xl mx-auto flex items-center justify-between text-xs">
+                <div className="flex items-center space-x-4 flex-wrap gap-y-1">
+                  <div className="flex items-center space-x-1.5">
+                    <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">Av. Beira Mar 5, 2900 • Itapoá/SC</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5">
+                    <Phone className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">+55 (47) 3443-8700</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5">
+                    <Mail className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">atendimento@portoitapoa.com</span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2 flex-shrink-0">
+                  <div className="flex items-center space-x-2">
+                    {quickLinks.map((link) => (
+                      <Link
+                        key={link.name}
+                        href={link.href}
+                        className="flex items-center space-x-1 hover:text-green-200 transition-colors whitespace-nowrap"
+                      >
+                        <link.icon className="h-3 w-3" />
+                        <span className="text-xs">{link.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 overflow-visible">
+          <div className="flex items-center justify-between h-16 lg:h-20 gap-2">
             {/* Logo */}
             <Link href="/" className="flex items-center group">
               <motion.div
@@ -241,12 +310,14 @@ export function Header() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
-                <Image
-                  src="/logo-grande-1.png"
-                  alt="Porto Itapoá"
-                  fill
-                  className="object-contain"
-                />
+                <div className={`relative w-full h-full transition-all duration-300 ${!scrolled && isHomePage ? "brightness-0 invert" : ""}`}>
+                  <Image
+                    src="/logo-grande-1.png"
+                    alt="Porto Itapoá"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               </motion.div>
             </Link>
 
@@ -263,9 +334,16 @@ export function Header() {
                     href={item.href}
                     className={`flex items-center text-sm font-medium transition-colors duration-200 py-2 ${
                       pathname === item.href ||
-                      (item.submenu && item.submenu.some((section) => section.items.some((subItem) => pathname.startsWith(subItem.href))))
-                        ? "text-accent"
-                        : "text-gray-700 hover:text-accent"
+                      (
+                        item.submenu &&
+                          item.submenu.some((section) => section.items.some((subItem) => pathname.startsWith(subItem.href)))
+                      )
+                        ? isHomePage && !scrolled
+                          ? "text-green-200 bg-white/10"
+                          : "text-green-600 bg-green-50"
+                        : isHomePage && !scrolled
+                          ? "text-white hover:text-green-200"
+                          : "text-gray-700 hover:text-green-600"
                     }`}
                   >
                     <span>{t(item.nameKey as any) || item.name}</span>
@@ -363,7 +441,7 @@ export function Header() {
                         variant="ghost"
                         size="sm"
                         onClick={toggleSearch}
-                      className="hover:bg-gray-100"
+                      className={`hover:bg-white/20 ${!scrolled && isHomePage ? "text-white" : "text-gray-700 hover:bg-gray-100"}`}
                       >
                         <Search className="h-5 w-5" />
                       </Button>
@@ -386,7 +464,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="sm"
-              className="lg:hidden"
+              className={`lg:hidden ${!scrolled && isHomePage ? "text-white hover:bg-white/10" : "text-gray-700 hover:bg-gray-100"}`}
               onClick={() => setIsOpen(!isOpen)}
             >
                 {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}

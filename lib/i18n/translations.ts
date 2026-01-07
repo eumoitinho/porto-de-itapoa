@@ -23,6 +23,16 @@ export const translations = {
     regularMaritimeServices: "Serviços Marítimos Regulares",
     servicesDescription: "Conectamos o Brasil aos principais mercados mundiais através de parcerias com os maiores armadores globais",
     seeCompletePortfolio: "Ver Portfólio Completo",
+    priceCalculator: "Calculadora de Preços",
+    importFCL: "Importação FCL",
+    importLCL: "Importação LCL",
+    exportFCL: "Exportação FCL",
+    weight: "Peso (kg)",
+    volume: "Volume (m³)",
+    calculate: "Calcular",
+    estimatedPrice: "Preço Estimado",
+    priceTableDescription: "Baixe a tabela completa de preços públicos para consulta detalhada",
+    downloadPriceTable: "Baixar Tabela de Preços",
     
     // Location Section
     strategicLocation: "Localização Estratégica",
