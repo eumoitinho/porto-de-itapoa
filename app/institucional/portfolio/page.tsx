@@ -220,7 +220,7 @@ export default function PortfolioPage() {
   }
 
   return (
-    <div className="min-h-screen py-20 px-8 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-20 px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header Melhorado */}
         <motion.div
@@ -657,17 +657,6 @@ export default function PortfolioPage() {
                                       </div>
                                     </div>
 
-                                    {/* Contact Info */}
-                                    <div className="mt-8 bg-gray-50 rounded-xl p-6 border border-gray-200">
-                                      <h5 className="font-semibold text-gray-800 mb-3">Informações de Contato:</h5>
-                                      <div className="space-y-2 text-sm text-gray-600">
-                                        <p>Av. Beira Mar 5, 2900 Figueira do Pontal</p>
-                                        <p>Itapoá/SC - Brasil</p>
-                                        <p>+55 47 3443.8700</p>
-                                        <p>atendimento@portoitapoa.com</p>
-                                        <p className="text-green-600 font-medium">www.portoitapoa.com</p>
-                                      </div>
-                                    </div>
                                   </div>
                                 </div>
                               </motion.div>

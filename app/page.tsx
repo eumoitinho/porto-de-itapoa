@@ -363,47 +363,6 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Statistics Section (mínimo) */}
-      <section className="py-20 px-8 bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
-              {statsData?.title || translate("impressiveNumbers", "Números que impressionam")}
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {statsData?.description || translate("statsDescription", "Indicadores que reforçam nossa performance e confiabilidade")}
-            </p>
-          </motion.div>
-
-          <div className="rounded-2xl border border-gray-100 bg-white/80 backdrop-blur">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-200">
-              {currentStats.map((stat: any, index: number) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: index * 0.05 }}
-                  className="px-8 py-10 text-center"
-                >
-                  <div className="mb-3 flex items-center justify-center">
-                    <stat.icon className="h-6 w-6 text-emerald-600" strokeWidth={1.5} />
-                  </div>
-                  <div className="text-3xl md:text-4xl font-semibold text-gray-900 leading-none">{stat.value}</div>
-                  <div className="mt-2 text-base font-medium text-gray-800">{stat.label}</div>
-                  <div className="mt-1 text-sm text-gray-600">{stat.description}</div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Second Section with Parallax */}
       <main className="relative min-h-screen overflow-hidden">
@@ -477,12 +436,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Massive brand wordmark */}
-        <div className="pointer-events-none z-0 select-none absolute right-0 bottom-8 left-0" id="parallax-wordmark2">
-          <div className="md:px-10 max-w-full mr-auto ml-auto pr-6 pl-6 items-center justify-center">
-            <div className="whitespace-nowrap text-[20vw] leading-none text-8xl font-semibold text-zinc-50/10 tracking-tight text-center">TERMINAL</div>
-          </div>
-        </div>
       </main>
 
       {/* Terminal Section */}
@@ -537,7 +490,7 @@ export default function HomePage() {
                 <Compass className="h-10 w-10 text-emerald-600 mb-5" />
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{translate('vision', 'Visão')}</h3>
                 <p className="text-gray-600 leading-relaxed text-sm">
-                  {terminalData?.vision || translate('visionContent', 'Ampliar nossa liderança na América Latina com excelência operacional e ambiental.')}
+                  {terminalData?.vision || translate('visionContent', 'Ser o maior, mais eficiente e seguro terminal da América do Sul.')}
                 </p>
               </div>
             </motion.div>
@@ -835,28 +788,6 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Stats */}
-          <div className="text-center animate-on-scroll blur-slide">
-            <h3 className="text-xl font-semibold tracking-tight mb-8 text-white/90 animate-on-scroll text-reveal stagger-1">{translate("numbersThatProve", "Números que comprovam")}</h3>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="text-center animate-on-scroll slide-up stagger-2">
-                <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">180</div>
-                <div className="text-sm text-white/60">{translate("shipsPerMonth", "Navios por mês")}</div>
-              </div>
-              <div className="text-center animate-on-scroll slide-up stagger-3">
-                <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">1.8M</div>
-                <div className="text-sm text-white/60">{translate("teusPerYear", "TEUs por ano")}</div>
-              </div>
-              <div className="text-center animate-on-scroll slide-up stagger-4">
-                <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">50K+</div>
-                <div className="text-sm text-white/60">{translate("transactions", "Transações")}</div>
-              </div>
-              <div className="text-center lg:border-l lg:border-white/10 animate-on-scroll slide-up stagger-5">
-                <div className="text-3xl lg:text-4xl font-semibold tracking-tight text-green-500 mb-2">15+</div>
-                <div className="text-sm text-white/60">{translate("connectedCountries", "Países conectados")}</div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -899,7 +830,7 @@ export default function HomePage() {
             <div className="animate-on-scroll slide-left stagger-1">
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                <span className="text-sm font-medium text-green-600">{translate("letsWorkTogether", "Vamos trabalhar juntos")}</span>
+                <span className="text-sm font-medium text-green-600">{translate("contactUs", "Fale conosco")}</span>
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-6 text-gray-900">
                 {translate("readyToCreate", "Pronto para criar algo extraordinário?")}
@@ -916,7 +847,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-gray-900">{t("email")}</div>
-                    <div className="text-sm text-gray-600">{contactData?.email || "contato@portoitapoa.com.br"}</div>
+                    <div className="text-sm text-gray-600">{contactData?.email || "atendimento@portoitapoa.com"}</div>
                   </div>
                 </div>
                 
@@ -941,21 +872,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
-                <div className="animate-on-scroll fade-in stagger-2">
-                  <div className="text-xl font-semibold text-gray-900 mb-1">{translate("response24h", "Resposta em até 24h")}</div>
-                  <div className="text-xs text-gray-600">{translate("response", "Equipe especializada à disposição")}</div>
-                </div>
-                <div className="animate-on-scroll fade-in stagger-3">
-                  <div className="text-xl font-semibold text-gray-900 mb-1">{translate("global", "Atuação global")}</div>
-                  <div className="text-xs text-gray-600">{translate("connectivity", "Conectividade")}</div>
-                </div>
-                <div className="animate-on-scroll fade-in stagger-4">
-                  <div className="text-xl font-semibold text-gray-900 mb-1">{translate("sustainable", "Sustentável")}</div>
-                  <div className="text-xs text-gray-600">{translate("operation", "Operação responsável")}</div>
-                </div>
-              </div>
             </div>
 
             {/* Right Content - Contact Form */}

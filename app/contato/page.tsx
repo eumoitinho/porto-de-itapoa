@@ -61,7 +61,7 @@ export default function ContatoPage() {
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+          <Card className="bg-white border-gray-200 shadow-sm">
             <CardHeader className="text-center">
               <CardTitle className="text-4xl md:text-5xl font-light text-green-800 mb-4">
                 {title}
@@ -99,7 +99,7 @@ export default function ContatoPage() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-12"
         >
-          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+          <Card className="bg-white border-gray-200 shadow-sm">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <HeadphonesIcon className="h-8 w-8 text-green-600" />

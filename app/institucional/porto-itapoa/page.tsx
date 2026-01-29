@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Calendar, MapPin, Clock, Building } from 'lucide-react'
+import { Calendar, MapPin, Clock, Building, Ship, Anchor, History, Navigation } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
@@ -28,6 +28,11 @@ export default function PortoItapoaPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 bg-green-100 flex items-center justify-center">
+              <Anchor className="h-8 w-8 text-green-600" />
+            </div>
+          </div>
           <h1 className="text-5xl font-light text-green-800 mb-6">
             {title}
           </h1>
@@ -107,8 +112,8 @@ export default function PortoItapoaPage() {
 
                       <div className="flex-1 w-full md:w-auto"></div>
 
-                      {/* Event content - Flat, border-based */}
-                      <div className="flex-1 w-full md:w-auto bg-white border border-gray-100 p-6 hover:border-green-500 transition-colors duration-300 group">
+                      {/* Event content - Clean design without hover border */}
+                      <div className="flex-1 w-full md:w-auto bg-white p-6 group">
                         <div className="flex items-start gap-4">
                           {evento.imagem && (
                             <div className="relative w-20 h-20 flex-shrink-0 grayscale group-hover:grayscale-0 transition-all duration-500">

@@ -24,7 +24,7 @@ export default function CarreirasPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="relative py-20 px-8 bg-gradient-to-br from-green-50 via-emerald-50 to-white border-b border-gray-200">
+      <section className="relative pt-32 pb-20 px-8 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ export default function CarreirasPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <Card className="bg-gradient-to-br from-emerald-50 via-white to-white border-l-4 border-emerald-500 shadow-lg">
+              <Card className="bg-white border-l-4 border-green-500 shadow-lg">
                 <CardContent className="p-8 md:p-12">
                   <PortableText 
                     content={pageData.intro}
@@ -70,7 +70,7 @@ export default function CarreirasPage() {
       )}
 
       {/* Compromisso com Proteção de Dados Section */}
-      <section className="py-20 px-8 bg-zinc-200 border-gray-200 border-t">
+      <section className="py-20 px-8 bg-gray-50 border-gray-200 border-t">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -137,7 +137,7 @@ export default function CarreirasPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-lg rounded-2xl">
+            <Card className="bg-white border-gray-200 shadow-lg rounded-2xl">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 bg-green-600 rounded-full flex items-center justify-center">
@@ -220,7 +220,7 @@ export default function CarreirasPage() {
 
       {/* Benefícios Section */}
       {pageData?.beneficios && pageData.beneficios.length > 0 && (
-        <section className="py-20 px-8 bg-zinc-200 border-gray-200 border-t">
+        <section className="py-20 px-8 bg-gray-50 border-gray-200 border-t">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -236,21 +236,21 @@ export default function CarreirasPage() {
                 Conheça os benefícios oferecidos aos colaboradores do Porto Itapoá
               </p>
             </motion.div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {pageData.beneficios.map((beneficio: any, index: number) => {
                 const styleVariants = [
                   {
-                    card: "bg-gradient-to-br from-emerald-50 via-white to-white border-l-4 border-emerald-500 shadow-lg",
-                    icon: "bg-emerald-500 text-white shadow-lg",
+                    card: "bg-white border-l-4 border-green-500 shadow-lg",
+                    icon: "bg-green-600 text-white shadow-lg",
                   },
                   {
-                    card: "bg-white border-2 border-green-200 shadow-md rounded-2xl",
-                    icon: "bg-gradient-to-br from-green-400 to-green-600 text-white",
+                    card: "bg-white border border-gray-200 shadow-md",
+                    icon: "bg-green-600 text-white",
                   },
                   {
-                    card: "bg-gradient-to-tr from-lime-50 to-white border border-lime-300 shadow-sm rounded-xl",
-                    icon: "bg-lime-100 text-lime-700 border-2 border-lime-300",
+                    card: "bg-white border border-gray-200 shadow-sm",
+                    icon: "bg-gray-100 text-green-700 border border-gray-200",
                   },
                 ]
                 const style = styleVariants[index % styleVariants.length]
