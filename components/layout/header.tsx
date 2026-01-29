@@ -332,18 +332,18 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`flex items-center text-sm font-medium transition-colors duration-200 py-2 ${
+                    className={`flex items-center text-sm font-medium transition-all duration-200 py-2 px-3 ${
                       pathname === item.href ||
                       (
                         item.submenu &&
                           item.submenu.some((section) => section.items.some((subItem) => pathname.startsWith(subItem.href)))
                       )
                         ? isHomePage && !scrolled
-                          ? "text-green-200 bg-white/10"
-                          : "text-green-600 bg-green-50"
+                          ? "text-white bg-white/15 backdrop-blur-sm"
+                          : "text-green-700 bg-green-50/80"
                         : isHomePage && !scrolled
-                          ? "text-white hover:text-green-200"
-                          : "text-gray-700 hover:text-green-600"
+                          ? "text-white hover:text-green-200 hover:bg-white/10"
+                          : "text-gray-700 hover:text-green-600 hover:bg-gray-50"
                     }`}
                   >
                     <span>{t(item.nameKey as any) || item.name}</span>

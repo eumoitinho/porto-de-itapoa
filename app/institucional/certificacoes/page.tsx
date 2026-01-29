@@ -36,6 +36,11 @@ export default function CertificacoesPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 bg-green-100 flex items-center justify-center">
+              <Award className="h-8 w-8 text-green-600" />
+            </div>
+          </div>
           <h1 className="text-5xl font-light text-green-800 mb-6">
             {title}
           </h1>

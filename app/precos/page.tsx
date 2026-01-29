@@ -145,7 +145,7 @@ export default function PrecosPage() {
   }
 
   return (
-    <div className="min-h-screen py-20 px-8 bg-gray-50">
+    <div className="min-h-screen pt-32 pb-20 px-8 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header Melhorado */}
         <motion.div
@@ -260,15 +260,7 @@ export default function PrecosPage() {
           </div>
         </motion.div>
 
-        <Tabs defaultValue="tabela" className="w-full space-y-8">
-          <div className="flex justify-center mb-8">
-            <TabsList className="grid w-full max-w-md grid-cols-2 p-1 bg-gray-100 rounded-xl">
-              <TabsTrigger value="tabela" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-blue-700 data-[state=active]:shadow-sm py-3 font-medium">Tabela de Preços</TabsTrigger>
-              <TabsTrigger value="simulador" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-green-700 data-[state=active]:shadow-sm py-3 font-medium">Simulador de Custos</TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="tabela">
+        <div className="w-full space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Sidebar com Filtros Expandida */}
               <motion.div
@@ -726,23 +718,7 @@ export default function PrecosPage() {
                 )}
               </div>
             </div>
-          </TabsContent>
-
-          <TabsContent value="simulador">
-            <Card className="bg-white border border-gray-200 shadow-xl rounded-2xl p-8 text-center bg-gray-50">
-               <div className="max-w-xl mx-auto py-12">
-                 <Calculator className="h-16 w-16 text-green-600 mx-auto mb-6" />
-                 <h2 className="text-2xl font-bold text-gray-900 mb-4">Simulador de Custos</h2>
-                 <p className="text-gray-600 mb-8">
-                   Selecione os serviços que você deseja simular e obtenha uma estimativa instantânea.
-                 </p>
-                 <Button disabled className="bg-gray-300 text-gray-500 cursor-not-allowed">
-                   Funcionalidade em desenvolvimento
-                 </Button>
-               </div>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        </div>
       </div>
     </div>
   )

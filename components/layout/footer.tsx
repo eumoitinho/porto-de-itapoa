@@ -18,18 +18,18 @@ export function Footer() {
             <div>
               <Link href="/" className="flex items-center space-x-3 mb-6">
                 <div className="relative w-32 h-32">
-                   {/* Logo as seen in the white footer */}
+                   {/* Logo monocromática branca */}
                    <Image
                      src="/logo-grande-1.png"
                      alt="Porto Itapoá"
                      fill
-                     className="object-contain" 
+                     className="object-contain brightness-0 invert"
                    />
                 </div>
               </Link>
               
               <p className="text-neutral-400 max-w-md leading-relaxed">
-                {t("footerDescription")}
+                Terminal portuário de última geração, conectando o Brasil ao mundo com eficiência, tecnologia, segurança e sustentabilidade.
               </p>
             </div>
             
@@ -44,19 +44,19 @@ export function Footer() {
                 </div>
                 <div className="flex items-center text-neutral-400">
                   <Mail className="h-5 w-5 mr-3 flex-shrink-0 text-emerald-500" />
-                  <span className="text-sm">contato@portoitapoa.com.br</span>
+                  <span className="text-sm">atendimento@portoitapoa.com</span>
                 </div>
             </div>
 
             <div className="flex items-center gap-4">
-               {/* Socials */}
-               <a href="#" className="text-neutral-400 hover:text-white transition p-2 hover:bg-white/10 rounded-full">
+               {/* Redes Sociais */}
+               <a href="https://www.linkedin.com/company/porto-itapoa/" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition p-2 hover:bg-white/10 rounded-full">
                  <Linkedin className="h-5 w-5" />
                </a>
-               <a href="#" className="text-neutral-400 hover:text-white transition p-2 hover:bg-white/10 rounded-full">
+               <a href="https://www.instagram.com/portoitapoa/" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition p-2 hover:bg-white/10 rounded-full">
                  <Instagram className="h-5 w-5" />
                </a>
-               <a href="#" className="text-neutral-400 hover:text-white transition p-2 hover:bg-white/10 rounded-full">
+               <a href="https://www.facebook.com/portoitapoa/" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition p-2 hover:bg-white/10 rounded-full">
                  <Facebook className="h-5 w-5" />
                </a>
             </div>

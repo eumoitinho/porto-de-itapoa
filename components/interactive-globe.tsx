@@ -280,23 +280,40 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
             width={undefined}
             height={undefined}
             backgroundColor="rgba(255, 255, 255, 1)"
-            
-            globeImageUrl="//unpkg.com/three-globe/example/img/earth-day.jpg" 
-            
+
+            globeImageUrl="//unpkg.com/three-globe/example/img/earth-day.jpg"
+
             polygonsData={countriesData}
             polygonAltitude={0.008}
             polygonCapColor={() => COL_LAND}
             polygonSideColor={() => "rgba(200, 200, 200, 0.5)"}
             polygonStrokeColor={() => "#e5e7eb"}
             onPolygonHover={() => {}}
-            
+
             pointsData={points}
             pointAltitude={0.02}
             pointColor="color"
             pointRadius={(d: any) => (d.name === selectedPoint?.name ? 1.5 : (d.name === "Porto Itapoá" ? 1.2 : 0.6))}
             pointResolution={16}
             onPointClick={handlePointSelect}
-            
+
+            // Labels para origem e destino
+            labelsData={selectedPoint ? [
+              { ...PORTO_ITAPOA, label: "PORTO ITAPOÁ", size: 1.2, color: BRAND_DARK },
+              { ...selectedPoint, label: selectedPoint.name.toUpperCase(), size: 1.0, color: BRAND_GREEN }
+            ] : [
+              { ...PORTO_ITAPOA, label: "PORTO ITAPOÁ", size: 1.2, color: BRAND_DARK }
+            ]}
+            labelLat={(d: any) => d.lat}
+            labelLng={(d: any) => d.lng}
+            labelText={(d: any) => d.label}
+            labelSize={(d: any) => d.size}
+            labelColor={(d: any) => d.color}
+            labelResolution={2}
+            labelAltitude={0.03}
+            labelDotRadius={0.4}
+            labelDotOrientation={() => "bottom" as const}
+
             // Arcos (Linhas tracejadas)
             // Mostra arcos apenas para o ponto selecionado, conectando a Itapoá
             arcsData={selectedPoint ? [{
@@ -309,9 +326,9 @@ export function InteractiveGlobe({ className = "", title, description }: Interac
             arcColor="color"
             arcDashLength={0.5}
             arcDashGap={0.2}
-            arcDashAnimateTime={1500} // Velocidade da animação
+            arcDashAnimateTime={1500}
             arcStroke={1.5}
-            arcAltitude={0.25} // Arco mais alto para destaque
+            arcAltitude={0.25}
 
             enableZoom={false}
             enableGlobeGlow={false}
